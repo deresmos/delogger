@@ -7,7 +7,6 @@ install-dev:
 test:
 	py.test --rootdir=tests
 	@echo
-	@echo '--- flake8 check ---'
 	@make -iks check-flake8-results
 
 test-detail:
@@ -17,7 +16,8 @@ check-flake8:
 	find -type f -name '*.py' | flake8
 
 check-flake8-results:
-	find -type f -name '*.py' | flake8; \
+	@echo '--- flake8 check ---'
+	@find -type f -name '*.py' | flake8; \
 	if [ $$? = 0 ]; then \
 		echo -e '-> \e[32mOK\e[m'; \
 	else \
