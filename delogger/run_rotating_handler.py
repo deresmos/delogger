@@ -2,7 +2,6 @@ import os
 from datetime import datetime as dt
 from logging import FileHandler
 from pathlib import Path
-from time import sleep
 
 
 class _FILE_PATH(object):
