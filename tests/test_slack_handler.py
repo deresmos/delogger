@@ -1,3 +1,4 @@
+import json
 import logging
 import os
 
@@ -14,6 +15,8 @@ def test_normal():
     slack_handler = SlackHandler(url=dummy_url, channel='#dummy')
     slack_handler.setLevel(logging.DEBUG)
     logger.addHandler(slack_handler)
+
+    assert slack_handler.url != SlackHandler.POST_MESSAGE_URL
 
     logger.debug('normal test')
 
@@ -57,7 +60,7 @@ def test_token_env():
     assert slack_handler.url == SlackHandler.POST_MESSAGE_URL
 
 
-def token_error():
+def test_token_error():
     url_env = SlackHandler.URL_ENV
     token_env = SlackHandler.TOKEN_ENV
 
@@ -79,3 +82,53 @@ def token_error():
         assert False
 
     logger.debug('error test')
+
+
+def test_make_content_with_url():
+    levelno = logging.DEBUG
+
+    slack_handler = SlackHandler(url=dummy_url, channel='#dummy')
+    content = slack_handler._makeContent(levelno)
+
+    assert type(content) is str
+    content = json.loads(content)
+    assert content['icon_emoji'] == slack_handler.emojis[levelno]
+    assert content['username'] == slack_handler.usernames[levelno]
+    assert content['channel'] == '#dummy'
+    assert 'as_user' not in content
+    assert 'token' not in content
+
+    assert slack_handler.url != SlackHandler.POST_MESSAGE_URL
+
+
+def test_make_content_with_token():
+    levelno = logging.DEBUG
+
+    slack_handler = SlackHandler(
+        token=dummy_token,
+        channel='#dummy',
+        as_user=True,
+    )
+    content = slack_handler._makeContent(levelno)
+
+    assert type(content) is dict
+    assert 'icon_emoji' not in content
+    assert 'username' not in content
+    assert content['channel'] == '#dummy'
+    assert content['as_user']
+    assert content['token'] == dummy_token
+
+    assert slack_handler.url == SlackHandler.POST_MESSAGE_URL
+
+
+def test_params():
+    slack_handler = SlackHandler(
+        url=dummy_url,
+        emoji='emoji',
+        username='username',
+    )
+    content = slack_handler._makeContent(logging.INFO)
+    content = json.loads(content)
+
+    assert content['icon_emoji'] == 'emoji'
+    assert content['username'] == 'username'
