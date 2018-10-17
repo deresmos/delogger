@@ -1,6 +1,6 @@
-import json
-import os
+from json import dumps as json_dumps
 from logging import CRITICAL, DEBUG, ERROR, INFO, NOTSET, WARNING, Handler
+from os import getenv
 
 import requests
 
@@ -46,8 +46,8 @@ class SlackHandler(Handler):
         super().__init__()
         self.is_emit = True
 
-        self.url = url or os.getenv(self.URL_ENV)
-        self.token = token or os.getenv(self.TOKEN_ENV)
+        self.url = url or getenv(self.URL_ENV)
+        self.token = token or getenv(self.TOKEN_ENV)
         if self.token:
             self.url = self.POST_MESSAGE_URL
 
@@ -85,7 +85,7 @@ class SlackHandler(Handler):
         if self.token:
             content['token'] = self.token
         else:
-            content = json.dumps(content)
+            content = json_dumps(content)
 
         return content
 
