@@ -1,0 +1,159 @@
+import re
+from pathlib import Path
+
+from delogger import Delogger, debuglog
+
+_dp = (r'\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} '
+       '[^\s]+ [^\s]+ [^\s]+ \d{1,5} "%s"')
+_cp = r'\x1b\[\d{1,3}m\w+\s?\x1b\[0m %s\x1b\[0m'
+_lp = (r'\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} '
+       '[^\s]+\s? [^\s]+ [^\s]+ \d{1,5} "%s"')
+
+
+def _normal_stream_logger(logger, capsys):
+    # logger stream test
+    logger.debug('debug')
+    logger.info('info')
+    logger.warning('warning')
+    logger.error('error')
+
+    captured = capsys.readouterr()
+    streams = '\n'.join(['info', 'warning', 'error', ''])
+    assert captured.err == streams
+
+
+def _debug_stream_logger(logger, capsys):
+    # logger stream test
+    logger.debug('debug')
+    logger.info('info')
+    logger.warning('warning')
+    logger.error('error')
+    captured = capsys.readouterr()
+
+    streams = ['debug', 'info', 'warning', 'error']
+    streams = [_dp % stream for stream in streams]
+    errors = captured.err.split('\n')
+    for err, stream in zip(errors, streams):
+        assert re.findall(stream, err)
+
+
+def _color_stream_logger(logger, capsys):
+    # logger stream test
+    logger.debug('debug')
+    logger.info('info')
+    logger.warning('warning')
+    logger.error('error')
+    captured = capsys.readouterr()
+
+    streams = ['info', 'warning', 'error']
+    streams = [_cp % stream for stream in streams]
+    errors = captured.err.split('\n')
+    for err, stream in zip(errors, streams):
+        assert re.findall(stream, err)
+
+
+def _log_file(logpath):
+    logs = ['debug', 'info', 'warning', 'error']
+    logs = [_lp % stream for stream in logs]
+
+    for path in Path(logpath).iterdir():
+        with open(path, 'r') as f:
+            for line, log in zip(f, logs):
+                assert re.findall(log, line)
+
+
+def test_delogger_normal(capsys):
+    delogger = Delogger()
+    logger = delogger.logger
+
+    @debuglog
+    def test(*args):
+        return args
+
+    test('test', 'args')
+
+    _normal_stream_logger(logger, capsys)
+
+    assert not Path(delogger.log_dir).is_dir()
+
+
+def test_delogger_color(capsys):
+    delogger = Delogger(name='color', color_log=True)
+    logger = delogger.logger
+
+    _color_stream_logger(logger, capsys)
+
+    assert not Path(delogger.log_dir).is_dir()
+
+
+def test_delogger_debug(capsys):
+    delogger = Delogger('debug', debug_mode=True)
+    logger = delogger.logger
+
+    @debuglog
+    def test(*args):
+        return args
+
+    test('test', 'args')
+
+    _debug_stream_logger(logger, capsys)
+
+    assert not Path(delogger.log_dir).is_dir()
+
+
+def test_delogger_class_debug(capsys):
+    Delogger.debug_mode = True
+
+    try:
+        delogger = Delogger('debug_class')
+        logger = delogger.logger
+
+        _debug_stream_logger(logger, capsys)
+
+        @debuglog
+        def test(*args):
+            return args
+
+        test('test', 'args')
+
+        captured = capsys.readouterr()
+
+        streams = [('START test_delogger_class_debug.<locals>.test'
+                    ' args=\(\'test\', \'args\'\) kwargs={}'),
+                   ('END test_delogger_class_debug.<locals>.test'
+                    ' return=\(\'test\', \'args\'\)')]
+        streams = [_dp % stream for stream in streams]
+        errors = captured.err.split('\n')[-3:-1]
+        for err, stream in zip(errors, streams):
+            assert re.findall(stream, err)
+
+            assert not Path(delogger.log_dir).is_dir()
+
+    finally:
+        Delogger.debug_mode = False
+
+
+def test_delogger_savelog(capsys):
+    delogger = Delogger(name='savelog', save_log=True)
+    logger = delogger.logger
+
+    _normal_stream_logger(logger, capsys)
+
+    logpath = delogger.log_dir
+    assert Path(logpath).is_dir()
+    assert len(list(Path(logpath).iterdir())) == 1
+
+    _log_file(logpath)
+
+
+def test_delogger_savelog_debug(capsys):
+    delogger = Delogger(name='savelog_debug', save_log=True, debug_mode=True)
+    logger = delogger.logger
+
+    _debug_stream_logger(logger, capsys)
+
+    logpath = delogger.log_dir
+    assert Path(logpath).is_dir()
+    assert len(list(Path(logpath).iterdir())) == 1
+
+    _log_file(logpath)
