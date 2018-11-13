@@ -57,7 +57,7 @@ def _log_file(logpath):
     logs = [_lp % stream for stream in logs]
 
     for path in Path(logpath).iterdir():
-        with open(path, 'r') as f:
+        with open(str(path), 'r') as f:
             for line, log in zip(f, logs):
                 assert re.findall(log, line)
 

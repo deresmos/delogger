@@ -47,7 +47,7 @@ class RunRotatingHandler(FileHandler):
     def _open(self):
         path_parent = Path(self.filepath).parent
         if not path_parent.is_dir():
-            os.makedirs(path_parent)
+            os.makedirs(str(path_parent))
 
         return super()._open()
 
@@ -98,18 +98,16 @@ class SlackHandler(Handler):
 
     POST_MESSAGE_URL = 'https://slack.com/api/chat.postMessage'
 
-    def __init__(
-            self,
-            url=None,
-            channel=None,
-            as_user=False,
-            token=None,
-            *,
-            emoji=None,
-            username=None,
-            emojis=None,
-            usernames=None,
-    ):
+    def __init__(self,
+                 url=None,
+                 channel=None,
+                 as_user=False,
+                 token=None,
+                 *,
+                 emoji=None,
+                 username=None,
+                 emojis=None,
+                 usernames=None):
         super().__init__()
         self.is_emit = True
 

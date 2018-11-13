@@ -44,17 +44,15 @@ class DeloggerSetting(object):
         'CRIT': 'red,bg_white',
     }
 
-    def __init__(
-            self,
-            save_log=None,
-            logdir=None,
-            debug_mode=None,
-            color_log=None,
-            stream_level=None,
-            file_level=None,
-            date_fmt=None,
-            default=None,
-    ):
+    def __init__(self,
+                 save_log=None,
+                 logdir=None,
+                 debug_mode=None,
+                 color_log=None,
+                 stream_level=None,
+                 file_level=None,
+                 date_fmt=None,
+                 default=None):
         self.init_attr('save_log', save_log)
         self.init_attr('log_dir', logdir)
         self.init_attr('debug_mode', debug_mode)
@@ -90,13 +88,7 @@ class DeloggerSetting(object):
 
 
 class Delogger(DeloggerSetting):
-    def __init__(
-            self,
-            name=None,
-            parent=None,
-            *args,
-            **kwargs,
-    ):
+    def __init__(self, name=None, parent=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         name_ = parent or self
@@ -130,15 +122,13 @@ class Delogger(DeloggerSetting):
             rrh = RunRotatingHandler(self.log_dir)
             self.add_handler(rrh, DEBUG, fmt=self.file_fmt)
 
-    def add_handler(
-            self,
-            hdlr,
-            level,
-            fmt=None,
-            datefmt=None,
-            only_level=False,
-            formatter=None,
-    ):
+    def add_handler(self,
+                    hdlr,
+                    level,
+                    fmt=None,
+                    datefmt=None,
+                    only_level=False,
+                    formatter=None):
         hdlr.setLevel(level)
 
         datefmt = datefmt or self.date_fmt
@@ -150,15 +140,13 @@ class Delogger(DeloggerSetting):
 
         self._logger.addHandler(hdlr)
 
-    def add_stream_handler(
-            self,
-            level,
-            *,
-            check_level=False,
-            color_log=False,
-            hdlr=None,
-            **kwargs,
-    ):
+    def add_stream_handler(self,
+                           level,
+                           *,
+                           check_level=False,
+                           color_log=False,
+                           hdlr=None,
+                           **kwargs):
         if check_level and self.stream_level <= level:
             return
 
