@@ -4,10 +4,10 @@ from pathlib import Path
 from delogger import Delogger, debuglog
 
 _dp = (r'\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} '
-       '[^\s]+ [^\s]+ [^\s]+ \d{1,5} "%s"')
+       r'[^\s]+ [^\s]+ [^\s]+ \d{1,5} "%s"')
 _cp = r'\x1b\[\d{1,3}m\w+\s?\x1b\[0m %s\x1b\[0m'
 _lp = (r'\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} '
-       '[^\s]+\s? [^\s]+ [^\s]+ \d{1,5} "%s"')
+       r'[^\s]+\s? [^\s]+ [^\s]+ \d{1,5} "%s"')
 
 
 def _normal_stream_logger(logger, capsys):
@@ -118,10 +118,10 @@ def test_delogger_class_debug(capsys):
 
         captured = capsys.readouterr()
 
-        streams = [('START test_delogger_class_debug.<locals>.test'
-                    ' args=\(\'test\', \'args\'\) kwargs={}'),
-                   ('END test_delogger_class_debug.<locals>.test'
-                    ' return=\(\'test\', \'args\'\)')]
+        streams = [(r'START test_delogger_class_debug.<locals>.test'
+                    r' args=\(\'test\', \'args\'\) kwargs={}'),
+                   (r'END test_delogger_class_debug.<locals>.test'
+                    r' return=\(\'test\', \'args\'\)')]
         streams = [_dp % stream for stream in streams]
         errors = captured.err.split('\n')[-3:-1]
         for err, stream in zip(errors, streams):

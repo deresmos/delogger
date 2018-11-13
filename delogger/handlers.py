@@ -17,7 +17,7 @@ class _FILE_PATH(object):
 
     def __eq__(self, other):
         if not isinstance(other, _FILE_PATH):
-            raise NotImplemented
+            raise NotImplementedError
         eq = False
         eq = other.dirname == self.dirname
 

@@ -36,7 +36,7 @@ def test_url_env_error():
     try:
         SlackHandler(channel='#dummy')
 
-    except ValueError as e:
+    except ValueError:
         pass
     else:
         assert False
@@ -76,7 +76,7 @@ def test_token_error():
     try:
         SlackHandler()
 
-    except ValueError as e:
+    except ValueError:
         pass
     else:
         assert False
