@@ -49,7 +49,7 @@ class RunRotatingHandler(FileHandler):
         if not path_parent.is_dir():
             os.makedirs(path_parent)
 
-        super()._open()
+        return super()._open()
 
     def _load_file_path(self, dirname, fmt, backup_count):
         # Set the logfile name
