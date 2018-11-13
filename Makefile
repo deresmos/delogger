@@ -7,7 +7,7 @@ install-dev:
 test:
 	py.test --rootdir=tests
 	@echo
-	@make -iks check-flake8-results
+	@make -ks check-flake8-results
 
 test-detail:
 	py.test -v --rootdir=tests
@@ -22,4 +22,6 @@ check-flake8-results:
 		echo -e '-> \e[32mOK\e[m'; \
 	else \
 		echo -e '-> \e[31mNG\e[m'; \
+		echo; \
+		exit 1; \
 	fi
