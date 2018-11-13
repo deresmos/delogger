@@ -12,7 +12,7 @@ setup(
     include_package_data=False,
     keywords=['logging', 'Logger'],
     license='MIT License',
-    install_requires=['requests'],
+    install_requires=['requests', 'colorlog'],
     extras_require={
         'develop': [
             'flake8',
