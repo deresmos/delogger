@@ -74,16 +74,16 @@ def test_delogger_normal(capsys):
 
     _normal_stream_logger(logger, capsys)
 
-    assert not Path(delogger.log_dir).is_dir()
+    assert not Path(delogger.dirpath).is_dir()
 
 
 def test_delogger_color(capsys):
-    delogger = Delogger(name='color', color_log=True)
+    delogger = Delogger(name='color', color=True)
     logger = delogger.logger
 
     _color_stream_logger(logger, capsys)
 
-    assert not Path(delogger.log_dir).is_dir()
+    assert not Path(delogger.dirpath).is_dir()
 
 
 def test_delogger_debug(capsys):
@@ -98,7 +98,7 @@ def test_delogger_debug(capsys):
 
     _debug_stream_logger(logger, capsys)
 
-    assert not Path(delogger.log_dir).is_dir()
+    assert not Path(delogger.dirpath).is_dir()
 
 
 def test_delogger_class_debug(capsys):
@@ -127,19 +127,19 @@ def test_delogger_class_debug(capsys):
         for err, stream in zip(errors, streams):
             assert re.findall(stream, err)
 
-            assert not Path(delogger.log_dir).is_dir()
+            assert not Path(delogger.dirpath).is_dir()
 
     finally:
         Delogger.debug_mode = False
 
 
 def test_delogger_savelog(capsys):
-    delogger = Delogger(name='savelog', save_log=True)
+    delogger = Delogger(name='savelog', save=True)
     logger = delogger.logger
 
     _normal_stream_logger(logger, capsys)
 
-    logpath = delogger.log_dir
+    logpath = delogger.dirpath
     assert Path(logpath).is_dir()
     assert len(list(Path(logpath).iterdir())) == 1
 
@@ -147,12 +147,12 @@ def test_delogger_savelog(capsys):
 
 
 def test_delogger_savelog_debug(capsys):
-    delogger = Delogger(name='savelog_debug', save_log=True, debug_mode=True)
+    delogger = Delogger(name='savelog_debug', save=True, debug_mode=True)
     logger = delogger.logger
 
     _debug_stream_logger(logger, capsys)
 
-    logpath = delogger.log_dir
+    logpath = delogger.dirpath
     assert Path(logpath).is_dir()
     assert len(list(Path(logpath).iterdir())) == 1
 

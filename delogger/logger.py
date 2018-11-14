@@ -14,11 +14,11 @@ class DeloggerSetting(object):
     date_fmt = '%Y-%m-%d %H:%M:%S'
     stream_level = INFO
     file_level = DEBUG
-    save_log = False
-    color_log = False
+    save = False
+    color = False
     debug_mode = False
     default = True
-    log_dir = 'log'
+    dirpath = 'log'
 
     file_fmt = ('%(asctime)s %(levelname)-5s %(name)s %(filename)s '
                 '%(lineno)d "%(message)s"')
@@ -45,18 +45,18 @@ class DeloggerSetting(object):
     }
 
     def __init__(self,
-                 save_log=None,
+                 save=None,
                  logdir=None,
                  debug_mode=None,
-                 color_log=None,
+                 color=None,
                  stream_level=None,
                  file_level=None,
                  date_fmt=None,
                  default=None):
-        self.init_attr('save_log', save_log)
-        self.init_attr('log_dir', logdir)
+        self.init_attr('save', save)
+        self.init_attr('dirpath', logdir)
         self.init_attr('debug_mode', debug_mode)
-        self.init_attr('color_log', color_log)
+        self.init_attr('color', color)
         self.init_attr('stream_level', stream_level)
         self.init_attr('file_level', file_level)
         self.init_attr('dete_fmt', date_fmt)
@@ -80,7 +80,7 @@ class DeloggerSetting(object):
             self.stream_level = DEBUG
         else:
             index = self.FMT_INFO
-        fmts = self.stream_color_fmts if self.color_log else self.stream_fmts
+        fmts = self.stream_color_fmts if self.color else self.stream_fmts
 
         fmt = fmts[index]
 
@@ -138,11 +138,10 @@ class Delogger(DeloggerSetting):
         self._logger.setLevel(DEBUG)
 
         fmt = self.stream_fmt
-        self.add_stream_handler(
-            self.stream_level, fmt=fmt, color_log=self.color_log)
+        self.add_stream_handler(self.stream_level, fmt=fmt, color=self.color)
 
-        if self.save_log:
-            rrh = RunRotatingHandler(self.log_dir)
+        if self.save:
+            rrh = RunRotatingHandler(self.dirpath)
             self.add_handler(rrh, DEBUG, fmt=self.file_fmt)
 
     def add_handler(self,
@@ -167,13 +166,13 @@ class Delogger(DeloggerSetting):
                            level,
                            *,
                            check_level=False,
-                           color_log=False,
+                           color=False,
                            hdlr=None,
                            **kwargs):
         if check_level and self.stream_level <= level:
             return
 
-        if color_log:
+        if color:
             fmt = ColoredFormatter(
                 kwargs.get('fmt', None),
                 log_colors=self.log_colors,
