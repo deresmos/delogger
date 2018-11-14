@@ -62,6 +62,9 @@ class DeloggerSetting(object):
         self.init_attr('dete_fmt', date_fmt)
         self.init_attr('default', default)
 
+        if self.debug_mode and self.stream_level == INFO:
+            self.stream_level = DEBUG
+
         addLevelName(WARNING, 'WARN')
         addLevelName(CRITICAL, 'CRIT')
 
@@ -75,16 +78,18 @@ class DeloggerSetting(object):
 
     @property
     def stream_fmt(self):
-        if self.debug_mode:
+        return self._stream_fmt()
+
+    def _stream_fmt(self, debug_mode=False):
+        debug_mode = debug_mode or self.debug_mode
+
+        if debug_mode:
             index = self.FMT_DEBUG
-            self.stream_level = DEBUG
         else:
             index = self.FMT_INFO
         fmts = self.stream_color_fmts if self.color else self.stream_fmts
 
-        fmt = fmts[index]
-
-        return fmt
+        return fmts[index]
 
 
 class Delogger(DeloggerSetting):
