@@ -142,8 +142,17 @@ class Delogger(DeloggerSetting):
     def default_logger(self):
         self._logger.setLevel(DEBUG)
 
-        fmt = self.stream_fmt
-        self.add_stream_handler(self.stream_level, fmt=fmt, color=self.color)
+        if not self.debug_mode and self.stream_level <= INFO:
+            fmt = self.stream_fmt
+            self.add_stream_handler(
+                self.stream_level, fmt=fmt, color=self.color, only_level=True)
+            fmt = self._stream_fmt(debug_mode=True)
+            self.add_stream_handler(WARNING, fmt=fmt, color=self.color)
+
+        else:
+            fmt = self.stream_fmt
+            self.add_stream_handler(
+                self.stream_level, fmt=fmt, color=self.color)
 
         if self.save:
             rrh = RunRotatingHandler(self.dirpath)

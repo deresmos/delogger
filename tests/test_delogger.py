@@ -18,8 +18,10 @@ def _normal_stream_logger(logger, capsys):
     logger.error('error')
 
     captured = capsys.readouterr()
-    streams = '\n'.join(['info', 'warning', 'error', ''])
-    assert captured.err == streams
+    streams = ['info', _dp % 'warning', _dp % 'error']
+    errors = captured.err.split('\n')
+    for err, stream in zip(errors, streams):
+        assert re.findall(stream, err)
 
 
 def _debug_stream_logger(logger, capsys):
