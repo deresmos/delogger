@@ -3,8 +3,7 @@ from pathlib import Path
 
 from delogger import Delogger
 
-_dp = (r'\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} '
-       r'[^\s]+ [^\s]+ [^\s]+ \d{1,5} "%s"')
+_dp = (r'[^\s]+\s? \[[^\s]+ [^\s]+ [^\s]+ \d{1,5}\] %s')
 _cp = r'\x1b\[\d{1,3}m\w+\s?\x1b\[0m %s\x1b\[0m'
 _lp = (r'\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} '
        r'[^\s]+\s? [^\s]+ [^\s]+ \d{1,5} "%s"')

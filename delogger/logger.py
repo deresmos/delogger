@@ -25,8 +25,8 @@ class DeloggerSetting(object):
 
     stream_fmts = [
         '%(message)s',
-        ('%(asctime)s %(levelname)s %(filename)s %(name)s '
-         '%(lineno)s "%(message)s"'),
+        ('%(levelname)-5s [%(name)s %(filename)s '
+         '%(funcName)s %(lineno)d] %(message)s'),
     ]
     stream_color_fmts = [
         '%(log_color)s%(levelname)-5s%(reset)s %(message)s',
