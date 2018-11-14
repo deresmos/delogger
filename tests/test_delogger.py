@@ -1,7 +1,7 @@
 import re
 from pathlib import Path
 
-from delogger import Delogger, debuglog
+from delogger import Delogger
 
 _dp = (r'\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} '
        r'[^\s]+ [^\s]+ [^\s]+ \d{1,5} "%s"')
@@ -66,7 +66,7 @@ def test_delogger_normal(capsys):
     delogger = Delogger()
     logger = delogger.logger
 
-    @debuglog
+    @Delogger.debuglog
     def test(*args):
         return args
 
@@ -90,7 +90,7 @@ def test_delogger_debug(capsys):
     delogger = Delogger('debug', debug_mode=True)
     logger = delogger.logger
 
-    @debuglog
+    @Delogger.debuglog
     def test(*args):
         return args
 
@@ -110,7 +110,7 @@ def test_delogger_class_debug(capsys):
 
         _debug_stream_logger(logger, capsys)
 
-        @debuglog
+        @Delogger.debuglog
         def test(*args):
             return args
 

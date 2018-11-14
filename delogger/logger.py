@@ -111,6 +111,29 @@ class Delogger(DeloggerSetting):
 
         return self._logger
 
+    @classmethod
+    def debuglog(cls, func):
+        logger = cls(name='_debugger').logger
+
+        def wrapper(*args, **kwargs):
+            msg = 'START {} args={} kwargs={}'.format(
+                func.__qualname__,
+                args,
+                kwargs,
+            )
+            logger.debug(msg)
+
+            rtn = func(*args, **kwargs)
+            msg = 'END {} return={}'.format(
+                func.__qualname__,
+                rtn,
+            )
+            logger.debug(msg)
+
+            return rtn
+
+        return wrapper
+
     def default_logger(self):
         self._logger.setLevel(DEBUG)
 
@@ -202,35 +225,3 @@ class DeloggerQueue(Delogger):
     def listener_stop(self):
         if DeloggerQueue._listener:
             DeloggerQueue._listener.stop()
-
-
-def _wrapper(func, logger, *args, **kwargs):
-    msg = 'START {} args={} kwargs={}'.format(
-        func.__qualname__,
-        args,
-        kwargs,
-    )
-    logger.debug(msg)
-    rtn = func(*args, **kwargs)
-    msg = 'END {} return={}'.format(
-        func.__qualname__,
-        rtn,
-    )
-    logger.debug(msg)
-    return rtn
-
-
-def debuglog(func):
-    if not Delogger.debug_mode:
-        return lambda *args, **kwargs: func(*args, **kwargs)
-
-    logger = Delogger(name='_debugger').logger
-    return lambda *args, **kwargs: _wrapper(func, logger, *args, **kwargs)
-
-
-def qdebuglog(func):
-    if not DeloggerQueue.debug_mode:
-        return lambda *args, **kwargs: func(*args, **kwargs)
-
-    logger = DeloggerQueue(name='_debugger').logger
-    return lambda *args, **kwargs: _wrapper(func, logger, *args, **kwargs)

@@ -1,7 +1,6 @@
 from .filters import OnlyFilter
 from .handlers import RunRotatingHandler, SlackHandler
-from .logger import (Delogger, DeloggerQueue, DeloggerSetting, debuglog,
-                     qdebuglog)
+from .logger import Delogger, DeloggerQueue, DeloggerSetting
 
 __all__ = (
     'OnlyFilter',
@@ -10,6 +9,4 @@ __all__ = (
     'Delogger',
     'DeloggerQueue',
     'DeloggerSetting',
-    'debuglog',
-    'qdebuglog',
 )
