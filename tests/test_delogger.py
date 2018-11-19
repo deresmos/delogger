@@ -3,13 +3,15 @@ from pathlib import Path
 
 from delogger import Delogger
 
-_dp = (r'[^\s]+\s? \[[^\s]+ [^\s]+ [^\s]+ \d{1,5}\] %s')
+_dp = (r'[^\s]+\s? \[[^\s]+ File "[^\s]+", line \d{1,5}, in [^\s]+\] %s')
 _cp = r'\x1b\[\d{1,3}m\w+\s?\x1b\[0m %s\x1b\[0m'
+_cdp = (r'\x1b\[\d{1,3}m\w+\s?\x1b\[0m '
+        r'\[[^\s]+ File "[^\s]+", line \d{1,5}, in [^\s]+\] %s\x1b\[0m')
 _lp = (r'\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} '
        r'[^\s]+\s? [^\s]+ [^\s]+ \d{1,5} "%s"')
 
 
-def _normal_stream_logger(logger, capsys):
+def _normal_stream_logger(logger, capsys, is_color=False):
     # logger stream test
     logger.debug('debug')
     logger.info('info')
@@ -17,13 +19,16 @@ def _normal_stream_logger(logger, capsys):
     logger.error('error')
 
     captured = capsys.readouterr()
-    streams = ['info', _dp % 'warning', _dp % 'error']
+    if is_color:
+        streams = [_cp % 'info', _cdp % 'warning', _cdp % 'error']
+    else:
+        streams = ['info', _dp % 'warning', _dp % 'error']
     errors = captured.err.split('\n')
     for err, stream in zip(errors, streams):
         assert re.findall(stream, err)
 
 
-def _debug_stream_logger(logger, capsys):
+def _debug_stream_logger(logger, capsys, is_color=False):
     # logger stream test
     logger.debug('debug')
     logger.info('info')
@@ -31,23 +36,9 @@ def _debug_stream_logger(logger, capsys):
     logger.error('error')
     captured = capsys.readouterr()
 
+    _p = _cdp if is_color else _dp
     streams = ['debug', 'info', 'warning', 'error']
-    streams = [_dp % stream for stream in streams]
-    errors = captured.err.split('\n')
-    for err, stream in zip(errors, streams):
-        assert re.findall(stream, err)
-
-
-def _color_stream_logger(logger, capsys):
-    # logger stream test
-    logger.debug('debug')
-    logger.info('info')
-    logger.warning('warning')
-    logger.error('error')
-    captured = capsys.readouterr()
-
-    streams = ['info', 'warning', 'error']
-    streams = [_cp % stream for stream in streams]
+    streams = [_p % stream for stream in streams]
     errors = captured.err.split('\n')
     for err, stream in zip(errors, streams):
         assert re.findall(stream, err)
@@ -82,7 +73,16 @@ def test_delogger_color(capsys):
     delogger = Delogger(name='color', color=True)
     logger = delogger.logger
 
-    _color_stream_logger(logger, capsys)
+    _normal_stream_logger(logger, capsys, is_color=True)
+
+    assert not Path(delogger.dirpath).is_dir()
+
+
+def test_delogger_color_debug(capsys):
+    delogger = Delogger(name='color_debug', color=True, debug_mode=True)
+    logger = delogger.logger
+
+    _debug_stream_logger(logger, capsys, is_color=True)
 
     assert not Path(delogger.dirpath).is_dir()
 
