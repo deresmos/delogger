@@ -4,6 +4,10 @@ install:
 install-dev:
 	pip install -e '.[develop]'
 
+upload:
+	python setup.py bdist_wheel
+	twine upload dist/*
+
 test:
 	py.test --rootdir=tests
 	@echo
