@@ -1,7 +1,5 @@
 from setuptools import find_packages, setup
 
-__author__ = 'deresmos'
-
 setup(
     name='delogger',
     version='0.0.1',
