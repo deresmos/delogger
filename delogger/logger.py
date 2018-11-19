@@ -14,9 +14,9 @@ class DeloggerSetting(object):
     date_fmt = '%Y-%m-%d %H:%M:%S'
     stream_level = INFO
     file_level = DEBUG
-    save = False
-    color = False
-    debug_mode = False
+    is_save_file = False
+    is_color_stream = False
+    is_debug_stream = False
     default = True
     dirpath = 'log'
 
@@ -46,24 +46,24 @@ class DeloggerSetting(object):
     }
 
     def __init__(self,
-                 save=None,
+                 is_save_file=None,
                  logdir=None,
-                 debug_mode=None,
-                 color=None,
+                 is_debug_stream=None,
+                 is_color_stream=None,
                  stream_level=None,
                  file_level=None,
                  date_fmt=None,
                  default=None):
-        self.init_attr('save', save)
+        self.init_attr('is_save_file', is_save_file)
         self.init_attr('dirpath', logdir)
-        self.init_attr('debug_mode', debug_mode)
-        self.init_attr('color', color)
+        self.init_attr('is_debug_stream', is_debug_stream)
+        self.init_attr('is_color_stream', is_color_stream)
         self.init_attr('stream_level', stream_level)
         self.init_attr('file_level', file_level)
         self.init_attr('dete_fmt', date_fmt)
         self.init_attr('default', default)
 
-        if self.debug_mode and self.stream_level == INFO:
+        if self.is_debug_stream and self.stream_level == INFO:
             self.stream_level = DEBUG
 
         addLevelName(WARNING, 'WARN')
@@ -81,14 +81,18 @@ class DeloggerSetting(object):
     def stream_fmt(self):
         return self._stream_fmt()
 
-    def _stream_fmt(self, debug_mode=False):
-        debug_mode = debug_mode or self.debug_mode
+    def _stream_fmt(self, is_debug_stream=False):
+        is_debug_stream = is_debug_stream or self.is_debug_stream
 
-        if debug_mode:
+        if is_debug_stream:
             index = self.FMT_DEBUG
         else:
             index = self.FMT_INFO
-        fmts = self.stream_color_fmts if self.color else self.stream_fmts
+
+        if self.is_color_stream:
+            fmts = self.stream_color_fmts
+        else:
+            fmts = self.stream_fmts
 
         return fmts[index]
 
@@ -143,19 +147,25 @@ class Delogger(DeloggerSetting):
     def default_logger(self):
         self._logger.setLevel(DEBUG)
 
-        if not self.debug_mode and self.stream_level <= INFO:
+        if not self.is_debug_stream and self.stream_level <= INFO:
             fmt = self.stream_fmt
             self.add_stream_handler(
-                self.stream_level, fmt=fmt, color=self.color, only_level=True)
-            fmt = self._stream_fmt(debug_mode=True)
-            self.add_stream_handler(WARNING, fmt=fmt, color=self.color)
+                self.stream_level,
+                fmt=fmt,
+                is_color_stream=self.is_color_stream,
+                only_level=True)
+            fmt = self._stream_fmt(is_debug_stream=True)
+            self.add_stream_handler(
+                WARNING, fmt=fmt, is_color_stream=self.is_color_stream)
 
         else:
             fmt = self.stream_fmt
             self.add_stream_handler(
-                self.stream_level, fmt=fmt, color=self.color)
+                self.stream_level,
+                fmt=fmt,
+                is_color_stream=self.is_color_stream)
 
-        if self.save:
+        if self.is_save_file:
             rrh = RunRotatingHandler(self.dirpath)
             self.add_handler(rrh, DEBUG, fmt=self.file_fmt)
 
@@ -181,13 +191,13 @@ class Delogger(DeloggerSetting):
                            level,
                            *,
                            check_level=False,
-                           color=False,
+                           is_color_stream=False,
                            hdlr=None,
                            **kwargs):
         if check_level and self.stream_level <= level:
             return
 
-        if color:
+        if is_color_stream:
             fmt = ColoredFormatter(
                 kwargs.get('fmt', None),
                 log_colors=self.log_colors,

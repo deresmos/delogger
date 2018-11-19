@@ -70,7 +70,7 @@ def test_delogger_normal(capsys):
 
 
 def test_delogger_color(capsys):
-    delogger = Delogger(name='color', color=True)
+    delogger = Delogger(name='color', is_color_stream=True)
     logger = delogger.logger
 
     _normal_stream_logger(logger, capsys, is_color=True)
@@ -79,7 +79,8 @@ def test_delogger_color(capsys):
 
 
 def test_delogger_color_debug(capsys):
-    delogger = Delogger(name='color_debug', color=True, debug_mode=True)
+    delogger = Delogger(
+        name='color_debug', is_color_stream=True, is_debug_stream=True)
     logger = delogger.logger
 
     _debug_stream_logger(logger, capsys, is_color=True)
@@ -88,7 +89,7 @@ def test_delogger_color_debug(capsys):
 
 
 def test_delogger_debug(capsys):
-    delogger = Delogger('debug', debug_mode=True)
+    delogger = Delogger('debug', is_debug_stream=True)
     logger = delogger.logger
 
     @Delogger.debuglog
@@ -103,7 +104,7 @@ def test_delogger_debug(capsys):
 
 
 def test_delogger_class_debug(capsys):
-    Delogger.debug_mode = True
+    Delogger.is_debug_stream = True
 
     try:
         delogger = Delogger('debug_class')
@@ -131,11 +132,11 @@ def test_delogger_class_debug(capsys):
             assert not Path(delogger.dirpath).is_dir()
 
     finally:
-        Delogger.debug_mode = False
+        Delogger.is_debug_stream = False
 
 
 def test_delogger_savelog(capsys):
-    delogger = Delogger(name='savelog', save=True)
+    delogger = Delogger(name='savelog', is_save_file=True)
     logger = delogger.logger
 
     _normal_stream_logger(logger, capsys)
@@ -148,7 +149,8 @@ def test_delogger_savelog(capsys):
 
 
 def test_delogger_savelog_debug(capsys):
-    delogger = Delogger(name='savelog_debug', save=True, debug_mode=True)
+    delogger = Delogger(
+        name='savelog_debug', is_save_file=True, is_debug_stream=True)
     logger = delogger.logger
 
     _debug_stream_logger(logger, capsys)
