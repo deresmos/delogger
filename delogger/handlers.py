@@ -9,14 +9,14 @@ from pathlib import Path
 import requests
 
 
-class _FILE_PATH(object):
+class _LOG_FILE(object):
     def __init__(self, dirname, basename):
         self.dirname = dirname
         self.basename = basename
         self.path = dt.today().strftime(str(Path(dirname) / basename))
 
     def __eq__(self, other):
-        if not isinstance(other, _FILE_PATH):
+        if not isinstance(other, _LOG_FILE):
             raise NotImplementedError
         eq = False
         eq = other.dirname == self.dirname
@@ -53,7 +53,7 @@ class RunRotatingHandler(FileHandler):
 
     def _load_file_path(self, dirname, fmt, backup_count):
         # Set the logfile name
-        path = _FILE_PATH(dirname, fmt)
+        path = _LOG_FILE(dirname, fmt)
         filepath = Path(str(path))
 
         # If already same dirname, return the filepath
