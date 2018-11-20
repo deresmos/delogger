@@ -10,12 +10,31 @@ import requests
 
 
 class _LOG_FILE(object):
+    """Set the path of the log file.
+
+    Args:
+        dirname (str): Directory path.
+        basename (str): Filename like date_string.
+
+    Attributes:
+        dirname (str): Directory path.
+        basename (str): Filename like date_string.
+        path (str): Log file path.
+
+    """
+
     def __init__(self, dirname, basename):
         self.dirname = dirname
         self.basename = basename
         self.path = dt.today().strftime(str(Path(dirname) / basename))
 
     def __eq__(self, other):
+        """Comparison for RunRotatingHandler.
+
+        Returns:
+            True if dirname is the same, False otherwise.
+
+        """
         if not isinstance(other, _LOG_FILE):
             raise NotImplementedError
         eq = False
@@ -31,10 +50,26 @@ class _LOG_FILE(object):
 
 
 class RunRotatingHandler(FileHandler):
+    """This handler leaves a log file for each execution.
+
+    Args:
+        dirname (str): Directory path.
+        backup_count (int): Leave logs up to the designated generation.
+        fmt (str): Filename like date_string.
+
+    Attributes:
+        filepath (str): File path determined only once at runtime.
+
+    """
+
     LOG_FMT = '%Y%m%d_%H%M%S.log'
+    """Default value of log format."""
+
     BACKUP_COUNT = 5
+    """Default value of backup count."""
 
     _files = []
+    """This list saving _LOG_FILE of output log file."""
 
     def __init__(self, dirname, backup_count=None, fmt=None, **kwargs):
         fmt = fmt or self.LOG_FMT
@@ -45,6 +80,13 @@ class RunRotatingHandler(FileHandler):
         super().__init__(self.filepath, **kwargs)
 
     def _open(self):
+        """It is executed at log output.
+
+        If there is no directory, it will be created automatically.
+
+        """
+
+        # If there is no save destination directory, the directory is created.
         path_parent = Path(self.filepath).parent
         if not path_parent.is_dir():
             os.makedirs(str(path_parent))
@@ -52,28 +94,66 @@ class RunRotatingHandler(FileHandler):
         return super()._open()
 
     def _load_file_path(self, dirname, fmt, backup_count):
-        # Set the logfile name
+        """Get the file path of the log output destination.
+
+        For each directory, determine the log file path only once at runtime.
+
+        Args:
+            dirname (str): Directory path.
+            fmt (str): Filename like date_string.
+            backup_count (int): Leave logs up to the designated generation.
+
+        """
+
+        # Set the logfile name.
         path = _LOG_FILE(dirname, fmt)
         filepath = Path(str(path))
 
-        # If already same dirname, return the filepath
+        # If already same dirname, return the filepath.
         for fpath in RunRotatingHandler._files:
             if fpath == path:
                 return str(fpath)
 
-        # Get file list matching format
+        # TODO: Get a file list that matches the format of fmt.
         filenames = sorted(filepath.parent.glob('*'))
 
         # Delete the old file and set a new file path
         if len(filenames) >= backup_count:
             os.remove(filenames[0])
-
         RunRotatingHandler._files.append(path)
+
         return str(path)
 
 
 class SlackHandler(Handler):
+    """Handler to send to Slack.
+
+    Args:
+        url (str): slack webhook url.
+        channel (str): Slack channel to be transmitted.
+        as_user (bool): Whether to send as a user.
+        token (str): slack token.
+
+        emoji (str): Emoji on sending.
+        username (str): Username on sending.
+        emojis (dict): Emojis on sending.
+        usernames (dict): Usernames on sending.
+
+    Attributes:
+        url (str): slack webhook url.
+        channel (str): Slack channel to be transmitted.
+        as_user (bool): Whether to send as a user.
+        token (str): slack token.
+
+        emoji (str): Emoji on sending.
+        username (str): Username on sending.
+        emojis (dict): Emojis on sending.
+        usernames (dict): Usernames on sending.
+
+    """
+
     TIMEOUT = 20
+    """default timeout for requests."""
 
     EMOJIS = {
         NOTSET: ':loudspeaker:',
@@ -83,6 +163,7 @@ class SlackHandler(Handler):
         ERROR: ':sob:',
         CRITICAL: ':scream:'
     }
+    """Default value of emojis."""
 
     USERNAMES = {
         NOTSET: 'Notset',
@@ -92,11 +173,16 @@ class SlackHandler(Handler):
         ERROR: 'Erorr',
         CRITICAL: 'Critical',
     }
+    """Default value of usernames."""
 
     URL_ENV = 'DELOGGER_SLACK_URL'
+    """Environment variable name of slack webhook url."""
+
     TOKEN_ENV = 'DELOGGER_TOKEN'
+    """Environment variable name of slack token."""
 
     POST_MESSAGE_URL = 'https://slack.com/api/chat.postMessage'
+    """Execution when using token API."""
 
     def __init__(self,
                  url=None,
@@ -129,6 +215,8 @@ class SlackHandler(Handler):
         self.username = username
 
     def _makeContent(self, levelno):
+        """Get slack's payload."""
+
         content = {}
 
         if self.emoji:
@@ -155,6 +243,8 @@ class SlackHandler(Handler):
         return content
 
     def makeContent(self, record):
+        """Get slack's payload."""
+
         content = {
             'text': self.format(record),
         }
@@ -163,6 +253,8 @@ class SlackHandler(Handler):
         return content
 
     def emit(self, record):
+        """Send a message to Slack."""
+
         try:
             if not self.is_emit:
                 return
