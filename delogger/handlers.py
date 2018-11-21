@@ -1,4 +1,5 @@
 import os
+import re
 from datetime import datetime as dt
 from json import dumps as json_dumps
 from logging import (CRITICAL, DEBUG, ERROR, INFO, NOTSET, WARNING,
@@ -71,6 +72,11 @@ class RunRotatingHandler(FileHandler):
     _files = []
     """This list saving _LOG_FILE of output log file."""
 
+    _LOG_FMT_RE = {
+        r'\d{4}': ['%Y'],
+        r'\d{2}': ['%m', '%d', '%H', '%M', '%S'],
+    }
+
     def __init__(self, dirname, backup_count=None, fmt=None, **kwargs):
         fmt = fmt or self.LOG_FMT
         backup_count = backup_count or self.BACKUP_COUNT
@@ -114,8 +120,8 @@ class RunRotatingHandler(FileHandler):
             if fpath == path:
                 return str(fpath)
 
-        # TODO: Get a file list that matches the format of fmt.
-        filenames = sorted(filepath.parent.glob('*'))
+        # Get a file list that matches the format of fmt.
+        filenames = self._get_match_files(filepath.parent, fmt)
 
         # Delete the old file and set a new file path
         if len(filenames) >= backup_count:
@@ -123,6 +129,17 @@ class RunRotatingHandler(FileHandler):
         RunRotatingHandler._files.append(path)
 
         return str(path)
+
+    def _get_match_files(self, dirpath, fmt):
+        fmt_ = fmt
+        for patter, date_strs in self._LOG_FMT_RE.items():
+            for date_str in date_strs:
+                fmt_ = fmt_.replace(date_str, patter)
+
+        repa = re.compile(fmt_)
+        files = [x for x in Path(dirpath).glob('*') if repa.search(str(x))]
+
+        return files
 
 
 class SlackHandler(Handler):
