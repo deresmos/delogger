@@ -21,6 +21,24 @@ def test_normal():
     logger.debug('normal test')
 
 
+def test_slack_handler_dup():
+    logger = logging.getLogger('slack_dup')
+    logger.setLevel(logging.DEBUG)
+
+    slack_handler = SlackHandler(url=dummy_url, channel='#dummy')
+    slack_handler.setLevel(logging.DEBUG)
+    logger.addHandler(slack_handler)
+
+    slack_handler = SlackHandler(url=dummy_url, channel='#dummy')
+    slack_handler.setLevel(logging.DEBUG)
+    logger.addHandler(slack_handler)
+
+    assert slack_handler.url != SlackHandler.POST_MESSAGE_URL
+    assert len(logger.handlers) == 1
+
+    logger.debug('slack handler duplication')
+
+
 def test_url_env():
     url_env = SlackHandler.URL_ENV
     os.environ[url_env] = dummy_url

@@ -284,3 +284,26 @@ class SlackHandler(Handler):
 
         except Exception:
             self.handleError(record)
+
+    def __eq__(self, other):
+        """Comparison for SlackHandler.
+
+        Returns:
+            True if token, url, level and channel is the same, False otherwise.
+
+        """
+
+        if not isinstance(other, SlackHandler):
+            if isinstance(other, Handler):
+                return False
+
+            raise NotImplementedError
+
+        eq = False
+        if other.token == self.token \
+                and other.url == self.url \
+                and other.level == self.level \
+                and other.channel == self.channel:
+            eq = True
+
+        return eq
