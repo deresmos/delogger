@@ -23,7 +23,7 @@ check-flake8: FORCE
 
 check-flake8-results: FORCE
 	@echo '--- flake8 check ---'
-	@find -type f -name '*.py' | flake8; \
+	@flake8; \
 	if [ $$? = 0 ]; then \
 		echo -e '-> \e[32mOK\e[m'; \
 	else \
