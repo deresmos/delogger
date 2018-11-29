@@ -231,26 +231,27 @@ class SlackHandler(Handler):
         self.emoji = emoji
         self.username = username
 
-    def _makeContent(self, levelno):
+    def _makeContent(self, levelno, content=None):
         """Get slack's payload."""
 
-        content = {}
-
-        if self.emoji:
-            content['icon_emoji'] = self.emoji
-        elif self.emojis:
-            content['icon_emoji'] = self.emojis[levelno]
-
-        if self.username:
-            content['username'] = self.username
-        elif self.usernames:
-            content['username'] = self.usernames[levelno]
-
-        if self.channel:
-            content['channel'] = self.channel
+        content = content or {}
 
         if self.as_user:
             content['as_user'] = self.as_user
+
+        else:
+            if self.emoji:
+                content['icon_emoji'] = self.emoji
+            elif self.emojis:
+                content['icon_emoji'] = self.emojis[levelno]
+
+            if self.username:
+                content['username'] = self.username
+            elif self.usernames:
+                content['username'] = self.usernames[levelno]
+
+        if self.channel:
+            content['channel'] = self.channel
 
         if self.token:
             content['token'] = self.token
@@ -265,7 +266,7 @@ class SlackHandler(Handler):
         content = {
             'text': self.format(record),
         }
-        content.update(self._makeContent(record.levelno))
+        content = self._makeContent(record.levelno, content=content)
 
         return content
 
