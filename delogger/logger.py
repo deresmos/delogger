@@ -1,7 +1,7 @@
 import atexit
 from copy import copy
-from logging import (CRITICAL, DEBUG, INFO, WARNING, Formatter, StreamHandler,
-                     addLevelName, getLogger)
+from logging import (CRITICAL, DEBUG, ERROR, INFO, WARNING, Formatter,
+                     StreamHandler, addLevelName, getLogger)
 from logging.handlers import QueueHandler, QueueListener
 from queue import Queue
 
@@ -54,6 +54,9 @@ class DeloggerSetting(object):
     dirpath = 'log'
     """Default value of log output destination directory."""
 
+    backup_count = 5
+    """Default value of RunRotatingHandler backup count."""
+
     file_fmt = ('%(asctime)s %(levelname)-5s %(name)s %(filename)s '
                 '%(lineno)d "%(message)s"')
     """Default value of file logger fmt."""
@@ -90,6 +93,7 @@ class DeloggerSetting(object):
     def __init__(self,
                  is_save_file=None,
                  logdir=None,
+                 backup_count=None,
                  is_debug_stream=None,
                  is_color_stream=None,
                  stream_level=None,
@@ -98,6 +102,7 @@ class DeloggerSetting(object):
                  default=None):
         self.init_attr('is_save_file', is_save_file)
         self.init_attr('dirpath', logdir)
+        self.init_attr('backup_count', backup_count)
         self.init_attr('is_debug_stream', is_debug_stream)
         self.init_attr('is_color_stream', is_color_stream)
         self.init_attr('stream_level', stream_level)
@@ -170,6 +175,12 @@ class Delogger(DeloggerSetting):
         _is_new_logger (bool): Whether it is a first generation logger.
 
     """
+
+    DEBUG = DEBUG
+    INFO = INFO
+    WARNING = WARNING
+    ERROR = ERROR
+    CRITICAL = CRITICAL
 
     def __init__(self, name=None, parent=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -254,7 +265,8 @@ class Delogger(DeloggerSetting):
         # If there is a log save flag, the log file handler is set.
 
         if self.is_save_file:
-            rrh = RunRotatingHandler(self.dirpath)
+            rrh = RunRotatingHandler(
+                self.dirpath, backup_count=self.backup_count)
             self.add_handler(rrh, DEBUG, fmt=self.file_fmt)
 
     def add_handler(self,
