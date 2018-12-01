@@ -39,7 +39,8 @@ class _LOG_FILE(object):
         if not isinstance(other, _LOG_FILE):
             raise NotImplementedError
         eq = False
-        eq = other.dirname == self.dirname
+        eq = (other.dirname == self.dirname) \
+            and (other.basename == self.basename)
 
         return eq
 
