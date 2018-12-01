@@ -6,7 +6,6 @@ from logging.handlers import QueueHandler, QueueListener
 from queue import Queue
 
 from colorlog import ColoredFormatter
-
 from delogger import OnlyFilter, RunRotatingHandler
 
 
@@ -57,6 +56,9 @@ class DeloggerSetting(object):
     backup_count = 5
     """Default value of RunRotatingHandler backup count."""
 
+    filename = None
+    """Default value of RunRotatingHandler filename (fmt)."""
+
     file_fmt = ('%(asctime)s %(levelname)-5s %(name)s %(filename)s '
                 '%(lineno)d "%(message)s"')
     """Default value of file logger fmt."""
@@ -94,6 +96,7 @@ class DeloggerSetting(object):
                  is_save_file=None,
                  logdir=None,
                  backup_count=None,
+                 filename=None,
                  is_debug_stream=None,
                  is_color_stream=None,
                  stream_level=None,
@@ -103,6 +106,7 @@ class DeloggerSetting(object):
         self.init_attr('is_save_file', is_save_file)
         self.init_attr('dirpath', logdir)
         self.init_attr('backup_count', backup_count)
+        self.init_attr('filename', filename)
         self.init_attr('is_debug_stream', is_debug_stream)
         self.init_attr('is_color_stream', is_color_stream)
         self.init_attr('stream_level', stream_level)
@@ -266,7 +270,9 @@ class Delogger(DeloggerSetting):
 
         if self.is_save_file:
             rrh = RunRotatingHandler(
-                self.dirpath, backup_count=self.backup_count)
+                self.dirpath,
+                backup_count=self.backup_count,
+                fmt=self.filename)
             self.add_handler(rrh, DEBUG, fmt=self.file_fmt)
 
     def add_handler(self,
