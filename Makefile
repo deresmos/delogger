@@ -9,6 +9,7 @@ install-dev: FORCE
 upload: FORCE
 	python setup.py bdist_wheel
 	twine upload dist/*
+	rm -rf dist
 
 test: FORCE
 	py.test --rootdir=tests
