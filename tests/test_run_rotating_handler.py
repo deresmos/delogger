@@ -9,6 +9,10 @@ _log_paths = []
 TODAY = dt.today()
 
 
+def test_start():
+    RunRotatingHandler._files = []
+
+
 def _normal_logger(name, logpath):
     _log_paths.append(logpath)
 

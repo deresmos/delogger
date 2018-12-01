@@ -1,4 +1,5 @@
 import re
+import shutil
 from pathlib import Path
 
 from delogger import Delogger
@@ -146,6 +147,7 @@ def test_delogger_savelog(capsys):
     assert len(list(Path(logpath).iterdir())) == 1
 
     _log_file(logpath)
+    shutil.rmtree(delogger.dirpath)
 
 
 def test_delogger_savelog_debug(capsys):
@@ -160,3 +162,20 @@ def test_delogger_savelog_debug(capsys):
     assert len(list(Path(logpath).iterdir())) == 1
 
     _log_file(logpath)
+    shutil.rmtree(delogger.dirpath)
+
+
+def test_delogger_savelog_onefile(capsys):
+    filename = 'onefile.log'
+    delogger = Delogger(
+        name='savelog_onefile', is_save_file=True, filename=filename)
+    logger = delogger.logger
+
+    _normal_stream_logger(logger, capsys)
+
+    logpath = delogger.dirpath
+    assert (Path(logpath) / filename).exists()
+    assert len(list(Path(logpath).iterdir())) == 1
+
+    _log_file(logpath)
+    shutil.rmtree(delogger.dirpath)
