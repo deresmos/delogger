@@ -138,7 +138,9 @@ class RunRotatingHandler(FileHandler):
                 fmt_ = fmt_.replace(date_str, patter)
 
         repa = re.compile(fmt_)
-        files = [x for x in Path(dirpath).glob('*') if repa.search(str(x))]
+        files = [
+            x for x in sorted(Path(dirpath).glob('*')) if repa.search(str(x))
+        ]
 
         return files
 
