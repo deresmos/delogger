@@ -62,7 +62,7 @@ logger.debug('debug')
 logger.warning('warning')
 logger.info('End logging')
 ```
-![sample1](https://user-images.githubusercontent.com/27688389/48709759-c49a1480-ec49-11e8-92ee-99dae12c6e63.png "sample1")
+![sample3](https://user-images.githubusercontent.com/27688389/48709824-fad79400-ec49-11e8-8a93-a5c72bdec5fc.png "sample3")
 
 
 ### Debug stream mode
@@ -87,7 +87,7 @@ logger.info('End logging')
 ```python
 from delogger import Delogger
 
-Delogger.is_color_stream = True
+Delogger.is_color_stream = False
 delogger = Delogger(name='test_logger')
 logger = delogger.logger
 
@@ -96,7 +96,7 @@ logger.debug('debug')
 logger.warning('warning')
 logger.info('End logging')
 ```
-![sample3](https://user-images.githubusercontent.com/27688389/48709824-fad79400-ec49-11e8-8a93-a5c72bdec5fc.png "sample3")
+![sample1](https://user-images.githubusercontent.com/27688389/48709759-c49a1480-ec49-11e8-92ee-99dae12c6e63.png "sample1")
 
 
 ### Debug and color stream mode
