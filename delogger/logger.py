@@ -41,7 +41,7 @@ class DeloggerSetting(object):
     is_save_file = False
     """Default value of save file flag."""
 
-    is_color_stream = False
+    is_color_stream = True
     """Default value of color stream flag."""
 
     is_debug_stream = False
