@@ -78,10 +78,18 @@ class RunRotatingHandler(FileHandler):
         r'\d{2}': ['%m', '%d', '%H', '%M', '%S'],
     }
 
-    def __init__(self, dirname, backup_count=None, fmt=None, **kwargs):
+    def __init__(self,
+                 dirname=None,
+                 filepath=None,
+                 backup_count=None,
+                 fmt=None,
+                 **kwargs):
         fmt = fmt or self.LOG_FMT
         backup_count = backup_count or self.BACKUP_COUNT
 
+        if filepath:
+            dirname = Path(filepath).parent
+            fmt = Path(filepath).name
         self.filepath = self._load_file_path(dirname, fmt, backup_count)
 
         super().__init__(self.filepath, **kwargs)

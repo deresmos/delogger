@@ -59,6 +59,9 @@ class DeloggerSetting(object):
     filename = None
     """Default value of RunRotatingHandler filename (fmt)."""
 
+    filepath = None
+    """Default value of RunRotatingHandler filepath (filepath)."""
+
     file_fmt = ('%(asctime)s %(levelname)-5s %(name)s %(filename)s '
                 '%(lineno)d "%(message)s"')
     """Default value of file logger fmt."""
@@ -97,6 +100,7 @@ class DeloggerSetting(object):
                  logdir=None,
                  backup_count=None,
                  filename=None,
+                 filepath=None,
                  is_debug_stream=None,
                  is_color_stream=None,
                  stream_level=None,
@@ -107,6 +111,7 @@ class DeloggerSetting(object):
         self.init_attr('dirpath', logdir)
         self.init_attr('backup_count', backup_count)
         self.init_attr('filename', filename)
+        self.init_attr('filepath', filepath)
         self.init_attr('is_debug_stream', is_debug_stream)
         self.init_attr('is_color_stream', is_color_stream)
         self.init_attr('stream_level', stream_level)
@@ -272,6 +277,7 @@ class Delogger(DeloggerSetting):
             rrh = RunRotatingHandler(
                 self.dirpath,
                 backup_count=self.backup_count,
+                filepath=self.filepath,
                 fmt=self.filename)
             self.add_handler(rrh, DEBUG, fmt=self.file_fmt)
 

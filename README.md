@@ -34,6 +34,7 @@ The default logging includes the following:
 | is_debug_stream | Whether to output the stream in debug mode | False               |
 | default         | Whether to use the default handler         | True                |
 | dirpath         | log output folder                          | 'log'               |
+| filepath        | log output filepath                        | None                |
 
 
 Installation

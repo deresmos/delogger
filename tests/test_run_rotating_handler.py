@@ -26,6 +26,19 @@ def _normal_logger(name, logpath):
     return logger
 
 
+def _filepath_logger(name, logpath):
+    _log_paths.append(str(Path(logpath).parent))
+
+    logger = logging.getLogger(name)
+    logger.setLevel(logging.DEBUG)
+
+    runrotating = RunRotatingHandler(filepath=logpath)
+    runrotating.setLevel(logging.DEBUG)
+    logger.addHandler(runrotating)
+
+    return logger
+
+
 def test_normal():
     logpath = 'log'
     logger = _normal_logger('normal', logpath)
@@ -74,6 +87,18 @@ def test_logpath2():
     logger.debug('log path test: %s', logpath)
     assert Path(logpath).is_dir()
     assert len(list(Path(logpath).iterdir())) == 1
+    assert len(RunRotatingHandler._files) == len(_log_paths)
+
+
+def test_filepath():
+    logpath = 'log/%Y/%M%d/%Y.log'
+    logger = _normal_logger('filepath', logpath)
+    logpath = dt.strftime(TODAY, logpath)
+
+    logger.debug('log path test: %s', logpath)
+    assert Path(logpath).parent.is_dir()
+    assert len(list(Path(logpath).iterdir())) == 1
+    assert Path(logpath).exists()
     assert len(RunRotatingHandler._files) == len(_log_paths)
 
 
