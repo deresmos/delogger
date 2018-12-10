@@ -6,7 +6,7 @@ from pathlib import Path
 from delogger import Delogger
 
 _dp = (r'[^\s]+\s? \[[^\s]+ File "[^\s]+", line \d{1,5}, in [^\s]+\] %s')
-_cp = r'\x1b\[\d{1,3}m\w+\s?\x1b\[0m %s\x1b\[0m'
+_cp = r'%s'
 _cdp = (r'\x1b\[\d{1,3}m\w+\s?\x1b\[0m '
         r'\[[^\s]+ File "[^\s]+", line \d{1,5}, in [^\s]+\] %s\x1b\[0m')
 _lp = (r'\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} '
