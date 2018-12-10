@@ -133,7 +133,7 @@ class RunRotatingHandler(FileHandler):
         filenames = self._get_match_files(filepath.parent, fmt)
 
         # Delete the old file and set a new file path
-        if len(filenames) >= backup_count:
+        if (backup_count > 0) and (len(filenames) >= backup_count):
             os.remove(filenames[0])
         RunRotatingHandler._files.append(path)
 
