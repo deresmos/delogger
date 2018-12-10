@@ -1,5 +1,6 @@
 import re
 import shutil
+from datetime import datetime as dt
 from pathlib import Path
 
 from delogger import Delogger
@@ -10,6 +11,8 @@ _cdp = (r'\x1b\[\d{1,3}m\w+\s?\x1b\[0m '
         r'\[[^\s]+ File "[^\s]+", line \d{1,5}, in [^\s]+\] %s\x1b\[0m')
 _lp = (r'\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} '
        r'[^\s]+\s? [^\s]+ [^\s]+ \d{1,5} "%s"')
+
+TODAY = dt.today()
 
 
 def _normal_stream_logger(logger, capsys, is_color=False):
@@ -179,6 +182,22 @@ def test_delogger_savelog_onefile(capsys):
 
     _log_file(logpath)
     shutil.rmtree(delogger.dirpath)
+
+
+def test_delogger_savelog_filepath(capsys):
+    filepath = './%Y/%dtest.log'
+    delogger = Delogger(
+        name='savelog_filepath', is_save_file=True, filepath=filepath)
+    logger = delogger.logger
+    _filepath = dt.strftime(TODAY, filepath)
+
+    _normal_stream_logger(logger, capsys)
+
+    assert Path(_filepath).exists()
+
+    logdir = Path(_filepath).parent
+    _log_file(logdir)
+    shutil.rmtree(logdir)
 
 
 def test_delogger_is_stream(capsys):
