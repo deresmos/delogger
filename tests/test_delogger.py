@@ -195,7 +195,7 @@ def test_delogger_savelog_filepath(capsys):
 
     assert Path(_filepath).exists()
 
-    logdir = Path(_filepath).parent
+    logdir = str(Path(_filepath).parent)
     _log_file(logdir)
     shutil.rmtree(logdir)
 
