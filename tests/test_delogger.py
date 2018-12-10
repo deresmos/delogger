@@ -211,7 +211,6 @@ def test_delogger_savelog_filepath_nameonly(capsys):
 
     assert Path(_filepath).exists()
 
-    logdir = Path(_filepath).parent
     Path(_filepath).unlink()
 
 
