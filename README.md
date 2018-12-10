@@ -36,6 +36,7 @@ The default logging includes the following:
 | dirpath         | log output folder                          | 'log'               |
 | filepath        | log output filepath                        | None                |
 | is_stream       | If False, disabled stream output           | True                |
+| backup_count    | logfile backup_count                       | 5                   |
 
 
 Installation
