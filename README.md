@@ -98,8 +98,7 @@ logger.debug('debug')
 logger.warning('warning')
 logger.info('End logging')
 ```
-![logfile](https://user-images.githubusercontent.com/27688389/49737220-9dc28180-fccf-11e8-9a39-8c3d5c05a6ef.png "logfile")
-fpd85b419501f28.png)
+![logfile](https://user-images.githubusercontent.com/27688389/49738444-c730dc80-fcd2-11e8-9fb2-2bd0336e25db.png "logfile")
 
 
 ### Queue mode
