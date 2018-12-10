@@ -64,7 +64,7 @@ logger.debug('debug')
 logger.warning('warning')
 logger.info('End logging')
 ```
-![sample3](https://user-images.githubusercontent.com/27688389/48709824-fad79400-ec49-11e8-8a93-a5c72bdec5fc.png "sample3")
+![normal](https://user-images.githubusercontent.com/27688389/49737427-335e1100-fcd0-11e8-8a59-7d0fe3088273.png "normal")
 
 
 ### Debug stream mode
@@ -81,42 +81,7 @@ logger.debug('debug')
 logger.warning('warning')
 logger.info('End logging')
 ```
-![sample2](https://user-images.githubusercontent.com/27688389/48709786-d8de1180-ec49-11e8-919b-31b9f7a51bfc.png "sample2")
-
-
-### Color stream mode
-
-```python
-from delogger import Delogger
-
-Delogger.is_color_stream = False
-delogger = Delogger(name='test_logger')
-logger = delogger.logger
-
-logger.info('Start logging')
-logger.debug('debug')
-logger.warning('warning')
-logger.info('End logging')
-```
-![sample1](https://user-images.githubusercontent.com/27688389/48709759-c49a1480-ec49-11e8-92ee-99dae12c6e63.png "sample1")
-
-
-### Debug and color stream mode
-
-```python
-from delogger import Delogger
-
-Delogger.is_color_stream = True
-Delogger.is_debug_stream = True
-delogger = Delogger(name='test_logger')
-logger = delogger.logger
-
-logger.info('Start logging')
-logger.debug('debug')
-logger.warning('warning')
-logger.info('End logging')
-```
-![sample4](https://user-images.githubusercontent.com/27688389/48709860-117deb00-ec4a-11e8-905f-7f1597363c38.png "sample4")
+![debug](https://user-images.githubusercontent.com/27688389/49737352-03af0900-fcd0-11e8-8420-f1fc295394c8.png "debug")
 
 
 ### Save log file
@@ -125,7 +90,7 @@ logger.info('End logging')
 from delogger import Delogger
 
 Delogger.is_save_file = True
-delogger = Delogger(name='test_logger')
+delogger = Delogger(name='test_logger', filename='%Y/%m%d.log')
 logger = delogger.logger
 
 logger.info('Start logging')
@@ -133,7 +98,8 @@ logger.debug('debug')
 logger.warning('warning')
 logger.info('End logging')
 ```
-![sample5](https://user-images.githubusercontent.com/27688389/48978687-b426e580-f0f2-11e8-8b4c-fa418471e576.png "sample5")
+![logfile](https://user-images.githubusercontent.com/27688389/49737220-9dc28180-fccf-11e8-9a39-8c3d5c05a6ef.png "logfile")
+fpd85b419501f28.png)
 
 
 ### Queue mode
@@ -155,4 +121,39 @@ time.sleep(1)
 logger.info('End logging')
 print('End queue mode')
 ```
-![sample6](https://user-images.githubusercontent.com/27688389/48709874-1e024380-ec4a-11e8-818f-521260c9c4e9.png "sample6")
+![queue](https://user-images.githubusercontent.com/27688389/49737371-10336180-fcd0-11e8-84dd-f9be5f223f42.png "queue")
+
+
+### No Color stream mode
+
+```python
+from delogger import Delogger
+
+Delogger.is_color_stream = False
+delogger = Delogger(name='test_logger')
+logger = delogger.logger
+
+logger.info('Start logging')
+logger.debug('debug')
+logger.warning('warning')
+logger.info('End logging')
+```
+![no-color-normal](https://user-images.githubusercontent.com/27688389/48709759-c49a1480-ec49-11e8-92ee-99dae12c6e63.png "no-color-normal")
+
+
+### Debug and no color stream mode
+
+```python
+from delogger import Delogger
+
+Delogger.is_color_stream = False
+Delogger.is_debug_stream = True
+delogger = Delogger(name='test_logger')
+logger = delogger.logger
+
+logger.info('Start logging')
+logger.debug('debug')
+logger.warning('warning')
+logger.info('End logging')
+```
+![no-color-debug](https://user-images.githubusercontent.com/27688389/49737616-a8314b00-fcd0-11e8-8d11-2274bb7e0ae1.png "no-color-debug")
