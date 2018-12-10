@@ -65,7 +65,7 @@ class DeloggerSetting(object):
     filepath = None
     """Default value of RunRotatingHandler filepath (filepath)."""
 
-    file_fmt = ('%(asctime)s %(levelname)-5s %(name)s %(filename)s '
+    file_fmt = ('%(asctime)s %(levelname)s %(name)s %(filename)s '
                 '%(lineno)d "%(message)s"')
     """Default value of file logger fmt."""
 
