@@ -77,7 +77,7 @@ class DeloggerSetting(object):
     """Default value of stream logger fmt.(0: normal, 1: debug)"""
 
     stream_color_fmts = [
-        '%(log_color)s%(levelname)-5s%(reset)s %(message)s',
+        '%(message)s',
         ('%(log_color)s%(levelname)-5s%(reset)s [%(name)s '
          'File "%(filename)s", line %(lineno)d, in %(funcName)s] %(message)s'),
     ]
