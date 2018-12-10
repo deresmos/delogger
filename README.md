@@ -90,7 +90,7 @@ logger.info('End logging')
 from delogger import Delogger
 
 Delogger.is_save_file = True
-delogger = Delogger(name='test_logger', filename='%Y/%m%d.log')
+delogger = Delogger(name='test_logger', filepath='%Y/%m%d.log')
 logger = delogger.logger
 
 logger.info('Start logging')
@@ -108,7 +108,6 @@ import time
 
 from delogger import DeloggerQueue
 
-DeloggerQueue.is_color_stream = True
 delogger = DeloggerQueue(name='test_logger')
 logger = delogger.logger
 
