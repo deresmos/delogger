@@ -200,6 +200,21 @@ def test_delogger_savelog_filepath(capsys):
     shutil.rmtree(logdir)
 
 
+def test_delogger_savelog_filepath_nameonly(capsys):
+    filepath = '%dtest.log'
+    delogger = Delogger(
+        name='savelog_filepath_name', is_save_file=True, filepath=filepath)
+    logger = delogger.logger
+    _filepath = dt.strftime(TODAY, filepath)
+
+    _normal_stream_logger(logger, capsys)
+
+    assert Path(_filepath).exists()
+
+    logdir = Path(_filepath).parent
+    Path(_filepath).unlink()
+
+
 def test_delogger_is_stream(capsys):
     filename = 'onefile.log'
     delogger = Delogger(
