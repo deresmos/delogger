@@ -179,3 +179,28 @@ def test_delogger_savelog_onefile(capsys):
 
     _log_file(logpath)
     shutil.rmtree(delogger.dirpath)
+
+
+def test_delogger_is_stream(capsys):
+    filename = 'onefile.log'
+    delogger = Delogger(
+        name='disable_stream',
+        is_save_file=True,
+        filename=filename,
+        is_stream=False)
+    logger = delogger.logger
+
+    logger.debug('debug')
+    logger.info('info')
+    logger.warning('warning')
+    logger.error('error')
+
+    captured = capsys.readouterr()
+    assert not captured.err
+
+    logpath = delogger.dirpath
+    assert (Path(logpath) / filename).exists()
+    assert len(list(Path(logpath).iterdir())) == 1
+
+    _log_file(logpath)
+    shutil.rmtree(delogger.dirpath)

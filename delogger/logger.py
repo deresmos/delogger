@@ -35,6 +35,9 @@ class DeloggerSetting(object):
     stream_level = INFO
     """Default value of stream logger level."""
 
+    is_stream = True
+    """Default value of stream output flag."""
+
     file_level = DEBUG
     """Default value of file logger level."""
 
@@ -101,6 +104,7 @@ class DeloggerSetting(object):
                  backup_count=None,
                  filename=None,
                  filepath=None,
+                 is_stream=None,
                  is_debug_stream=None,
                  is_color_stream=None,
                  stream_level=None,
@@ -112,6 +116,7 @@ class DeloggerSetting(object):
         self.init_attr('backup_count', backup_count)
         self.init_attr('filename', filename)
         self.init_attr('filepath', filepath)
+        self.init_attr('is_stream', is_stream)
         self.init_attr('is_debug_stream', is_debug_stream)
         self.init_attr('is_color_stream', is_color_stream)
         self.init_attr('stream_level', stream_level)
@@ -330,6 +335,10 @@ class Delogger(DeloggerSetting):
             **kwargs: Keyword argument of add_handler method
 
         """
+
+        # disable stream output
+        if not self.is_stream:
+            return
 
         if check_level and self.stream_level <= level:
             return

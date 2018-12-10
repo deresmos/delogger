@@ -35,6 +35,7 @@ The default logging includes the following:
 | default         | Whether to use the default handler         | True                |
 | dirpath         | log output folder                          | 'log'               |
 | filepath        | log output filepath                        | None                |
+| is_stream       | If False, disabled stream output           | True                |
 
 
 Installation
