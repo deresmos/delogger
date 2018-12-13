@@ -19,6 +19,11 @@ try:
 except ImportError:
     pass
 
+try:
+    from memory_profiler import profile
+except ImportError:
+    pass
+
 
 class DeloggerSetting(object):
     """Common configuration class of Delogger.
@@ -286,6 +291,39 @@ class Delogger(DeloggerSetting):
             with StringIO() as f:
                 prof.print_stats(stream=f)
                 msg = 'line_profiler result\n{}'.format(f.getvalue())
+            logger.debug(msg)
+
+            # Output function name and return value.
+            msg = 'END {} return={}'.format(
+                func.__qualname__,
+                rtn,
+            )
+            logger.debug(msg)
+
+            return rtn
+
+        return wrapper
+
+    @classmethod
+    def debuglog_memory_profiler(cls, func):
+        """argument, return value and memory_profiler are output to the log.
+        """
+
+        logger = cls(name='_debugger_m').logger
+
+        def wrapper(*args, **kwargs):
+            # Output function name and argument.
+            msg = 'START {} args={} kwargs={}'.format(
+                func.__qualname__,
+                args,
+                kwargs,
+            )
+            logger.debug(msg)
+
+            # output memory_profiler
+            with StringIO() as f:
+                rtn = profile(func, stream=f, precision=2)(*args, **kwargs)
+                msg = 'memory_profiler result\n{}'.format(f.getvalue())
             logger.debug(msg)
 
             # Output function name and return value.
