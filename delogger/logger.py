@@ -6,7 +6,18 @@ from logging.handlers import QueueHandler, QueueListener
 from queue import Queue
 
 from colorlog import ColoredFormatter
+
 from delogger import OnlyFilter, RunRotatingHandler
+
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from io import StringIO
+
+try:
+    from line_profiler import LineProfiler
+except ImportError:
+    pass
 
 
 class DeloggerSetting(object):
@@ -241,6 +252,43 @@ class Delogger(DeloggerSetting):
 
             # Output function name and return value.
             rtn = func(*args, **kwargs)
+            msg = 'END {} return={}'.format(
+                func.__qualname__,
+                rtn,
+            )
+            logger.debug(msg)
+
+            return rtn
+
+        return wrapper
+
+    @classmethod
+    def debuglog_line_profiler(cls, func):
+        """argument, return value and line_profiler are output to the log.
+        """
+
+        logger = cls(name='_debugger_l').logger
+
+        def wrapper(*args, **kwargs):
+            # Output function name and argument.
+            msg = 'START {} args={} kwargs={}'.format(
+                func.__qualname__,
+                args,
+                kwargs,
+            )
+            logger.debug(msg)
+
+            # output line_profiler
+            prof = LineProfiler()
+            prof.add_function(func)
+
+            rtn = prof.runcall(func, *args, **kwargs)
+            with StringIO() as f:
+                prof.print_stats(stream=f)
+                msg = 'line_profiler result\n{}'.format(f.getvalue())
+            logger.debug(msg)
+
+            # Output function name and return value.
             msg = 'END {} return={}'.format(
                 func.__qualname__,
                 rtn,
