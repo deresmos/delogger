@@ -280,7 +280,7 @@ class Delogger(DeloggerSetting):
         return wrapper
 
     @classmethod
-    def debuglog_line_profiler(cls, func):
+    def line_profiler(cls, func):
         """line_profiler are output to the log.
         """
 
@@ -302,7 +302,7 @@ class Delogger(DeloggerSetting):
         return wrapper
 
     @classmethod
-    def debuglog_memory_profiler(cls, func):
+    def memory_profiler(cls, func):
         """memory_profiler are output to the log.
         """
 
@@ -320,7 +320,7 @@ class Delogger(DeloggerSetting):
         return wrapper
 
     @classmethod
-    def debuglog_line_memory_profiler(cls, func):
+    def line_memory_profiler(cls, func):
         """line_profiler and memory_profiler mix are output to the log.
         """
 
