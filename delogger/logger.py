@@ -348,7 +348,7 @@ class Delogger(DeloggerSetting):
                 mix.append(template.format(*l_m_mix))
             mix[cls.L_M_HEADER_INDEX] = template.format(*cls.L_M_HEADER)
             mix[cls.L_M_SEPARATOR_INDEX] += '=' * 27
-            logger.debug('\n' + '\n'.join(mix))
+            logger.debug('line, memory profiler result\n' + '\n'.join(mix))
 
             return rtn
 
