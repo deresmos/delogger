@@ -269,20 +269,12 @@ class Delogger(DeloggerSetting):
 
     @classmethod
     def debuglog_line_profiler(cls, func):
-        """argument, return value and line_profiler are output to the log.
+        """line_profiler are output to the log.
         """
 
         logger = cls(name='_debugger_l').logger
 
         def wrapper(*args, **kwargs):
-            # Output function name and argument.
-            msg = 'START {} args={} kwargs={}'.format(
-                func.__qualname__,
-                args,
-                kwargs,
-            )
-            logger.debug(msg)
-
             # output line_profiler
             prof = LineProfiler()
             prof.add_function(func)
@@ -293,44 +285,22 @@ class Delogger(DeloggerSetting):
                 msg = 'line_profiler result\n{}'.format(f.getvalue())
             logger.debug(msg)
 
-            # Output function name and return value.
-            msg = 'END {} return={}'.format(
-                func.__qualname__,
-                rtn,
-            )
-            logger.debug(msg)
-
             return rtn
 
         return wrapper
 
     @classmethod
     def debuglog_memory_profiler(cls, func):
-        """argument, return value and memory_profiler are output to the log.
+        """memory_profiler are output to the log.
         """
 
         logger = cls(name='_debugger_m').logger
 
         def wrapper(*args, **kwargs):
-            # Output function name and argument.
-            msg = 'START {} args={} kwargs={}'.format(
-                func.__qualname__,
-                args,
-                kwargs,
-            )
-            logger.debug(msg)
-
             # output memory_profiler
             with StringIO() as f:
                 rtn = profile(func, stream=f, precision=2)(*args, **kwargs)
                 msg = 'memory_profiler result\n{}'.format(f.getvalue())
-            logger.debug(msg)
-
-            # Output function name and return value.
-            msg = 'END {} return={}'.format(
-                func.__qualname__,
-                rtn,
-            )
             logger.debug(msg)
 
             return rtn
