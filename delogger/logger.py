@@ -218,7 +218,8 @@ class Delogger(DeloggerSetting):
 
     L_M_HEADER_INDEX = 6
     L_M_SEPARATOR_INDEX = 7
-    L_M_TEMPLATE = '{0:>6} {1:>9} {2:>12} {3:>8} {4:>8} {5:>12} {6:>12}   {7:<}'
+    L_M_TEMPLATE = ('{0:>6} {1:>9} {2:>12} {3:>8} {4:>8} '
+                    '{5:>12} {6:>12}   {7:<}')
     L_M_HEADER = [
         'Line #', 'Hits', 'Time', 'Per Hit', '% Time', 'Mem usage',
         'Increment', 'Line Contents'
