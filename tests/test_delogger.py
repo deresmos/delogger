@@ -107,6 +107,22 @@ def test_delogger_debug(capsys):
     assert not Path(delogger.dirpath).is_dir()
 
 
+def test_delogger_debug_instance(capsys):
+    delogger = Delogger('debug_instance')
+    delogger.is_debug_stream = True
+    logger = delogger.logger
+
+    @Delogger.debuglog
+    def test(*args):
+        return args
+
+    test('test', 'args')
+
+    _debug_stream_logger(logger, capsys)
+
+    assert not Path(delogger.dirpath).is_dir()
+
+
 def test_delogger_class_debug(capsys):
     Delogger.is_debug_stream = True
 

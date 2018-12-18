@@ -144,9 +144,6 @@ class DeloggerSetting(object):
         self.init_attr('dete_fmt', date_fmt)
         self.init_attr('default', default)
 
-        if self.is_debug_stream and self.stream_level == INFO:
-            self.stream_level = DEBUG
-
         addLevelName(WARNING, 'WARN')
         addLevelName(CRITICAL, 'CRIT')
 
@@ -438,12 +435,15 @@ class Delogger(DeloggerSetting):
                 WARNING, fmt=fmt, is_color_stream=self.is_color_stream)
 
         else:
+
+            stream_level = self.stream_level
+            if self.is_debug_stream and self.stream_level == INFO:
+                stream_level = DEBUG
+
             # all debug stream.
             fmt = self.stream_fmt
             self.add_stream_handler(
-                self.stream_level,
-                fmt=fmt,
-                is_color_stream=self.is_color_stream)
+                stream_level, fmt=fmt, is_color_stream=self.is_color_stream)
         # If there is a log save flag, the log file handler is set.
 
         if self.is_save_file:
