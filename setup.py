@@ -5,7 +5,7 @@ with open('./README.md', 'r', encoding='utf-8') as f:
 
 setup(
     name='delogger',
-    version='0.2.2',
+    version='0.2.3',
     description='delogger is a convenient logging package',
     long_description=readme,
     long_description_content_type='text/markdown',

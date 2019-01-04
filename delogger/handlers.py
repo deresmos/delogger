@@ -222,7 +222,6 @@ class SlackHandler(Handler):
                  username=None,
                  emojis=None,
                  usernames=None):
-        super().__init__()
         self.is_emit = True
 
         self.url = url or getenv(self.URL_ENV)
@@ -241,6 +240,8 @@ class SlackHandler(Handler):
         self.as_user = as_user
         self.emoji = emoji
         self.username = username
+
+        super().__init__()
 
     def _makeContent(self, levelno, content=None):
         """Get slack's payload."""
@@ -319,3 +320,7 @@ class SlackHandler(Handler):
             eq = True
 
         return eq
+
+    def __hash__(self):
+        return hash('{}{}{}{}'.format(self.token, self.url, self.level,
+                                      self.channel))
