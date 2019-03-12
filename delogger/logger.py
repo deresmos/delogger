@@ -228,6 +228,7 @@ class Delogger(DeloggerSetting):
         name_ = parent or self
         name_ = name or type(name_).__name__
         logger = getLogger(name_)
+        logger.setLevel(Delogger.DEBUG)
         self._logger = logger
 
         if len(self._logger.handlers) > 0:
@@ -418,7 +419,6 @@ class Delogger(DeloggerSetting):
 
     def default_logger(self):
         """Set default handler."""
-        self._logger.setLevel(DEBUG)
 
         if not self.is_debug_stream and self.stream_level <= INFO:
             # info is a normal stream, over warning it is a debug stream.
