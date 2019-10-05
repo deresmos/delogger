@@ -1,7 +1,16 @@
 import atexit
 from copy import copy
-from logging import (CRITICAL, DEBUG, ERROR, INFO, WARNING, Formatter,
-                     StreamHandler, addLevelName, getLogger)
+from logging import (
+    CRITICAL,
+    DEBUG,
+    ERROR,
+    INFO,
+    WARNING,
+    Formatter,
+    StreamHandler,
+    addLevelName,
+    getLogger,
+)
 from logging.handlers import QueueHandler, QueueListener
 from queue import Queue
 
@@ -49,7 +58,7 @@ class DeloggerSetting(object):
 
     """
 
-    date_fmt = '%Y-%m-%d %H:%M:%S'
+    date_fmt = "%Y-%m-%d %H:%M:%S"
     """Default value of datetime format."""
 
     stream_level = INFO
@@ -73,7 +82,7 @@ class DeloggerSetting(object):
     default = True
     """Default value of default logger."""
 
-    dirpath = 'log'
+    dirpath = "log"
     """Default value of log output destination directory."""
 
     backup_count = 5
@@ -85,21 +94,26 @@ class DeloggerSetting(object):
     filepath = None
     """Default value of RunRotatingHandler filepath (filepath)."""
 
-    file_fmt = ('%(asctime)s %(levelname)s %(name)s %(filename)s '
-                '%(lineno)d "%(message)s"')
+    file_fmt = (
+        "%(asctime)s %(levelname)s %(name)s %(filename)s " '%(lineno)d "%(message)s"'
+    )
     """Default value of file logger fmt."""
 
     stream_fmts = [
-        '%(message)s',
-        ('%(levelname)-5s [%(name)s File "%(filename)s", '
-         'line %(lineno)d, in %(funcName)s] %(message)s'),
+        "%(message)s",
+        (
+            '%(levelname)-5s [%(name)s File "%(filename)s", '
+            "line %(lineno)d, in %(funcName)s] %(message)s"
+        ),
     ]
     """Default value of stream logger fmt.(0: normal, 1: debug)"""
 
     stream_color_fmts = [
-        '%(message)s',
-        ('%(log_color)s%(levelname)-5s%(reset)s [%(name)s '
-         'File "%(filename)s", line %(lineno)d, in %(funcName)s] %(message)s'),
+        "%(message)s",
+        (
+            "%(log_color)s%(levelname)-5s%(reset)s [%(name)s "
+            'File "%(filename)s", line %(lineno)d, in %(funcName)s] %(message)s'
+        ),
     ]
     """Default value of color stream logger fmt.(0: normal, 1: debug)"""
 
@@ -110,42 +124,44 @@ class DeloggerSetting(object):
     """Debug level index constant."""
 
     log_colors = {
-        'DEBUG': 'cyan',
-        'INFO': 'green',
-        'WARN': 'yellow',
-        'ERROR': 'red',
-        'CRIT': 'red,bg_white',
+        "DEBUG": "cyan",
+        "INFO": "green",
+        "WARN": "yellow",
+        "ERROR": "red",
+        "CRIT": "red,bg_white",
     }
     """Definition of color stream level setting."""
 
-    def __init__(self,
-                 is_save_file=None,
-                 logdir=None,
-                 backup_count=None,
-                 filename=None,
-                 filepath=None,
-                 is_stream=None,
-                 is_debug_stream=None,
-                 is_color_stream=None,
-                 stream_level=None,
-                 file_level=None,
-                 date_fmt=None,
-                 default=None):
-        self.init_attr('is_save_file', is_save_file)
-        self.init_attr('dirpath', logdir)
-        self.init_attr('backup_count', backup_count)
-        self.init_attr('filename', filename)
-        self.init_attr('filepath', filepath)
-        self.init_attr('is_stream', is_stream)
-        self.init_attr('is_debug_stream', is_debug_stream)
-        self.init_attr('is_color_stream', is_color_stream)
-        self.init_attr('stream_level', stream_level)
-        self.init_attr('file_level', file_level)
-        self.init_attr('dete_fmt', date_fmt)
-        self.init_attr('default', default)
+    def __init__(
+        self,
+        is_save_file=None,
+        logdir=None,
+        backup_count=None,
+        filename=None,
+        filepath=None,
+        is_stream=None,
+        is_debug_stream=None,
+        is_color_stream=None,
+        stream_level=None,
+        file_level=None,
+        date_fmt=None,
+        default=None,
+    ):
+        self.init_attr("is_save_file", is_save_file)
+        self.init_attr("dirpath", logdir)
+        self.init_attr("backup_count", backup_count)
+        self.init_attr("filename", filename)
+        self.init_attr("filepath", filepath)
+        self.init_attr("is_stream", is_stream)
+        self.init_attr("is_debug_stream", is_debug_stream)
+        self.init_attr("is_color_stream", is_color_stream)
+        self.init_attr("stream_level", stream_level)
+        self.init_attr("file_level", file_level)
+        self.init_attr("dete_fmt", date_fmt)
+        self.init_attr("default", default)
 
-        addLevelName(WARNING, 'WARN')
-        addLevelName(CRITICAL, 'CRIT')
+        addLevelName(WARNING, "WARN")
+        addLevelName(CRITICAL, "CRIT")
 
     def init_attr(self, key, value):
         """Initializing variables.
@@ -215,11 +231,16 @@ class Delogger(DeloggerSetting):
 
     L_M_HEADER_INDEX = 6
     L_M_SEPARATOR_INDEX = 7
-    L_M_TEMPLATE = ('{0:>6} {1:>9} {2:>12} {3:>8} {4:>8} '
-                    '{5:>12} {6:>12}   {7:<}')
+    L_M_TEMPLATE = "{0:>6} {1:>9} {2:>12} {3:>8} {4:>8} " "{5:>12} {6:>12}   {7:<}"
     L_M_HEADER = [
-        'Line #', 'Hits', 'Time', 'Per Hit', '% Time', 'Mem usage',
-        'Increment', 'Line Contents'
+        "Line #",
+        "Hits",
+        "Time",
+        "Per Hit",
+        "% Time",
+        "Mem usage",
+        "Increment",
+        "Line Contents",
     ]
 
     def __init__(self, name=None, parent=None, *args, **kwargs):
@@ -255,23 +276,16 @@ class Delogger(DeloggerSetting):
         put to the log.
         """
 
-        logger = cls(name='_debugger').logger
+        logger = cls(name="_debugger").logger
 
         def wrapper(*args, **kwargs):
             # Output function name and argument.
-            msg = 'START {} args={} kwargs={}'.format(
-                func.__qualname__,
-                args,
-                kwargs,
-            )
+            msg = "START {} args={} kwargs={}".format(func.__qualname__, args, kwargs)
             logger.debug(msg)
 
             # Output function name and return value.
             rtn = func(*args, **kwargs)
-            msg = 'END {} return={}'.format(
-                func.__qualname__,
-                rtn,
-            )
+            msg = "END {} return={}".format(func.__qualname__, rtn)
             logger.debug(msg)
 
             return rtn
@@ -283,7 +297,7 @@ class Delogger(DeloggerSetting):
         """line_profiler are output to the log.
         """
 
-        logger = cls(name='_debugger_l').logger
+        logger = cls(name="_debugger_l").logger
 
         def wrapper(*args, **kwargs):
             # output line_profiler
@@ -293,7 +307,7 @@ class Delogger(DeloggerSetting):
             rtn = prof.runcall(func, *args, **kwargs)
             with StringIO() as f:
                 prof.print_stats(stream=f)
-                msg = 'line_profiler result\n{}'.format(f.getvalue())
+                msg = "line_profiler result\n{}".format(f.getvalue())
             logger.debug(msg)
 
             return rtn
@@ -305,13 +319,13 @@ class Delogger(DeloggerSetting):
         """memory_profiler are output to the log.
         """
 
-        logger = cls(name='_debugger_m').logger
+        logger = cls(name="_debugger_m").logger
 
         def wrapper(*args, **kwargs):
             # output memory_profiler
             with StringIO() as f:
                 rtn = profile(func, stream=f, precision=2)(*args, **kwargs)
-                msg = 'memory_profiler result\n{}'.format(f.getvalue())
+                msg = "memory_profiler result\n{}".format(f.getvalue())
             logger.debug(msg)
 
             return rtn
@@ -323,7 +337,7 @@ class Delogger(DeloggerSetting):
         """line_profiler and memory_profiler mix are output to the log.
         """
 
-        logger = cls(name='_debugger_l_m').logger
+        logger = cls(name="_debugger_l_m").logger
 
         def wrapper(*args, **kwargs):
             # memory_profiler
@@ -346,8 +360,8 @@ class Delogger(DeloggerSetting):
                 l_m_mix = l[:5] + m
                 mix.append(template.format(*l_m_mix))
             mix[cls.L_M_HEADER_INDEX] = template.format(*cls.L_M_HEADER)
-            mix[cls.L_M_SEPARATOR_INDEX] += '=' * 27
-            logger.debug('line, memory profiler result\n' + '\n'.join(mix))
+            mix[cls.L_M_SEPARATOR_INDEX] += "=" * 27
+            logger.debug("line, memory profiler result\n" + "\n".join(mix))
 
             return rtn
 
@@ -355,7 +369,7 @@ class Delogger(DeloggerSetting):
 
     @staticmethod
     def _memory_profiler_parse(result):
-        for line in result.split('\n'):
+        for line in result.split("\n"):
             try:
                 elem = line.split()
                 if not elem:
@@ -372,20 +386,20 @@ class Delogger(DeloggerSetting):
 
                 mem = elem[1:3]
                 inc_mem = elem[3:5]
-                yield [' '.join(mem), ' '.join(inc_mem), contents]
+                yield [" ".join(mem), " ".join(inc_mem), contents]
 
             except ValueError:
-                yield ['', '', contents]
+                yield ["", "", contents]
                 continue
             except LineEmpty:
-                yield ['', '', '']
+                yield ["", "", ""]
                 continue
 
     @staticmethod
     def _line_profiler_parse(result):
         mix = []
         line_tmp = []
-        for line in result.split('\n'):
+        for line in result.split("\n"):
             try:
                 elem = line.split()
                 if not elem:
@@ -403,10 +417,10 @@ class Delogger(DeloggerSetting):
                 line_tmp.append(elem[:5])
 
             except ValueError:
-                line_tmp.append([elem[0], '', '', '', ''])
+                line_tmp.append([elem[0], "", "", "", ""])
                 continue
             except LineEmpty:
-                line_tmp.append([elem[0], '', '', '', ''])
+                line_tmp.append([elem[0], "", "", "", ""])
                 continue
 
         for _ in range(5):
@@ -427,12 +441,14 @@ class Delogger(DeloggerSetting):
                 self.stream_level,
                 fmt=fmt,
                 is_color_stream=self.is_color_stream,
-                only_level=True)
+                only_level=True,
+            )
 
             # Set warning or more stream
             fmt = self._stream_fmt(is_debug_stream=True)
             self.add_stream_handler(
-                WARNING, fmt=fmt, is_color_stream=self.is_color_stream)
+                WARNING, fmt=fmt, is_color_stream=self.is_color_stream
+            )
 
         else:
 
@@ -443,7 +459,8 @@ class Delogger(DeloggerSetting):
             # all debug stream.
             fmt = self.stream_fmt
             self.add_stream_handler(
-                stream_level, fmt=fmt, is_color_stream=self.is_color_stream)
+                stream_level, fmt=fmt, is_color_stream=self.is_color_stream
+            )
         # If there is a log save flag, the log file handler is set.
 
         if self.is_save_file:
@@ -451,16 +468,13 @@ class Delogger(DeloggerSetting):
                 self.dirpath,
                 backup_count=self.backup_count,
                 filepath=self.filepath,
-                fmt=self.filename)
+                fmt=self.filename,
+            )
             self.add_handler(rrh, DEBUG, fmt=self.file_fmt)
 
-    def add_handler(self,
-                    hdlr,
-                    level,
-                    fmt=None,
-                    datefmt=None,
-                    only_level=False,
-                    formatter=None):
+    def add_handler(
+        self, hdlr, level, fmt=None, datefmt=None, only_level=False, formatter=None
+    ):
         """Helper function to add a handler.
 
         Args:
@@ -486,13 +500,9 @@ class Delogger(DeloggerSetting):
 
         self._logger.addHandler(hdlr)
 
-    def add_stream_handler(self,
-                           level,
-                           *,
-                           check_level=False,
-                           is_color_stream=False,
-                           hdlr=None,
-                           **kwargs):
+    def add_stream_handler(
+        self, level, *, check_level=False, is_color_stream=False, hdlr=None, **kwargs
+    ):
         """Helper function to add a stream handler.
 
         Args:
@@ -513,11 +523,9 @@ class Delogger(DeloggerSetting):
 
         if is_color_stream:
             fmt = ColoredFormatter(
-                kwargs.get('fmt', None),
-                log_colors=self.log_colors,
-                style='%',
+                kwargs.get("fmt", None), log_colors=self.log_colors, style="%"
             )
-            kwargs.setdefault('formatter', fmt)
+            kwargs.setdefault("formatter", fmt)
 
         hdlr = hdlr or StreamHandler()
         self.add_handler(hdlr, level, **kwargs)
@@ -570,8 +578,7 @@ class DeloggerQueue(Delogger):
 
             que = Queue(-1)
             queue_handler = QueueHandler(que)
-            listener = QueueListener(
-                que, *handlers, respect_handler_level=True)
+            listener = QueueListener(que, *handlers, respect_handler_level=True)
             self._logger.addHandler(queue_handler)
             listener.start()
 
