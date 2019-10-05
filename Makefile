@@ -14,7 +14,7 @@ upload: FORCE
 test: FORCE
 	py.test --rootdir=tests
 	@echo
-	@make -ks check-flake8-results
+	# @make -ks check-flake8-results
 
 test-detail: FORCE
 	py.test -v --rootdir=tests
