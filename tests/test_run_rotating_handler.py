@@ -40,62 +40,62 @@ def _filepath_logger(name, logpath):
 
 
 def test_normal():
-    logpath = 'log'
-    logger = _normal_logger('normal', logpath)
+    logpath = "log"
+    logger = _normal_logger("normal", logpath)
 
-    logger.debug('log file test')
+    logger.debug("log file test")
     assert Path(logpath).is_dir()
     assert len(list(Path(logpath).iterdir())) == 1
     assert len(RunRotatingHandler._files) == len(_log_paths)
 
 
 def test_normal_same():
-    logpath = 'log'
-    logger = logging.getLogger('normal')
+    logpath = "log"
+    logger = logging.getLogger("normal")
 
-    logger.debug('same normal logger')
+    logger.debug("same normal logger")
     assert Path(logpath).is_dir()
     assert len(list(Path(logpath).iterdir())) == 1
     assert len(RunRotatingHandler._files) == len(_log_paths)
 
 
 def test_normal2():
-    logpath = 'log2'
-    logger = _normal_logger('normal2', logpath)
+    logpath = "log2"
+    logger = _normal_logger("normal2", logpath)
 
-    logger.debug('log file test')
+    logger.debug("log file test")
     assert Path(logpath).is_dir()
     assert len(list(Path(logpath).iterdir())) == 1
     assert len(RunRotatingHandler._files) == len(_log_paths)
 
 
 def test_logpath():
-    logpath = 'log/logs'
-    logger = _normal_logger('logpath', logpath)
+    logpath = "log/logs"
+    logger = _normal_logger("logpath", logpath)
 
-    logger.debug('log path test: %s', logpath)
+    logger.debug("log path test: %s", logpath)
     assert Path(logpath).is_dir()
     assert len(list(Path(logpath).iterdir())) == 1
     assert len(RunRotatingHandler._files) == len(_log_paths)
 
 
 def test_logpath2():
-    logpath = 'log/%Y/%M'
-    logger = _normal_logger('logpath2', logpath)
+    logpath = "log/%Y/%M"
+    logger = _normal_logger("logpath2", logpath)
     logpath = dt.strftime(TODAY, logpath)
 
-    logger.debug('log path test: %s', logpath)
+    logger.debug("log path test: %s", logpath)
     assert Path(logpath).is_dir()
     assert len(list(Path(logpath).iterdir())) == 1
     assert len(RunRotatingHandler._files) == len(_log_paths)
 
 
 def test_filepath():
-    logpath = 'log/%Y/%M%d/%Y.log'
-    logger = _normal_logger('filepath', logpath)
+    logpath = "log/%Y/%M%d/%Y.log"
+    logger = _normal_logger("filepath", logpath)
     logpath = dt.strftime(TODAY, logpath)
 
-    logger.debug('log path test: %s', logpath)
+    logger.debug("log path test: %s", logpath)
     assert Path(logpath).parent.is_dir()
     assert len(list(Path(logpath).iterdir())) == 1
     assert Path(logpath).exists()

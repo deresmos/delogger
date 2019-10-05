@@ -2,8 +2,7 @@ import os
 import re
 from datetime import datetime as dt
 from json import dumps as json_dumps
-from logging import (CRITICAL, DEBUG, ERROR, INFO, NOTSET, WARNING,
-                     FileHandler, Handler)
+from logging import CRITICAL, DEBUG, ERROR, INFO, NOTSET, WARNING, FileHandler, Handler
 from os import getenv
 from pathlib import Path
 
@@ -39,8 +38,7 @@ class _LOG_FILE(object):
         if not isinstance(other, _LOG_FILE):
             raise NotImplementedError
         eq = False
-        eq = (other.dirname == self.dirname) \
-            and (other.basename == self.basename)
+        eq = (other.dirname == self.dirname) and (other.basename == self.basename)
 
         return eq
 
@@ -64,7 +62,7 @@ class RunRotatingHandler(FileHandler):
 
     """
 
-    LOG_FMT = '%Y%m%d_%H%M%S.log'
+    LOG_FMT = "%Y%m%d_%H%M%S.log"
     """Default value of log format."""
 
     BACKUP_COUNT = 5
@@ -73,17 +71,11 @@ class RunRotatingHandler(FileHandler):
     _files = []
     """This list saving _LOG_FILE of output log file."""
 
-    _LOG_FMT_RE = {
-        r'\d{4}': ['%Y'],
-        r'\d{2}': ['%m', '%d', '%H', '%M', '%S'],
-    }
+    _LOG_FMT_RE = {r"\d{4}": ["%Y"], r"\d{2}": ["%m", "%d", "%H", "%M", "%S"]}
 
-    def __init__(self,
-                 dirname=None,
-                 filepath=None,
-                 backup_count=None,
-                 fmt=None,
-                 **kwargs):
+    def __init__(
+        self, dirname=None, filepath=None, backup_count=None, fmt=None, **kwargs
+    ):
         fmt = fmt or self.LOG_FMT
         backup_count = backup_count or self.BACKUP_COUNT
 
@@ -146,9 +138,7 @@ class RunRotatingHandler(FileHandler):
                 fmt_ = fmt_.replace(date_str, patter)
 
         repa = re.compile(fmt_)
-        files = [
-            x for x in sorted(Path(dirpath).glob('*')) if repa.search(str(x))
-        ]
+        files = [x for x in sorted(Path(dirpath).glob("*")) if repa.search(str(x))]
 
         return files
 
@@ -184,44 +174,46 @@ class SlackHandler(Handler):
     """default timeout for requests."""
 
     EMOJIS = {
-        NOTSET: ':loudspeaker:',
-        DEBUG: ':simple_smile:',
-        INFO: ':smile:',
-        WARNING: ':sweat:',
-        ERROR: ':sob:',
-        CRITICAL: ':scream:'
+        NOTSET: ":loudspeaker:",
+        DEBUG: ":simple_smile:",
+        INFO: ":smile:",
+        WARNING: ":sweat:",
+        ERROR: ":sob:",
+        CRITICAL: ":scream:",
     }
     """Default value of emojis."""
 
     USERNAMES = {
-        NOTSET: 'Notset',
-        DEBUG: 'Debug',
-        INFO: 'Info',
-        WARNING: 'Warning',
-        ERROR: 'Erorr',
-        CRITICAL: 'Critical',
+        NOTSET: "Notset",
+        DEBUG: "Debug",
+        INFO: "Info",
+        WARNING: "Warning",
+        ERROR: "Erorr",
+        CRITICAL: "Critical",
     }
     """Default value of usernames."""
 
-    URL_ENV = 'DELOGGER_SLACK_URL'
+    URL_ENV = "DELOGGER_SLACK_URL"
     """Environment variable name of slack webhook url."""
 
-    TOKEN_ENV = 'DELOGGER_TOKEN'
+    TOKEN_ENV = "DELOGGER_TOKEN"
     """Environment variable name of slack token."""
 
-    POST_MESSAGE_URL = 'https://slack.com/api/chat.postMessage'
+    POST_MESSAGE_URL = "https://slack.com/api/chat.postMessage"
     """Execution when using token API."""
 
-    def __init__(self,
-                 url=None,
-                 channel=None,
-                 as_user=False,
-                 token=None,
-                 *,
-                 emoji=None,
-                 username=None,
-                 emojis=None,
-                 usernames=None):
+    def __init__(
+        self,
+        url=None,
+        channel=None,
+        as_user=False,
+        token=None,
+        *,
+        emoji=None,
+        username=None,
+        emojis=None,
+        usernames=None
+    ):
         self.is_emit = True
 
         self.url = url or getenv(self.URL_ENV)
@@ -231,7 +223,7 @@ class SlackHandler(Handler):
 
         if not self.url:
             self.is_emit = False
-            raise ValueError('Not set url')
+            raise ValueError("Not set url")
 
         self.token = token
         self.channel = channel
@@ -249,24 +241,24 @@ class SlackHandler(Handler):
         content = content or {}
 
         if self.as_user:
-            content['as_user'] = self.as_user
+            content["as_user"] = self.as_user
 
         else:
             if self.emoji:
-                content['icon_emoji'] = self.emoji
+                content["icon_emoji"] = self.emoji
             elif self.emojis:
-                content['icon_emoji'] = self.emojis[levelno]
+                content["icon_emoji"] = self.emojis[levelno]
 
             if self.username:
-                content['username'] = self.username
+                content["username"] = self.username
             elif self.usernames:
-                content['username'] = self.usernames[levelno]
+                content["username"] = self.usernames[levelno]
 
         if self.channel:
-            content['channel'] = self.channel
+            content["channel"] = self.channel
 
         if self.token:
-            content['token'] = self.token
+            content["token"] = self.token
         else:
             content = json_dumps(content)
 
@@ -275,9 +267,7 @@ class SlackHandler(Handler):
     def makeContent(self, record):
         """Get slack's payload."""
 
-        content = {
-            'text': self.format(record),
-        }
+        content = {"text": self.format(record)}
         content = self._makeContent(record.levelno, content=content)
 
         return content
@@ -289,11 +279,7 @@ class SlackHandler(Handler):
             if not self.is_emit:
                 return
 
-            requests.post(
-                self.url,
-                data=self.makeContent(record),
-                timeout=self.TIMEOUT,
-            )
+            requests.post(self.url, data=self.makeContent(record), timeout=self.TIMEOUT)
 
         except Exception:
             self.handleError(record)
@@ -313,14 +299,15 @@ class SlackHandler(Handler):
             raise NotImplementedError
 
         eq = False
-        if other.token == self.token \
-                and other.url == self.url \
-                and other.level == self.level \
-                and other.channel == self.channel:
+        if (
+            other.token == self.token
+            and other.url == self.url
+            and other.level == self.level
+            and other.channel == self.channel
+        ):
             eq = True
 
         return eq
 
     def __hash__(self):
-        return hash('{}{}{}{}'.format(self.token, self.url, self.level,
-                                      self.channel))
+        return hash("{}{}{}{}".format(self.token, self.url, self.level, self.channel))
