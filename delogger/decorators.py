@@ -28,7 +28,18 @@ class DeloggerDebugLogDecorator(DeloggerBase):
         """
 
         logger = cls(name="_debugger").logger
+        return DeloggerDebugLogDecorator.__debuglog_wrapper(func, logger)
 
+    def _debuglog(self, func):
+        """When this decorator is set, the argument and return value are out-
+        put to the log.
+        """
+
+        logger = self._logger
+        return DeloggerDebugLogDecorator.__debuglog_wrapper(func, logger)
+
+    @staticmethod
+    def __debuglog_wrapper(func, logger):
         def wrapper(*args, **kwargs):
             # Output function name and argument.
             msg = "START {} args={} kwargs={}".format(func.__qualname__, args, kwargs)
@@ -38,8 +49,6 @@ class DeloggerDebugLogDecorator(DeloggerBase):
             rtn = func(*args, **kwargs)
             msg = "END {} return={}".format(func.__qualname__, rtn)
             logger.debug(msg)
-
-            return rtn
 
         return wrapper
 
@@ -51,7 +60,17 @@ class DeloggerLineProfilerDecorator(DeloggerBase):
         """
 
         logger = cls(name="_debugger_l").logger
+        return DeloggerLineProfilerDecorator.__line_profiler_wrapper(func, logger)
 
+    def _line_profiler(self, func):
+        """line_profiler are output to the log.
+        """
+
+        logger = self._logger
+        return DeloggerLineProfilerDecorator.__line_profiler_wrapper(func, logger)
+
+    @staticmethod
+    def __line_profiler_wrapper(func, logger):
         def wrapper(*args, **kwargs):
             # output line_profiler
             prof = LineProfiler()
@@ -75,7 +94,17 @@ class DeloggerMemoryProfilerDecorator(DeloggerBase):
         """
 
         logger = cls(name="_debugger_m").logger
+        return DeloggerMemoryProfilerDecorator.__memory_profiler_wrapper(func, logger)
 
+    def _memory_profiler(self, func):
+        """memory_profiler are output to the log.
+        """
+
+        logger = self._logger
+        return DeloggerMemoryProfilerDecorator.__memory_profiler_wrapper(func, logger)
+
+    @staticmethod
+    def __memory_profiler_wrapper(func, logger):
         def wrapper(*args, **kwargs):
             # output memory_profiler
             with StringIO() as f:
@@ -109,12 +138,28 @@ class DeloggerLineMemoryProfilerDecorator(DeloggerBase):
         """
 
         logger = cls(name="_debugger_l_m").logger
+        return DeloggerLineMemoryProfilerDecorator.__line_memory_profiler_wrapper(
+            func, logger
+        )
 
+    def _line_memory_profiler(self, func):
+        """line_profiler and memory_profiler mix are output to the log.
+        """
+
+        logger = self._logger
+        return DeloggerLineMemoryProfilerDecorator.__line_memory_profiler_wrapper(
+            func, logger
+        )
+
+    @staticmethod
+    def __line_memory_profiler_wrapper(func, logger):
         def wrapper(*args, **kwargs):
             # memory_profiler
             with StringIO() as f:
                 rtn = profile(func, stream=f, precision=2)(*args, **kwargs)
-                memory_value = cls._memory_profiler_parse(f.getvalue())
+                memory_value = DeloggerLineMemoryProfilerDecorator._memory_profiler_parse(
+                    f.getvalue()
+                )
 
             # line_profiler
             prof = LineProfiler()
@@ -123,15 +168,19 @@ class DeloggerLineMemoryProfilerDecorator(DeloggerBase):
             rtn = prof.runcall(func, *args, **kwargs)
             with StringIO() as f:
                 prof.print_stats(stream=f)
-                mix, line_tmp = cls._line_profiler_parse(f.getvalue())
+                mix, line_tmp = DeloggerLineMemoryProfilerDecorator._line_profiler_parse(
+                    f.getvalue()
+                )
 
             # memory line mix output
-            template = cls.L_M_TEMPLATE
+            template = DeloggerLineMemoryProfilerDecorator.L_M_TEMPLATE
             for l, m in zip(line_tmp, memory_value):
                 l_m_mix = l[:5] + m
                 mix.append(template.format(*l_m_mix))
-            mix[cls.L_M_HEADER_INDEX] = template.format(*cls.L_M_HEADER)
-            mix[cls.L_M_SEPARATOR_INDEX] += "=" * 27
+            mix[DeloggerLineMemoryProfilerDecorator.L_M_HEADER_INDEX] = template.format(
+                *DeloggerLineMemoryProfilerDecorator.L_M_HEADER
+            )
+            mix[DeloggerLineMemoryProfilerDecorator.L_M_SEPARATOR_INDEX] += "=" * 27
             logger.debug("line, memory profiler result\n" + "\n".join(mix))
 
             return rtn
