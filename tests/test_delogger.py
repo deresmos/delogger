@@ -255,3 +255,22 @@ def test_delogger_is_stream(capsys):
 
     _log_file(logpath)
     shutil.rmtree(delogger.dirpath)
+
+
+def test_delogger_no_propagate(capsys, caplog):
+    logging.basicConfig(level=logging.DEBUG)
+    logging.getLogger()
+
+    delogger = Delogger("propagate")
+    logger = delogger.logger
+
+    logger.info("OK")
+
+    captured = capsys.readouterr()
+    streams = ["OK"]
+    errors = captured.err.split("\n")
+    for err, stream in zip(errors, streams):
+        assert re.findall(stream, err)
+
+    # Check no propagate
+    assert not caplog.records
