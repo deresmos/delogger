@@ -19,6 +19,9 @@ test: FORCE
 test-detail: FORCE
 	py.test -v --rootdir=tests
 
+format: FORCE
+	black ./
+
 check-flake8: FORCE
 	find -type f -name '*.py' | flake8
 
