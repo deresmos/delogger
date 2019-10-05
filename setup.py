@@ -12,7 +12,7 @@ setup(
     author="deresmos",
     author_email="deresmos@gmail.com",
     url="https://github.com/deresmos/delogger",
-    python_requires=">=3.4",
+    python_requires=">=3.6",
     packages=find_packages(),
     include_package_data=False,
     keywords=["logging", "Logger"],
