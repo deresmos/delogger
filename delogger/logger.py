@@ -249,6 +249,7 @@ class Delogger(DeloggerSetting):
         name_ = parent or self
         name_ = name or type(name_).__name__
         logger = getLogger(name_)
+        logger.propagate = False
         logger.setLevel(Delogger.DEBUG)
         self._logger = logger
 
