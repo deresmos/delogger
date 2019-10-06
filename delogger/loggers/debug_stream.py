@@ -1,4 +1,4 @@
-from ..logger import Delogger
+from delogger import Delogger
 
 
 def _set_logger():
