@@ -1,3 +1,5 @@
+from logging import DEBUG
+
 from ..handlers import RunRotatingHandler
 from ..logger import DeloggerQueue
 
@@ -7,7 +9,7 @@ def _set_logger():
     delogger.default = False
 
     rrh = RunRotatingHandler("log", backup_count=-1, fmt="%Y-%m-%d.log")
-    delogger.add_handler(rrh, delogger.DEBUG, fmt=delogger.file_fmt)
+    delogger.add_handler(rrh, DEBUG, fmt=delogger.file_fmt)
 
     return delogger.logger
 
