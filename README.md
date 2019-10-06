@@ -6,7 +6,7 @@ delogger
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/deresmos/delogger/blob/master/LICENSE)
 
 
-Abount
+About
 ===
 Delogger is a Python package that makes easy use of decided logging.
 
