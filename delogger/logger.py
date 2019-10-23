@@ -3,13 +3,25 @@ from copy import copy
 from logging import DEBUG, INFO, WARNING
 from logging.handlers import QueueHandler, QueueListener
 from queue import Queue
+from typing import Optional
 
 from delogger import RunRotatingHandler
 from delogger.base import DeloggerBase
 from delogger.decorators import DeloggerDecorators
+from delogger.modes.base import ModeBase
+from delogger.modes.stream import ColorStreamInfoMode
 
 
 class Delogger(DeloggerDecorators, DeloggerBase):
+    DEFAULT_MODES = [ColorStreamInfoMode()]
+
+    def __init__(
+        self, name: str = None, *, modes: Optional[ModeBase] = None, **kwargs
+    ) -> None:
+        super().__init__(name=name, **kwargs)
+
+        self.modes = modes or self.DEFAULT_MODES
+
     @property
     def logger(self):
         """Return set logging.Logger."""
@@ -21,6 +33,23 @@ class Delogger(DeloggerDecorators, DeloggerBase):
             self._is_new_logger = False
 
         return self._logger
+
+    def get_logger(self):
+        """Return set logging.Logger."""
+
+        if not self._is_new_logger:
+            return self._logger
+
+        # Set handler
+        self.load_modes(self.modes)
+        self._logger.propagate = False
+        self._is_new_logger = False
+
+        return self._logger
+
+    def load_modes(self, modes):
+        for mode in modes:
+            mode.load_handler(delogger=self)
 
     def default_logger(self):
         """Set default handler."""
