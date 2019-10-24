@@ -26,9 +26,9 @@ class LogFile:
 class RunRotatingFileMode(ModeBase):
     def __init__(
         self,
-        level: int = DEBUG,
         filepath: str = "log/%Y%m%d_%H%M%S.log",
         backup_count: int = 5,
+        level: int = DEBUG,
         fmt: Optional[str] = None,
     ) -> None:
         self.level = level
@@ -52,10 +52,10 @@ class RunRotatingFileMode(ModeBase):
 class TimedRotatingFileMode(ModeBase):
     def __init__(
         self,
-        level: int = DEBUG,
         filepath: str = "log/delogger.log",
         when: str = "midnight",
         backup_count: int = 0,
+        level: int = DEBUG,
         fmt: Optional[str] = None,
     ) -> None:
         self.level = level
