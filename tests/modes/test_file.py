@@ -2,7 +2,7 @@ from pathlib import Path
 from shutil import rmtree
 
 from delogger import Delogger
-from delogger.modes.file import RunRotatingMode, TimedRotatingFileMode
+from delogger.modes.file import RunRotatingFileMode, TimedRotatingFileMode
 from tests.lib.base import Assert, DeloggerTestBase
 
 
@@ -16,7 +16,7 @@ class TestFileMode(DeloggerTestBase):
             rmtree(log_dir)
 
     def test_run_rotation_mode(self, capsys):
-        run_rotation_mode = RunRotatingMode()
+        run_rotation_mode = RunRotatingFileMode()
         delogger = Delogger("file_run_rotationg_mode", modes=[run_rotation_mode])
         logger = delogger.get_logger()
 
@@ -30,7 +30,7 @@ class TestFileMode(DeloggerTestBase):
         logfile.dirpath.rmdir()
 
     def test_run_rotation_filepath_mode(self, capsys):
-        run_rotation_mode = RunRotatingMode(filepath="log/test.log")
+        run_rotation_mode = RunRotatingFileMode(filepath="log/test.log")
         delogger = Delogger(
             "file_run_rotationg_filepath_mode", modes=[run_rotation_mode]
         )

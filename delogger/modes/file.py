@@ -23,7 +23,7 @@ class LogFile:
         self.dirpath.mkdir(parents=True, exist_ok=True)
 
 
-class RunRotatingMode(ModeBase):
+class RunRotatingFileMode(ModeBase):
     def __init__(
         self,
         level: int = DEBUG,
