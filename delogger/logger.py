@@ -47,7 +47,7 @@ class Delogger(DeloggerDecorators, DeloggerBase):
 
     def load_modes(self, modes):
         for mode in modes:
-            mode.load_handler(delogger=self)
+            mode.load_mode(delogger=self)
 
     def default_logger(self):
         """Set default handler."""

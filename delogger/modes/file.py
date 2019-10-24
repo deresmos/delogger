@@ -38,7 +38,7 @@ class RunRotatingMode(ModeBase):
 
         self.logfile: Optional[LogFile] = None
 
-    def load_handler(self, delogger: DeloggerBase):
+    def load_mode(self, delogger: DeloggerBase):
         run_hdlr = RunRotatingHandler(
             filepath=self.filepath, backup_count=self.backup_count
         )
@@ -66,7 +66,7 @@ class TimedRotatingFileMode(ModeBase):
 
         self.logfile = LogFile(filepath)
 
-    def load_handler(self, delogger: DeloggerBase):
+    def load_mode(self, delogger: DeloggerBase):
         self.logfile.mkdir()
         timed_hdlr = TimedRotatingFileHandler(
             filename=str(self.logfile.filepath),
