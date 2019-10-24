@@ -1,4 +1,5 @@
 from logging import DEBUG
+from logging.handlers import TimedRotatingFileHandler
 from pathlib import Path
 from typing import Optional
 
@@ -14,6 +15,12 @@ class LogFile:
         self.filepath: Path = _filepath
         self.dirpath: Path = _filepath.parent
         self.filename: str = _filepath.name
+
+    def mkdir(self) -> None:
+        if self.dirpath.is_dir():
+            return
+
+        self.dirpath.mkdir(parents=True, exist_ok=True)
 
 
 class RunRotatingMode(ModeBase):
@@ -40,3 +47,32 @@ class RunRotatingMode(ModeBase):
         delogger.add_handler(run_hdlr, self.level, fmt=fmt)
 
         self.logfile = LogFile(run_hdlr.filepath)
+
+
+class TimedRotatingFileMode(ModeBase):
+    def __init__(
+        self,
+        level: int = DEBUG,
+        filepath: str = "log/delogger.log",
+        when: str = "midnight",
+        backup_count: int = 0,
+        fmt: Optional[str] = None,
+    ) -> None:
+        self.level = level
+        self.filepath = filepath
+        self.when = when
+        self.backup_count = backup_count
+        self.fmt = fmt
+
+        self.logfile = LogFile(filepath)
+
+    def load_handler(self, delogger: DeloggerBase):
+        self.logfile.mkdir()
+        timed_hdlr = TimedRotatingFileHandler(
+            filename=str(self.logfile.filepath),
+            when=self.when,
+            backupCount=self.backup_count,
+        )
+
+        fmt = self.fmt or delogger.file_fmt
+        delogger.add_handler(timed_hdlr, self.level, fmt=fmt)
