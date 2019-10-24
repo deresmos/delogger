@@ -5,9 +5,9 @@ from logging.handlers import QueueHandler, QueueListener
 from queue import Queue
 from typing import Optional
 
-from delogger import RunRotatingHandler
 from delogger.base import DeloggerBase
 from delogger.decorators import DeloggerDecorators
+from delogger.handlers.run_rotating import RunRotatingHandler
 from delogger.modes.base import ModeBase
 from delogger.modes.stream import ColorStreamInfoMode
 

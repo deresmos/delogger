@@ -3,7 +3,7 @@ import shutil
 from datetime import datetime as dt
 from pathlib import Path
 
-from delogger import RunRotatingHandler
+from delogger.handlers.run_rotating import RunRotatingHandler
 
 _log_paths = []
 TODAY = dt.today()
