@@ -27,6 +27,7 @@ class DeloggerBase(DeloggerSetting):
         name_ = name or type(name_).__name__
         logger = getLogger(name_)
         logger.setLevel(DEBUG)
+        logger.propagate = False
         self._logger = logger
 
         if len(self._logger.handlers) > 0:
