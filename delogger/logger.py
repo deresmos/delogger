@@ -29,7 +29,6 @@ class Delogger(DeloggerDecorators, DeloggerBase):
         # Set only loggers that have not been set yet.
         if self._is_new_logger and self.default:
             self.default_logger()
-            self._logger.propagate = False
             self._is_new_logger = False
 
         return self._logger
@@ -42,7 +41,6 @@ class Delogger(DeloggerDecorators, DeloggerBase):
 
         # Set handler
         self.load_modes(self.modes)
-        self._logger.propagate = False
         self._is_new_logger = False
 
         return self._logger
