@@ -29,12 +29,6 @@ class DeloggerTestBase:
     ALL_LEVELS = ["debug", "info", "warning", "error", "critical"]
 
     def check_normal_stream_log(self, logger, capsys, is_color=False):
-        logger.debug("debug")
-        logger.info("info")
-        logger.warning("warning")
-        logger.error("error")
-        logger.critical("critical")
-
         captured = capsys.readouterr()
         if is_color:
             streams = [
@@ -55,16 +49,10 @@ class DeloggerTestBase:
             Assert._match(stream, log)
 
     def check_debug_stream_log(self, logger, capsys, is_color=False):
-        # logger stream test
-        logger.debug("debug")
-        logger.info("info")
-        logger.warning("warning")
-        logger.error("error")
-
         captured = capsys.readouterr()
 
         fmt = self.COLOR_FMT if is_color else self.DEBUG_FMT
-        streams = ["debug", "info", "warning", "error"]
+        streams = self.ALL_LEVELS
         streams = [fmt % stream for stream in streams]
         logs = captured.err.split("\n")
         for stream, log in zip(streams, logs):
