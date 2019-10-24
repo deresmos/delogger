@@ -26,6 +26,8 @@ class DeloggerTestBase:
         r"\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} " r'[^\s]+\s? [^\s]+ [^\s]+ \d{1,5} "%s"'
     )
 
+    ALL_LEVELS = ["debug", "info", "warning", "error", "critical"]
+
     def check_normal_stream_log(self, logger, capsys, is_color=False):
         logger.debug("debug")
         logger.info("info")
@@ -68,11 +70,23 @@ class DeloggerTestBase:
         for stream, log in zip(streams, logs):
             Assert._match(stream, log)
 
-    def check_log_file(self, logpath):
-        logs = ["debug", "info", "warning", "error"]
-        logs = [self.LOG_FMT % stream for stream in logs]
+    def check_log_file(self, filepath):
+        logs = [self.LOG_FMT % stream for stream in self.ALL_LEVELS]
 
-        for path in Path(logpath).iterdir():
-            with open(str(path), "r") as f:
-                for line, log in zip(f, logs):
-                    Assert._match(log, line)
+        _filepath = Path(filepath)
+        if not _filepath.is_file():
+            raise FileNotFoundError(_filepath)
+
+        if _filepath.stat().st_size <= 0:
+            raise Exception("Empty file")
+
+        with open(str(filepath), "r") as f:
+            for log, line in zip(logs, f):
+                Assert._match(log, line)
+
+    def execute_log(self, logger):
+        logger.debug("debug")
+        logger.info("info")
+        logger.warning("warning")
+        logger.error("error")
+        logger.critical("critical")
