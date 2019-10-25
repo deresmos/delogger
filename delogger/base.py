@@ -1,6 +1,5 @@
 from logging import DEBUG, Formatter, StreamHandler, getLogger
 
-from colorlog import ColoredFormatter
 from delogger import OnlyFilter
 from delogger.setting import DeloggerSetting
 
@@ -87,6 +86,8 @@ class DeloggerBase(DeloggerSetting):
             return
 
         if is_color_stream:
+            from colorlog import ColoredFormatter
+
             fmt = ColoredFormatter(
                 kwargs.get("fmt", None), log_colors=self.log_colors, style="%"
             )
