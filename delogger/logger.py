@@ -48,6 +48,11 @@ class Delogger(DeloggerBase):
         for mode in modes:
             mode.load_mode(delogger=self)
 
+    def load_decorators(self, decorators=None):
+        decorators = decorators or []
+        for decorator in decorators:
+            decorator.load_decorator(delogger=self)
+
     def default_logger(self):
         """Set default handler."""
 
