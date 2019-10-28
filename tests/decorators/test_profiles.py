@@ -6,6 +6,11 @@ from tests.lib.base import DeloggerTestBase
 
 class TestProfileDecorator(DeloggerTestBase):
     def test_line_profile_decorator(self, capsys, caplog):
+        try:
+            import line_profiler
+        except ImportError:
+            return
+
         delogger = Delogger("line_profile_decorator", modes=[StreamDebugMode()])
         delogger.load_decorators([LineProfile()])
         logger = delogger.get_logger()
@@ -18,6 +23,11 @@ class TestProfileDecorator(DeloggerTestBase):
         test_func("testarg", 123)
 
     def test_memory_profile_decorator(self, capsys, caplog):
+        try:
+            import memory_profiler
+        except ImportError:
+            return
+
         delogger = Delogger("memory_profile_decorator", modes=[StreamDebugMode()])
         delogger.load_decorators([MemoryProfile()])
         logger = delogger.get_logger()
@@ -30,6 +40,11 @@ class TestProfileDecorator(DeloggerTestBase):
         test_func("testarg", 123)
 
     def test_line_memory_profile_decorator(self, capsys, caplog):
+        try:
+            import line_profiler
+        except ImportError:
+            return
+
         delogger = Delogger("line_memory_profile_decorator", modes=[StreamDebugMode()])
         delogger.load_decorators([LineMemoryProfile()])
         logger = delogger.get_logger()
