@@ -1,7 +1,6 @@
 import atexit
 from copy import copy
 from logging import DEBUG, INFO, WARNING
-from logging.handlers import QueueHandler, QueueListener
 from queue import Queue
 from typing import Optional
 
@@ -128,6 +127,7 @@ class DeloggerQueue(Delogger):
         Set QueueListener only for the first time.
 
         """
+        from logging.handlers import QueueHandler, QueueListener
 
         if DeloggerQueue._listener:
             queue_handler = QueueHandler(DeloggerQueue._que)
