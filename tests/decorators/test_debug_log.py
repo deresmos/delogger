@@ -28,6 +28,5 @@ class TestDebugLogDecorator(DeloggerTestBase):
         streams = [fmt % stream for stream in streams]
         logs = captured.err.split("\n")
         for stream, log in zip(streams, logs):
-            print(stream, log)
             Assert._match(stream, log)
         return False
