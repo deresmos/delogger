@@ -1,6 +1,7 @@
 from logging import DEBUG
 
-from delogger import DeloggerQueue, RunRotatingHandler
+from delogger import DeloggerQueue
+from delogger.handlers.run_rotating import RunRotatingHandler
 
 
 def _set_logger():

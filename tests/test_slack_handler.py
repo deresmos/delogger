@@ -2,7 +2,7 @@ import json
 import logging
 import os
 
-from delogger import SlackHandler
+from delogger.handlers.slack import SlackHandler
 
 dummy_url = "dummy.url"
 dummy_token = "dummy.token"
