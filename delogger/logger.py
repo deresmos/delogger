@@ -48,8 +48,7 @@ class Delogger(DeloggerBase):
         for mode in modes:
             mode.load_mode(delogger=self)
 
-    def load_decorators(self, decorators=None):
-        decorators = decorators or []
+    def load_decorators(self, *decorators):
         for decorator in decorators:
             decorator.load_decorator(delogger=self)
 

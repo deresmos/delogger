@@ -12,7 +12,7 @@ class TestProfileDecorator(DeloggerTestBase):
             return
 
         delogger = Delogger("line_profile_decorator", modes=[StreamDebugMode()])
-        delogger.load_decorators([LineProfile()])
+        delogger.load_decorators(LineProfile())
         logger = delogger.get_logger()
 
         @logger.line_profile
@@ -29,7 +29,7 @@ class TestProfileDecorator(DeloggerTestBase):
             return
 
         delogger = Delogger("memory_profile_decorator", modes=[StreamDebugMode()])
-        delogger.load_decorators([MemoryProfile()])
+        delogger.load_decorators(MemoryProfile())
         logger = delogger.get_logger()
 
         @logger.memory_profile
@@ -46,7 +46,7 @@ class TestProfileDecorator(DeloggerTestBase):
             return
 
         delogger = Delogger("line_memory_profile_decorator", modes=[StreamDebugMode()])
-        delogger.load_decorators([LineMemoryProfile()])
+        delogger.load_decorators(LineMemoryProfile())
         logger = delogger.get_logger()
 
         @logger.line_memory_profile
