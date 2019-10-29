@@ -6,13 +6,12 @@ from queue import Queue
 from typing import Optional
 
 from delogger.base import DeloggerBase
-from delogger.decorators import DeloggerDecorators
 from delogger.handlers.run_rotating import RunRotatingHandler
 from delogger.modes.base import ModeBase
 from delogger.modes.stream import ColorStreamInfoMode
 
 
-class Delogger(DeloggerDecorators, DeloggerBase):
+class Delogger(DeloggerBase):
     DEFAULT_MODES = [ColorStreamInfoMode()]
 
     def __init__(
@@ -48,6 +47,10 @@ class Delogger(DeloggerDecorators, DeloggerBase):
     def load_modes(self, modes):
         for mode in modes:
             mode.load_mode(delogger=self)
+
+    def load_decorators(self, *decorators):
+        for decorator in decorators:
+            decorator.load_to_delogger(delogger=self)
 
     def default_logger(self):
         """Set default handler."""
