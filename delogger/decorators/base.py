@@ -16,7 +16,7 @@ class DecoratorBase(metaclass=ABCMeta):
     def decorator(self, func):
         pass
 
-    def load_decorator(self, delogger: DeloggerBase):
+    def load_to_delogger(self, delogger: DeloggerBase):
         logger = delogger._logger
         _decorator = getattr(logger, self.decorator_name, None)
         if _decorator:

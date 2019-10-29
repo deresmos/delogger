@@ -50,7 +50,7 @@ class Delogger(DeloggerBase):
 
     def load_decorators(self, *decorators):
         for decorator in decorators:
-            decorator.load_decorator(delogger=self)
+            decorator.load_to_delogger(delogger=self)
 
     def default_logger(self):
         """Set default handler."""
