@@ -1,7 +1,13 @@
 import shutil
 from pathlib import Path
 
-from .config import TODAY, _debug_stream_logger, _dp, _log_file, _normal_stream_logger
+from tests.deprecated.config import (
+    TODAY,
+    _debug_stream_logger,
+    _dp,
+    _log_file,
+    _normal_stream_logger,
+)
 
 
 def test_debug_logger(capsys):

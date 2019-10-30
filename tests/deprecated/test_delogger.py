@@ -4,9 +4,15 @@ import shutil
 from datetime import datetime as dt
 from pathlib import Path
 
-from delogger import Delogger
+from tests.deprecated.config import (
+    TODAY,
+    _debug_stream_logger,
+    _dp,
+    _log_file,
+    _normal_stream_logger,
+)
 
-from .config import TODAY, _debug_stream_logger, _dp, _log_file, _normal_stream_logger
+from delogger import Delogger
 
 
 def test_delogger_normal(capsys):
