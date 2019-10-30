@@ -3,7 +3,6 @@ from logging.handlers import TimedRotatingFileHandler
 from pathlib import Path
 from typing import Optional
 
-from delogger.base import DeloggerBase
 from delogger.handlers.run_rotating import RunRotatingHandler
 from delogger.modes.base import ModeBase
 
@@ -38,7 +37,7 @@ class RunRotatingFileMode(ModeBase):
 
         self.logfile: Optional[LogFile] = None
 
-    def load_mode(self, delogger: DeloggerBase):
+    def load_to_delogger(self, delogger):
         run_hdlr = RunRotatingHandler(
             filepath=self.filepath, backup_count=self.backup_count
         )
@@ -66,7 +65,7 @@ class TimedRotatingFileMode(ModeBase):
 
         self.logfile = LogFile(filepath)
 
-    def load_mode(self, delogger: DeloggerBase):
+    def load_to_delogger(self, delogger):
         self.logfile.mkdir()
         timed_hdlr = TimedRotatingFileHandler(
             filename=str(self.logfile.filepath),

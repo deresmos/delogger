@@ -1,7 +1,6 @@
 from logging import DEBUG, INFO, WARNING
 from typing import Optional
 
-from delogger.base import DeloggerBase
 from delogger.modes.base import ModeBase
 
 __all__ = [
@@ -26,7 +25,7 @@ class StreamMode(ModeBase):
         self.debug_fmt = debug_fmt
         self.info_fmt = info_fmt
 
-    def load_mode(self, delogger: DeloggerBase):
+    def load_to_delogger(self, delogger):
         debug_fmt = self.debug_fmt or self._stream_fmt(delogger, is_debug=True)
         info_fmt = self.info_fmt or self._stream_fmt(delogger, is_debug=False)
 
