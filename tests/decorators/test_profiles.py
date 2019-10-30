@@ -11,7 +11,8 @@ class TestProfileDecorator(DeloggerTestBase):
         except ImportError:
             return
 
-        delogger = Delogger("line_profile_decorator", modes=[StreamDebugMode()])
+        delogger = Delogger("line_profile_decorator")
+        delogger.load_modes(StreamDebugMode())
         delogger.load_decorators(LineProfile())
         logger = delogger.get_logger()
 
@@ -28,7 +29,8 @@ class TestProfileDecorator(DeloggerTestBase):
         except ImportError:
             return
 
-        delogger = Delogger("memory_profile_decorator", modes=[StreamDebugMode()])
+        delogger = Delogger("memory_profile_decorator")
+        delogger.load_modes(StreamDebugMode())
         delogger.load_decorators(MemoryProfile())
         logger = delogger.get_logger()
 
@@ -45,7 +47,8 @@ class TestProfileDecorator(DeloggerTestBase):
         except ImportError:
             return
 
-        delogger = Delogger("line_memory_profile_decorator", modes=[StreamDebugMode()])
+        delogger = Delogger("line_memory_profile_decorator")
+        delogger.load_modes(StreamDebugMode())
         delogger.load_decorators(LineMemoryProfile())
         logger = delogger.get_logger()
 

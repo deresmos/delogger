@@ -17,7 +17,8 @@ class TestFileMode(DeloggerTestBase):
 
     def test_run_rotation_mode(self, capsys):
         run_rotation_mode = RunRotatingFileMode()
-        delogger = Delogger("file_run_rotationg_mode", modes=[run_rotation_mode])
+        delogger = Delogger("file_run_rotationg_mode")
+        delogger.load_modes(run_rotation_mode)
         logger = delogger.get_logger()
 
         logfile = run_rotation_mode.logfile
@@ -31,9 +32,8 @@ class TestFileMode(DeloggerTestBase):
 
     def test_run_rotation_filepath_mode(self, capsys):
         run_rotation_mode = RunRotatingFileMode(filepath="log/test.log")
-        delogger = Delogger(
-            "file_run_rotationg_filepath_mode", modes=[run_rotation_mode]
-        )
+        delogger = Delogger("file_run_rotationg_filepath_mode")
+        delogger.load_modes(run_rotation_mode)
         logger = delogger.get_logger()
 
         logfile = run_rotation_mode.logfile
@@ -47,7 +47,8 @@ class TestFileMode(DeloggerTestBase):
 
     def test_timed_rotating_file_mode(self, capsys):
         timed_file_mode = TimedRotatingFileMode()
-        delogger = Delogger("timed_rotating_file_mode", modes=[timed_file_mode])
+        delogger = Delogger("timed_rotating_file_mode")
+        delogger.load_modes(timed_file_mode)
         logger = delogger.get_logger()
 
         logfile = timed_file_mode.logfile

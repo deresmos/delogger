@@ -2,22 +2,13 @@ import atexit
 from copy import copy
 from logging import DEBUG, INFO, WARNING
 from queue import Queue
-from typing import Optional
 
 from delogger.base import DeloggerBase
-from delogger.modes.base import ModeBase
-from delogger.modes.stream import ColorStreamInfoMode
 
 
 class Delogger(DeloggerBase):
-    DEFAULT_MODES = [ColorStreamInfoMode()]
-
-    def __init__(
-        self, name: str = None, *, modes: Optional[ModeBase] = None, **kwargs
-    ) -> None:
+    def __init__(self, name: str = None, **kwargs) -> None:
         super().__init__(name=name, **kwargs)
-
-        self.modes = modes or self.DEFAULT_MODES
 
     @property
     def logger(self):
@@ -37,12 +28,11 @@ class Delogger(DeloggerBase):
             return self._logger
 
         # Set handler
-        self.load_modes(self.modes)
         self._is_new_logger = False
 
         return self._logger
 
-    def load_modes(self, modes):
+    def load_modes(self, *modes):
         for mode in modes:
             mode.load_to_delogger(delogger=self)
 

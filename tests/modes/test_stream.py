@@ -12,7 +12,8 @@ from tests.lib.base import Assert, DeloggerTestBase
 
 class TestStreamMode(DeloggerTestBase):
     def test_stream_info_mode(self, capsys):
-        delogger = Delogger("stream_info_mode", modes=[StreamInfoMode()])
+        delogger = Delogger("stream_info_mode")
+        delogger.load_modes(StreamInfoMode())
         logger = delogger.get_logger()
 
         self.execute_log(logger)
@@ -21,7 +22,8 @@ class TestStreamMode(DeloggerTestBase):
         Assert._bool(not Path(delogger.dirpath).is_dir())
 
     def test_stream_debug_mode(self, capsys):
-        delogger = Delogger(name="stream_debug_mode", modes=[StreamDebugMode()])
+        delogger = Delogger(name="stream_debug_mode")
+        delogger.load_modes(StreamDebugMode())
         logger = delogger.get_logger()
 
         self.execute_log(logger)
@@ -30,9 +32,8 @@ class TestStreamMode(DeloggerTestBase):
         Assert._bool(not Path(delogger.dirpath).is_dir())
 
     def test_color_stream_info_mode(self, capsys):
-        delogger = Delogger(
-            name="color_stream_info_mode", modes=[ColorStreamInfoMode()]
-        )
+        delogger = Delogger(name="color_stream_info_mode")
+        delogger.load_modes(ColorStreamInfoMode())
         logger = delogger.get_logger()
 
         self.execute_log(logger)
@@ -41,9 +42,8 @@ class TestStreamMode(DeloggerTestBase):
         Assert._bool(not Path(delogger.dirpath).is_dir())
 
     def test_color_stream_debug_mode(self, capsys):
-        delogger = Delogger(
-            name="color_stream_debug_mode", modes=[ColorStremDebugMode()]
-        )
+        delogger = Delogger(name="color_stream_debug_mode")
+        delogger.load_modes(ColorStremDebugMode())
         logger = delogger.get_logger()
 
         self.execute_log(logger)

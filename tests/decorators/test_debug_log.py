@@ -6,7 +6,8 @@ from tests.lib.base import Assert, DeloggerTestBase
 
 class TestDebugLogDecorator(DeloggerTestBase):
     def test_debug_log_decorator(self, capsys, caplog):
-        delogger = Delogger("debug_log_decorator", modes=[StreamDebugMode()])
+        delogger = Delogger("debug_log_decorator")
+        delogger.load_modes(StreamDebugMode())
         delogger.load_decorators(DebugLog())
         logger = delogger.get_logger()
 

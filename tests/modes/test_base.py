@@ -2,6 +2,7 @@ import logging
 
 from delogger import Delogger
 from delogger.modes.base import PropagateMode
+from delogger.modes.stream import StreamInfoMode
 from tests.lib.base import Assert, DeloggerTestBase
 
 
@@ -10,7 +11,8 @@ class TestPropagateMode(DeloggerTestBase):
         logging.basicConfig(level=logging.DEBUG)
         logging.getLogger()
 
-        delogger = Delogger("propagate_mode", modes=[PropagateMode()])
+        delogger = Delogger("propagate_mode")
+        delogger.load_modes(PropagateMode())
         logger = delogger.get_logger()
 
         self.execute_log(logger)
@@ -22,7 +24,8 @@ class TestPropagateMode(DeloggerTestBase):
         logging.getLogger()
 
         delogger = Delogger("no_propagate_mode")
+        delogger.load_modes(StreamInfoMode())
         logger = delogger.get_logger()
 
         self.execute_log(logger)
-        self.check_normal_stream_log(logger, capsys, is_color=True)
+        self.check_normal_stream_log(logger, capsys, is_color=False)
