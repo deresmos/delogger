@@ -5,7 +5,6 @@ from queue import Queue
 from typing import Optional
 
 from delogger.base import DeloggerBase
-from delogger.handlers.run_rotating import RunRotatingHandler
 from delogger.modes.base import ModeBase
 from delogger.modes.stream import ColorStreamInfoMode
 
@@ -22,7 +21,7 @@ class Delogger(DeloggerBase):
 
     @property
     def logger(self):
-        """Return set logging.Logger."""
+        """[Deprecated] Return set logging.Logger."""
 
         # Set only loggers that have not been set yet.
         if self._is_new_logger and self.default:
@@ -52,7 +51,8 @@ class Delogger(DeloggerBase):
             decorator.load_to_delogger(delogger=self)
 
     def default_logger(self):
-        """Set default handler."""
+        """[Deprecated] Set default handler."""
+        from delogger.handlers.run_rotating import RunRotatingHandler
 
         if not self.is_debug_stream and self.stream_level <= INFO:
             # info is a normal stream, over warning it is a debug stream.
@@ -113,8 +113,16 @@ class DeloggerQueue(Delogger):
         super().__init__(*args, **kwargs)
         self.default = default
 
+    def get_logger(self):
+        """Return set logging.Logger."""
+
+        if not DeloggerQueue._listener:
+            self.queue_logger()
+
+        return super().get_logger()
+
     def default_logger(self):
-        """Default logger for Queue."""
+        """[Deprecated] Default logger for Queue."""
 
         if not DeloggerQueue._listener:
             super().default_logger()

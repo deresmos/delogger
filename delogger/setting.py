@@ -20,22 +20,22 @@ class DeloggerSettingBase:
 
 class DeloggerFileSetting(DeloggerSettingBase):
     is_save_file = False
-    """Default value of save file flag."""
+    """[Deprecated] Default value of save file flag."""
 
     file_level = DEBUG
-    """Default value of file logger level."""
+    """[Deprecated] Default value of file logger level."""
 
     dirpath = "log"
-    """Default value of log output destination directory."""
+    """[Deprecated] Default value of log output destination directory."""
 
     backup_count = 5
-    """Default value of RunRotatingHandler backup count."""
+    """[Deprecated] Default value of RunRotatingHandler backup count."""
 
     filename = None
-    """Default value of RunRotatingHandler filename (fmt)."""
+    """[Deprecated] Default value of RunRotatingHandler filename (fmt)."""
 
     filepath = None
-    """Default value of RunRotatingHandler filepath (filepath)."""
+    """[Deprecated] Default value of RunRotatingHandler filepath (filepath)."""
 
     file_fmt = (
         "%(asctime)s %(levelname)s %(name)s %(filename)s " '%(lineno)d "%(message)s"'
@@ -65,16 +65,16 @@ class DeloggerFileSetting(DeloggerSettingBase):
 
 class DeloggerStreamSetting(DeloggerSettingBase):
     is_stream = True
-    """Default value of stream output flag."""
+    """[Deprecated] Default value of stream output flag."""
 
     is_debug_stream = False
-    """Default value of debug stream flag."""
+    """[Deprecated] Default value of debug stream flag."""
 
     is_color_stream = True
-    """Default value of color stream flag."""
+    """[Deprecated] Default value of color stream flag."""
 
     stream_level = INFO
-    """Default value of stream logger level."""
+    """[Deprecated] Default value of stream logger level."""
 
     stream_fmts = [
         "%(message)s",
@@ -127,11 +127,11 @@ class DeloggerStreamSetting(DeloggerSettingBase):
 
     @property
     def stream_fmt(self):
-        """Return a stream fmt tailored to the situation."""
+        """[Deprecated] Return a stream fmt tailored to the situation."""
         return self._stream_fmt()
 
     def _stream_fmt(self, is_debug_stream=False):
-        """Return a stream fmt tailored to the situation.
+        """[Deprecated] Return a stream fmt tailored to the situation.
 
         Return fmt of color stream or debug stream according to set-
         ting situation.
@@ -160,7 +160,7 @@ class DeloggerSetting(DeloggerFileSetting, DeloggerStreamSetting):
     """Default value of datetime format."""
 
     default = True
-    """Default value of default logger."""
+    """[Deprecated] Default value of default logger."""
 
     def __init__(self, date_fmt=None, default=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
