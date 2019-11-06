@@ -24,7 +24,7 @@ class Delogger(DeloggerBase):
     def get_logger(self):
         """Return set logging.Logger."""
 
-        if not self._is_new_logger:
+        if self.is_already_setup():
             return self._logger
 
         # Set handler
@@ -33,10 +33,16 @@ class Delogger(DeloggerBase):
         return self._logger
 
     def load_modes(self, *modes):
+        if self.is_already_setup():
+            return
+
         for mode in modes:
             mode.load_to_delogger(delogger=self)
 
     def load_decorators(self, *decorators):
+        if self.is_already_setup():
+            return
+
         for decorator in decorators:
             decorator.load_to_delogger(delogger=self)
 

@@ -36,6 +36,9 @@ class DeloggerBase(DeloggerSetting):
             # Not set logger
             self._is_new_logger = True
 
+    def is_already_setup(self):
+        return not self._is_new_logger
+
     def add_handler(
         self, hdlr, level, fmt=None, datefmt=None, only_level=False, formatter=None
     ):
