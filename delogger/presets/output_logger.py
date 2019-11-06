@@ -7,7 +7,7 @@ from delogger.modes.file import TimedRotatingFileMode
 
 
 def _get_logger():
-    delogger = DeloggerQueue("debug_logger")
+    delogger = DeloggerQueue("output_logger")
     delogger.load_modes(TimedRotatingFileMode())
 
     slack_webhook = os.getenv("DELOGGER_SLACK_WEBHOOK")
