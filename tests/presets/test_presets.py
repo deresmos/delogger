@@ -14,8 +14,8 @@ class TestPresets(DeloggerTestBase):
                 continue
             rmtree(log_dir)
 
-    def test_debug_logger(self, capsys):
-        from delogger.presets.debug_logger import logger
+    def test_debug(self, capsys):
+        from delogger.presets.debug import logger
 
         self.execute_log(logger)
 
