@@ -40,6 +40,8 @@ class TestPresets(DeloggerTestBase):
 
         self.execute_log(logger)
 
+        assert getattr(logger, "debuglog")
+
     def test_profiler(self):
         from delogger.presets.profiler import logger
 
