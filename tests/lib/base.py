@@ -22,9 +22,7 @@ class DeloggerTestBase:
         r"(\x1b\[\d{1,3}m)+\w+\s?\x1b\[0m "
         r'\[[^\s]+ File "[^\s]+", line \d{1,5}, in [^\s]+\] %s\x1b\[0m'
     )
-    LOG_FMT = (
-        r"\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} " r'[^\s]+\s? [^\s]+ [^\s]+ \d{1,5} "%s"'
-    )
+    LOG_FMT = r"\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}.\d{3} [^\s]+\s? [^\s]+ \d{1,5} %s"
 
     ALL_LEVELS = ["debug", "info", "warning", "error", "critical"]
 

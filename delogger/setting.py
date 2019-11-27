@@ -38,7 +38,7 @@ class DeloggerFileSetting(DeloggerSettingBase):
     """[Deprecated] Default value of RunRotatingHandler filepath (filepath)."""
 
     file_fmt = (
-        "%(asctime)s %(levelname)s %(name)s %(filename)s " '%(lineno)d "%(message)s"'
+        "%(asctime)s.%(msecs).03d %(levelname)s %(filename)s:%(lineno)d %(message)s"
     )
     """Default value of file logger fmt."""
 
