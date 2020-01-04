@@ -38,7 +38,7 @@ class DeloggerFileSetting(DeloggerSettingBase):
     """[Deprecated] Default value of RunRotatingHandler filepath (filepath)."""
 
     file_fmt = (
-        "%(asctime)s %(levelname)s %(name)s %(filename)s " '%(lineno)d "%(message)s"'
+        "%(asctime)s.%(msecs).03d %(levelname)s %(filename)s:%(lineno)d %(message)s"
     )
     """Default value of file logger fmt."""
 
@@ -78,18 +78,14 @@ class DeloggerStreamSetting(DeloggerSettingBase):
 
     stream_fmts = [
         "%(message)s",
-        (
-            '%(levelname)-5s [%(name)s File "%(filename)s", '
-            "line %(lineno)d, in %(funcName)s] %(message)s"
-        ),
+        "%(levelname)-5s %(asctime)s %(filename)s:%(lineno)d %(message)s",
     ]
     """Default value of stream logger fmt.(0: normal, 1: debug)"""
 
     stream_color_fmts = [
-        "%(message)s",
-        (
-            "%(log_color)s%(levelname)-5s%(reset)s [%(name)s "
-            'File "%(filename)s", line %(lineno)d, in %(funcName)s] %(message)s'
+        stream_fmts[0],
+        stream_fmts[1].replace(
+            "%(levelname)-5s", "%(log_color)s%(levelname)-5s%(reset)s"
         ),
     ]
     """Default value of color stream logger fmt.(0: normal, 1: debug)"""
@@ -165,7 +161,7 @@ class DeloggerSetting(DeloggerFileSetting, DeloggerStreamSetting):
     def __init__(self, date_fmt=None, default=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.init_attr("dete_fmt", date_fmt)
+        self.init_attr("date_fmt", date_fmt)
         self.init_attr("default", default)
 
         addLevelName(WARNING, "WARN")
