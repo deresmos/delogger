@@ -16,13 +16,12 @@ class Assert:
 
 
 class DeloggerTestBase:
-    DEBUG_FMT = r'[^\s]+\s? \[[^\s]+ File "[^\s]+", line \d{1,5}, in [^\s]+\] %s'
+    DEBUG_FMT = r"\w+\s? \d{2}:\d{2}:\d{2} [^\s]+:\d{1,5} %s"
     INFO_FMT = r"%s"
     COLOR_FMT = (
-        r"(\x1b\[\d{1,3}m)+\w+\s?\x1b\[0m "
-        r'\[[^\s]+ File "[^\s]+", line \d{1,5}, in [^\s]+\] %s\x1b\[0m'
+        r"(\x1b\[\d{1,3}m)+\w+\s?\x1b\[0m \d{2}:\d{2}:\d{2} [^\s]+:\d{1,5} %s\x1b\[0m"
     )
-    LOG_FMT = r"\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}.\d{3} [^\s]+\s? [^\s]+ \d{1,5} %s"
+    LOG_FMT = r"\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}.\d{3} [^\s]+\s? [^\s]+:\d{1,5} %s"
 
     ALL_LEVELS = ["debug", "info", "warning", "error", "critical"]
 

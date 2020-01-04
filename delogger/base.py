@@ -108,4 +108,4 @@ class DeloggerBase(DeloggerSetting):
             kwargs.setdefault("formatter", fmt)
 
         hdlr = hdlr or StreamHandler()
-        self.add_handler(hdlr, level, **kwargs)
+        self.add_handler(hdlr, level, datefmt=datefmt, **kwargs)

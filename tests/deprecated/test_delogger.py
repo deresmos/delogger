@@ -4,6 +4,7 @@ import shutil
 from datetime import datetime as dt
 from pathlib import Path
 
+from delogger import Delogger
 from tests.deprecated.config import (
     TODAY,
     _debug_stream_logger,
@@ -11,8 +12,6 @@ from tests.deprecated.config import (
     _log_file,
     _normal_stream_logger,
 )
-
-from delogger import Delogger
 
 
 def test_delogger_normal(capsys):
@@ -25,7 +24,7 @@ def test_delogger_normal(capsys):
 
 
 def test_delogger_color(capsys):
-    delogger = Delogger(name="color", is_color_stream=True)
+    delogger = Delogger(name="color", is_color_stream=True, date_fmt="%H:%M:%S")
     logger = delogger.logger
 
     _normal_stream_logger(logger, capsys, is_color=True)
@@ -34,7 +33,12 @@ def test_delogger_color(capsys):
 
 
 def test_delogger_color_debug(capsys):
-    delogger = Delogger(name="color_debug", is_color_stream=True, is_debug_stream=True)
+    delogger = Delogger(
+        name="color_debug",
+        is_color_stream=True,
+        is_debug_stream=True,
+        date_fmt="%H:%M:%S",
+    )
     logger = delogger.logger
 
     _debug_stream_logger(logger, capsys, is_color=True)
