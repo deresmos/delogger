@@ -1,0 +1,45 @@
+# INFO
+- name: ready-for-merge
+  color: 00ff00
+
+# WARNING
+- name: experimental
+  color: ffff00
+- name: WIP
+  color: ffff00
+
+# ALERT
+- name: bug
+  color: dd0000
+
+# PROGRAMING
+- name: fix
+  color: a2eeef
+- name: enhancement
+  color: a2eeef
+- name: refactor
+  color: a2eeef
+
+# Communication
+- name: help wanted
+  color: ffccdd
+- name: question
+  color: ffccdd
+- name: documentation
+  color: ffccdd
+- name: discussion
+  color: ffccdd
+
+# etc
+- name: release
+  color: dff4de
+- name: workflow
+  color: dff4de
+
+# invalid
+- name: duplicate
+  color: dddddd
+- name: wontfix
+  color: dddddd
+- name: invalid
+  color: dddddd
