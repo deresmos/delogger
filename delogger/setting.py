@@ -161,7 +161,7 @@ class DeloggerSetting(DeloggerFileSetting, DeloggerStreamSetting):
     def __init__(self, date_fmt=None, default=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.init_attr("dete_fmt", date_fmt)
+        self.init_attr("date_fmt", date_fmt)
         self.init_attr("default", default)
 
         addLevelName(WARNING, "WARN")
