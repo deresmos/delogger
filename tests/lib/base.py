@@ -15,13 +15,26 @@ class Assert:
         assert value  # nosec
 
 
+# YYYY-MM-DD hh:mm:ss.000
+F_ASCTIME_L = r"\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}.\d{3}"
+# hh:mm:ss
+F_ASCTIME_S = r"\d{2}:\d{2}:\d{2}"
+F_LEVEL_NAME = r"(DEBUG|INFO|WARN|ERROR|CRIT)\s?"
+F_FILENAME = r"[^\s]+"
+F_LINENO = r"\d+"
+F_COLOR_START = r"(\x1b\[\d{1,3}m)+"
+F_COLOR_END = r"\x1b\[0m"
+F_MESSAGE = r"%s"
+
+
 class DeloggerTestBase:
-    DEBUG_FMT = r"\w+\s? \d{2}:\d{2}:\d{2} [^\s]+:\d{1,5} %s"
-    INFO_FMT = r"%s"
+    DEBUG_FMT = rf"{F_LEVEL_NAME} {F_ASCTIME_S} {F_FILENAME}:{F_LINENO} {F_MESSAGE}"
+    INFO_FMT = r"{F_MESSAGE}"
     COLOR_FMT = (
-        r"(\x1b\[\d{1,3}m)+\w+\s?\x1b\[0m \d{2}:\d{2}:\d{2} [^\s]+:\d{1,5} %s\x1b\[0m"
+        rf"{F_COLOR_START}{F_LEVEL_NAME}{F_COLOR_END} "
+        rf"{F_ASCTIME_S} {F_FILENAME}:{F_LINENO} {F_MESSAGE}{F_COLOR_END}"
     )
-    LOG_FMT = r"\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}.\d{3} [^\s]+\s? [^\s]+:\d{1,5} %s"
+    LOG_FMT = rf"{F_ASCTIME_L} {F_LEVEL_NAME} {F_FILENAME}:{F_LINENO} {F_MESSAGE}"
 
     ALL_LEVELS = ["debug", "info", "warning", "error", "critical"]
 
