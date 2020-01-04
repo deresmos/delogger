@@ -65,7 +65,13 @@ logger.debug('debug')
 logger.warning('warning')
 logger.info('End logging')
 ```
-![normal](https://user-images.githubusercontent.com/27688389/49737427-335e1100-fcd0-11e8-8a59-7d0fe3088273.png "normal")
+
+Output
+```
+Start logging
+WARN  2020-01-04 22:59:02 test.py:8 warning
+End logging
+```
 
 
 ### Debug stream mode
@@ -82,7 +88,14 @@ logger.debug('debug')
 logger.warning('warning')
 logger.info('End logging')
 ```
-![debug](https://user-images.githubusercontent.com/27688389/49737352-03af0900-fcd0-11e8-8420-f1fc295394c8.png "debug")
+
+Output
+```
+INFO  2020-01-04 23:00:07 test.py:7 Start logging
+DEBUG 2020-01-04 23:00:07 test.py:8 debug
+WARN  2020-01-04 23:00:07 test.py:9 warning
+INFO  2020-01-04 23:00:07 test.py:10 End logging
+```
 
 
 ### Save log file
@@ -99,7 +112,14 @@ logger.debug('debug')
 logger.warning('warning')
 logger.info('End logging')
 ```
-![logfile](https://user-images.githubusercontent.com/27688389/49738444-c730dc80-fcd2-11e8-9fb2-2bd0336e25db.png "logfile")
+
+Output
+```
+2020-01-04 23:02:13.722 INFO test.py:7 Start logging
+2020-01-04 23:02:13.722 DEBUG test.py:8 debug
+2020-01-04 23:02:13.722 WARN test.py:9 warning
+2020-01-04 23:02:13.722 INFO test.py:10 End logging
+```
 
 
 ### Queue mode
@@ -120,7 +140,15 @@ time.sleep(1)
 logger.info('End logging')
 print('End queue mode')
 ```
-![queue](https://user-images.githubusercontent.com/27688389/49737371-10336180-fcd0-11e8-84dd-f9be5f223f42.png "queue")
+
+Output
+```
+Start queue mode
+Start logging
+WARN  2020-01-04 23:01:56 test.py:11 warning
+End queue mode
+End logging
+```
 
 
 ### No Color stream mode
@@ -137,7 +165,13 @@ logger.debug('debug')
 logger.warning('warning')
 logger.info('End logging')
 ```
-![no-color-normal](https://user-images.githubusercontent.com/27688389/48709759-c49a1480-ec49-11e8-92ee-99dae12c6e63.png "no-color-normal")
+
+Output
+```
+Start logging
+WARN  2020-01-04 22:59:02 test.py:8 warning
+End logging
+```
 
 
 ### Debug and no color stream mode
@@ -155,4 +189,11 @@ logger.debug('debug')
 logger.warning('warning')
 logger.info('End logging')
 ```
-![no-color-debug](https://user-images.githubusercontent.com/27688389/49737616-a8314b00-fcd0-11e8-8d11-2274bb7e0ae1.png "no-color-debug")
+
+Output
+```
+INFO  2020-01-04 23:00:07 test.py:7 Start logging
+DEBUG 2020-01-04 23:00:07 test.py:8 debug
+WARN  2020-01-04 23:00:07 test.py:9 warning
+INFO  2020-01-04 23:00:07 test.py:10 End logging
+```
