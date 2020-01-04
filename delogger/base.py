@@ -68,7 +68,14 @@ class DeloggerBase(DeloggerSetting):
         self._logger.addHandler(hdlr)
 
     def add_stream_handler(
-        self, level, *, check_level=False, is_color_stream=False, hdlr=None, **kwargs
+        self,
+        level,
+        *,
+        check_level=False,
+        is_color_stream=False,
+        hdlr=None,
+        datefmt=None,
+        **kwargs
     ):
         """Helper function to add a stream handler.
 
@@ -91,8 +98,12 @@ class DeloggerBase(DeloggerSetting):
         if is_color_stream:
             from colorlog import ColoredFormatter
 
+            datefmt = datefmt or self.date_fmt
             fmt = ColoredFormatter(
-                kwargs.get("fmt", None), log_colors=self.log_colors, style="%"
+                kwargs.get("fmt", None),
+                log_colors=self.log_colors,
+                style="%",
+                datefmt=datefmt,
             )
             kwargs.setdefault("formatter", fmt)
 

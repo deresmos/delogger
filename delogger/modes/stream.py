@@ -13,17 +13,21 @@ __all__ = [
 
 
 class StreamMode(ModeBase):
+    DATE_FMT = "%H:%M:%S"
+
     def __init__(
         self,
         is_color: bool = False,
         is_debug: bool = False,
         debug_fmt: Optional[str] = None,
         info_fmt: Optional[str] = None,
+        date_fmt: Optional[str] = None,
     ) -> None:
         self.is_color = is_color
         self.is_debug = is_debug
         self.debug_fmt = debug_fmt
         self.info_fmt = info_fmt
+        self.date_fmt = date_fmt or self.DATE_FMT
 
     def load_to_delogger(self, delogger):
         debug_fmt = self.debug_fmt or self._stream_fmt(delogger, is_debug=True)
@@ -31,15 +35,25 @@ class StreamMode(ModeBase):
 
         if self.is_debug:
             delogger.add_stream_handler(
-                DEBUG, fmt=debug_fmt, is_color_stream=self.is_color
+                DEBUG,
+                fmt=debug_fmt,
+                is_color_stream=self.is_color,
+                datefmt=self.date_fmt,
             )
         else:
             delogger.add_stream_handler(
-                INFO, fmt=info_fmt, is_color_stream=self.is_color, only_level=True
+                INFO,
+                fmt=info_fmt,
+                is_color_stream=self.is_color,
+                only_level=True,
+                datefmt=self.date_fmt,
             )
 
             delogger.add_stream_handler(
-                WARNING, fmt=debug_fmt, is_color_stream=self.is_color
+                WARNING,
+                fmt=debug_fmt,
+                is_color_stream=self.is_color,
+                datefmt=self.date_fmt,
             )
 
     def _stream_fmt(self, delogger, is_debug: bool):

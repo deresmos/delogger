@@ -78,18 +78,14 @@ class DeloggerStreamSetting(DeloggerSettingBase):
 
     stream_fmts = [
         "%(message)s",
-        (
-            '%(levelname)-5s [%(name)s File "%(filename)s", '
-            "line %(lineno)d, in %(funcName)s] %(message)s"
-        ),
+        "%(levelname)-5s %(asctime)s %(filename)s:%(lineno)d %(message)s",
     ]
     """Default value of stream logger fmt.(0: normal, 1: debug)"""
 
     stream_color_fmts = [
-        "%(message)s",
-        (
-            "%(log_color)s%(levelname)-5s%(reset)s [%(name)s "
-            'File "%(filename)s", line %(lineno)d, in %(funcName)s] %(message)s'
+        stream_fmts[0],
+        stream_fmts[1].replace(
+            "%(levelname)-5s", "%(log_color)s%(levelname)-5s%(reset)s"
         ),
     ]
     """Default value of color stream logger fmt.(0: normal, 1: debug)"""
