@@ -2,6 +2,8 @@ from logging import CRITICAL, DEBUG, INFO, WARNING, addLevelName
 
 
 class DeloggerSettingBase:
+    """Deprecated"""
+
     def init_attr(self, key, value):
         """Initializing variables.
 
@@ -19,6 +21,8 @@ class DeloggerSettingBase:
 
 
 class DeloggerFileSetting(DeloggerSettingBase):
+    """Deprecated"""
+
     is_save_file = False
     """[Deprecated] Default value of save file flag."""
 
@@ -64,6 +68,8 @@ class DeloggerFileSetting(DeloggerSettingBase):
 
 
 class DeloggerStreamSetting(DeloggerSettingBase):
+    """Deprecated"""
+
     is_stream = True
     """[Deprecated] Default value of stream output flag."""
 
@@ -152,8 +158,10 @@ class DeloggerStreamSetting(DeloggerSettingBase):
 
 
 class DeloggerSetting(DeloggerFileSetting, DeloggerStreamSetting):
+    """Deprecated"""
+
     date_fmt = "%Y-%m-%d %H:%M:%S"
-    """Default value of datetime format."""
+    """[Deprecated] Default value of datetime format."""
 
     default = True
     """[Deprecated] Default value of default logger."""

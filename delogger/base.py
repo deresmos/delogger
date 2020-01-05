@@ -1,4 +1,12 @@
-from logging import DEBUG, Formatter, StreamHandler, getLogger
+from logging import (
+    CRITICAL,
+    DEBUG,
+    WARNING,
+    Formatter,
+    StreamHandler,
+    addLevelName,
+    getLogger,
+)
 
 from delogger import OnlyFilter
 from delogger.setting import DeloggerSetting
@@ -21,6 +29,9 @@ class DeloggerBase(DeloggerSetting):
 
     def __init__(self, name=None, parent=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        addLevelName(WARNING, "WARN")
+        addLevelName(CRITICAL, "CRIT")
 
         name_ = parent or self
         name_ = name or type(name_).__name__
@@ -58,6 +69,7 @@ class DeloggerBase(DeloggerSetting):
         hdlr.setLevel(level)
 
         # Set formatter.
+        # deprecated self.date_fmt
         datefmt = datefmt or self.date_fmt
         formatter = formatter or Formatter(fmt, datefmt)
         hdlr.setFormatter(formatter)
@@ -100,6 +112,7 @@ class DeloggerBase(DeloggerSetting):
         if is_color_stream:
             from colorlog import ColoredFormatter
 
+            # deprecated self.date_fmt
             datefmt = datefmt or self.date_fmt
             # deprecated self.log_colors
             log_colors = log_colors or self.log_colors
@@ -132,6 +145,7 @@ class DeloggerBase(DeloggerSetting):
 
         from colorlog import ColoredFormatter
 
+        # deprecated self.date_fmt
         datefmt = datefmt or self.date_fmt
         # deprecated self.log_colors
         log_colors = log_colors or self.log_colors
