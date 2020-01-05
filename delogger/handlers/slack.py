@@ -1,7 +1,7 @@
 from json import dumps as json_dumps
 from logging import CRITICAL, DEBUG, ERROR, INFO, NOTSET, WARNING, Handler
 from os import getenv
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union
 
 
 class SlackHandler(Handler):
@@ -98,7 +98,7 @@ class SlackHandler(Handler):
 
     def _makeContent(
         self, levelno: int, content: Optional[Dict[str, Any]] = None
-    ) -> str:
+    ) -> Union[str, Dict[str, Any]]:
         """Get slack's payload."""
 
         _content: Dict[str, Any] = content or {}
@@ -122,12 +122,11 @@ class SlackHandler(Handler):
 
         if self.token:
             _content["token"] = self.token
+            return _content
         else:
-            content_str = json_dumps(_content)
+            return json_dumps(_content)
 
-        return content_str
-
-    def makeContent(self, record) -> str:
+    def makeContent(self, record) -> Union[str, Dict[str, Any]]:
         """Get slack's payload."""
 
         content = {"text": self.format(record)}

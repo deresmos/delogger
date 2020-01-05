@@ -106,10 +106,6 @@ class DeloggerQueue(Delogger):
     _listener = None
     """A common QueueListener for all loggers."""
 
-    def __init__(self, default: bool = True, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
-        self.default = default
-
     def get_logger(self) -> Logger:
         """Return set logging.Logger."""
 
