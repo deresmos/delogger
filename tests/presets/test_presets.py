@@ -1,8 +1,7 @@
 from pathlib import Path
 from shutil import rmtree
 
-from delogger import Delogger
-from tests.lib.base import Assert, DeloggerTestBase
+from tests.lib.base import DeloggerTestBase
 
 
 class TestPresets(DeloggerTestBase):

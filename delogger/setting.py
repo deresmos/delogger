@@ -2,6 +2,8 @@ from logging import CRITICAL, DEBUG, INFO, WARNING, addLevelName
 
 
 class DeloggerSettingBase:
+    """Deprecated"""
+
     def init_attr(self, key, value):
         """Initializing variables.
 
@@ -19,6 +21,8 @@ class DeloggerSettingBase:
 
 
 class DeloggerFileSetting(DeloggerSettingBase):
+    """Deprecated"""
+
     is_save_file = False
     """[Deprecated] Default value of save file flag."""
 
@@ -40,7 +44,7 @@ class DeloggerFileSetting(DeloggerSettingBase):
     file_fmt = (
         "%(asctime)s.%(msecs).03d %(levelname)s %(filename)s:%(lineno)d %(message)s"
     )
-    """Default value of file logger fmt."""
+    """[Deprecated] Default value of file logger fmt."""
 
     def __init__(
         self,
@@ -64,6 +68,8 @@ class DeloggerFileSetting(DeloggerSettingBase):
 
 
 class DeloggerStreamSetting(DeloggerSettingBase):
+    """Deprecated"""
+
     is_stream = True
     """[Deprecated] Default value of stream output flag."""
 
@@ -80,7 +86,7 @@ class DeloggerStreamSetting(DeloggerSettingBase):
         "%(message)s",
         "%(levelname)-5s %(asctime)s %(filename)s:%(lineno)d %(message)s",
     ]
-    """Default value of stream logger fmt.(0: normal, 1: debug)"""
+    """[Deprecated] Default value of stream logger fmt.(0: normal, 1: debug)"""
 
     stream_color_fmts = [
         stream_fmts[0],
@@ -88,13 +94,13 @@ class DeloggerStreamSetting(DeloggerSettingBase):
             "%(levelname)-5s", "%(log_color)s%(levelname)-5s%(reset)s"
         ),
     ]
-    """Default value of color stream logger fmt.(0: normal, 1: debug)"""
+    """[Deprecated] Default value of color stream logger fmt.(0: normal, 1: debug)"""
 
     FMT_INFO = 0
-    """Info level index constant."""
+    """[Deprecated] Info level index constant."""
 
     FMT_DEBUG = 1
-    """Debug level index constant."""
+    """[Deprecated] Debug level index constant."""
 
     log_colors = {
         "DEBUG": "cyan",
@@ -103,7 +109,7 @@ class DeloggerStreamSetting(DeloggerSettingBase):
         "ERROR": "red",
         "CRIT": "red,bg_white",
     }
-    """Definition of color stream level setting."""
+    """[Deprecated] Definition of color stream level setting."""
 
     def __init__(
         self,
@@ -152,8 +158,10 @@ class DeloggerStreamSetting(DeloggerSettingBase):
 
 
 class DeloggerSetting(DeloggerFileSetting, DeloggerStreamSetting):
+    """Deprecated"""
+
     date_fmt = "%Y-%m-%d %H:%M:%S"
-    """Default value of datetime format."""
+    """[Deprecated] Default value of datetime format."""
 
     default = True
     """[Deprecated] Default value of default logger."""

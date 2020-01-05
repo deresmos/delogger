@@ -1,5 +1,5 @@
 import os
-from logging import INFO
+from logging import INFO, Logger
 
 from delogger import DeloggerQueue
 from delogger.decorators.debug_log import DebugLog
@@ -7,7 +7,7 @@ from delogger.handlers.slack import SlackHandler
 from delogger.modes.file import TimedRotatingFileMode
 
 
-def _get_logger():
+def _get_logger() -> Logger:
     delogger = DeloggerQueue("output_logger")
     delogger.load_modes(TimedRotatingFileMode())
     delogger.load_decorators(DebugLog())

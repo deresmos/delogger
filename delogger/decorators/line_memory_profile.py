@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Callable, Generator, List, Tuple
 
 from delogger.decorators.base import DecoratorBase
 
@@ -26,10 +26,10 @@ class LineEmpty(Exception):
 class LineMemoryProfile(DecoratorBase):
     decorator_name = "line_memory_profile"
 
-    L_M_HEADER_INDEX = 6
-    L_M_SEPARATOR_INDEX = 7
-    L_M_TEMPLATE = "{0:>6} {1:>9} {2:>12} {3:>8} {4:>8} " "{5:>12} {6:>12}   {7:<}"
-    L_M_HEADER = [
+    L_M_HEADER_INDEX: int = 6
+    L_M_SEPARATOR_INDEX: int = 7
+    L_M_TEMPLATE: str = "{0:>6} {1:>9} {2:>12} {3:>8} {4:>8} " "{5:>12} {6:>12}   {7:<}"
+    L_M_HEADER: List[str] = [
         "Line #",
         "Hits",
         "Time",
@@ -75,7 +75,7 @@ class LineMemoryProfile(DecoratorBase):
         return wrapper
 
     @staticmethod
-    def _memory_profiler_parse(result):
+    def _memory_profiler_parse(result) -> Generator[List[str], None, None]:
         for line in result.split("\n"):
             try:
                 elem = line.split()
@@ -103,9 +103,9 @@ class LineMemoryProfile(DecoratorBase):
                 continue
 
     @staticmethod
-    def _line_profiler_parse(result):
-        mix = []
-        line_tmp = []
+    def _line_profiler_parse(result) -> Tuple[List[str], List[List[str]]]:
+        mix: List[str] = []
+        line_tmp: List[List[str]] = []
         for line in result.split("\n"):
             try:
                 elem = line.split()

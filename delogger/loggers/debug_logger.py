@@ -1,6 +1,7 @@
 import os
+from logging import INFO
 
-from delogger import Delogger
+from delogger import Delogger, SlackHandler
 
 
 def _set_logger():

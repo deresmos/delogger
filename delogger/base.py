@@ -1,4 +1,14 @@
-from logging import DEBUG, Formatter, StreamHandler, getLogger
+from logging import (
+    CRITICAL,
+    DEBUG,
+    WARNING,
+    Formatter,
+    Logger,
+    StreamHandler,
+    addLevelName,
+    getLogger,
+)
+from typing import Dict, Optional
 
 from delogger import OnlyFilter
 from delogger.setting import DeloggerSetting
@@ -19,15 +29,20 @@ class DeloggerBase(DeloggerSetting):
 
     """
 
-    def __init__(self, name=None, parent=None, *args, **kwargs):
+    def __init__(
+        self, name: Optional[str] = None, parent=None, *args, **kwargs
+    ) -> None:
         super().__init__(*args, **kwargs)
+
+        addLevelName(WARNING, "WARN")
+        addLevelName(CRITICAL, "CRIT")
 
         name_ = parent or self
         name_ = name or type(name_).__name__
         logger = getLogger(name_)
         logger.setLevel(DEBUG)
         logger.propagate = False
-        self._logger = logger
+        self._logger: Logger = logger
 
         if len(self._logger.handlers) > 0:
             # Already set logger
@@ -36,12 +51,18 @@ class DeloggerBase(DeloggerSetting):
             # Not set logger
             self._is_new_logger = True
 
-    def is_already_setup(self):
+    def is_already_setup(self) -> bool:
         return not self._is_new_logger
 
     def add_handler(
-        self, hdlr, level, fmt=None, datefmt=None, only_level=False, formatter=None
-    ):
+        self,
+        hdlr,
+        level: int,
+        fmt: Optional[str] = None,
+        datefmt: Optional[str] = None,
+        only_level: bool = False,
+        formatter=None,
+    ) -> None:
         """Helper function to add a handler.
 
         Args:
@@ -58,6 +79,7 @@ class DeloggerBase(DeloggerSetting):
         hdlr.setLevel(level)
 
         # Set formatter.
+        # deprecated self.date_fmt
         datefmt = datefmt or self.date_fmt
         formatter = formatter or Formatter(fmt, datefmt)
         hdlr.setFormatter(formatter)
@@ -69,20 +91,21 @@ class DeloggerBase(DeloggerSetting):
 
     def add_stream_handler(
         self,
-        level,
+        level: int,
         *,
-        check_level=False,
-        is_color_stream=False,
+        check_level: bool = False,
+        is_color_stream: bool = False,
         hdlr=None,
-        datefmt=None,
+        datefmt: Optional[str] = None,
+        log_colors: Optional[Dict[str, str]] = None,
         **kwargs
-    ):
+    ) -> None:
         """Helper function to add a stream handler.
 
         Args:
             level (int): Handler level.
             check_level (bool): Whether to check the default stream level.
-            is_color_stream (bool): Whether to output in color stream.
+            is_color_stream (bool): [Deprecated] Whether to output in color stream.
             hdlr: Handler other than stream handler.
             **kwargs: Keyword argument of add_handler method
 
@@ -95,13 +118,17 @@ class DeloggerBase(DeloggerSetting):
         if check_level and self.stream_level <= level:
             return
 
+        # deprecated is_color_stream
         if is_color_stream:
             from colorlog import ColoredFormatter
 
+            # deprecated self.date_fmt
             datefmt = datefmt or self.date_fmt
+            # deprecated self.log_colors
+            log_colors = log_colors or self.log_colors
             fmt = ColoredFormatter(
                 kwargs.get("fmt", None),
-                log_colors=self.log_colors,
+                log_colors=log_colors,
                 style="%",
                 datefmt=datefmt,
             )
@@ -109,3 +136,39 @@ class DeloggerBase(DeloggerSetting):
 
         hdlr = hdlr or StreamHandler()
         self.add_handler(hdlr, level, datefmt=datefmt, **kwargs)
+
+    def add_color_stream_handler(
+        self,
+        level: int,
+        log_colors: Optional[Dict[str, str]],
+        *,
+        check_level: bool = False,
+        hdlr=None,
+        datefmt: Optional[str] = None,
+        **kwargs
+    ):
+        """Helper function to add a color stream handler.
+
+        Args:
+            level (int): Handler level.
+            check_level (bool): Whether to check the default stream level.
+            hdlr: Handler other than stream handler.
+            **kwargs: Keyword argument of add_handler method
+
+        """
+
+        if check_level and self.stream_level <= level:
+            return
+
+        from colorlog import ColoredFormatter
+
+        # deprecated self.date_fmt
+        datefmt = datefmt or self.date_fmt
+        # deprecated self.log_colors
+        log_colors = log_colors or self.log_colors
+        fmt = ColoredFormatter(
+            kwargs.get("fmt", None), log_colors=log_colors, style="%", datefmt=datefmt
+        )
+
+        hdlr = hdlr or StreamHandler()
+        self.add_handler(hdlr, level, datefmt=datefmt, formatter=fmt, **kwargs)

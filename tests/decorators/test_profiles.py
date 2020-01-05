@@ -1,13 +1,14 @@
+from tests.lib.base import DeloggerTestBase
+
 from delogger import Delogger
 from delogger.decorators.profiles import LineMemoryProfile, LineProfile, MemoryProfile
 from delogger.modes.stream import StreamDebugMode
-from tests.lib.base import DeloggerTestBase
 
 
 class TestProfileDecorator(DeloggerTestBase):
     def test_line_profile_decorator(self, capsys, caplog):
         try:
-            import line_profiler
+            import line_profiler  # noqa
         except ImportError:
             return
 
@@ -25,7 +26,7 @@ class TestProfileDecorator(DeloggerTestBase):
 
     def test_memory_profile_decorator(self, capsys, caplog):
         try:
-            import memory_profiler
+            import memory_profiler  # noqa
         except ImportError:
             return
 
@@ -43,7 +44,7 @@ class TestProfileDecorator(DeloggerTestBase):
 
     def test_line_memory_profile_decorator(self, capsys, caplog):
         try:
-            import line_profiler
+            import line_profiler  # noqa
         except ImportError:
             return
 
