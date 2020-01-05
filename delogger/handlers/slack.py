@@ -3,8 +3,6 @@ from logging import CRITICAL, DEBUG, ERROR, INFO, NOTSET, WARNING, Handler
 from os import getenv
 from typing import Any, Dict, Optional
 
-import requests
-
 
 class SlackHandler(Handler):
     """Handler to send to Slack.
@@ -141,6 +139,9 @@ class SlackHandler(Handler):
         """Send a message to Slack."""
 
         try:
+            # TODO: temporary
+            import requests
+
             if not self.is_emit:
                 return
 
