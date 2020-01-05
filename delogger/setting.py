@@ -80,7 +80,7 @@ class DeloggerStreamSetting(DeloggerSettingBase):
         "%(message)s",
         "%(levelname)-5s %(asctime)s %(filename)s:%(lineno)d %(message)s",
     ]
-    """Default value of stream logger fmt.(0: normal, 1: debug)"""
+    """[Deprecated] Default value of stream logger fmt.(0: normal, 1: debug)"""
 
     stream_color_fmts = [
         stream_fmts[0],
@@ -88,13 +88,13 @@ class DeloggerStreamSetting(DeloggerSettingBase):
             "%(levelname)-5s", "%(log_color)s%(levelname)-5s%(reset)s"
         ),
     ]
-    """Default value of color stream logger fmt.(0: normal, 1: debug)"""
+    """[Deprecated] Default value of color stream logger fmt.(0: normal, 1: debug)"""
 
     FMT_INFO = 0
-    """Info level index constant."""
+    """[Deprecated] Info level index constant."""
 
     FMT_DEBUG = 1
-    """Debug level index constant."""
+    """[Deprecated] Debug level index constant."""
 
     log_colors = {
         "DEBUG": "cyan",
