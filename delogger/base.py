@@ -3,10 +3,12 @@ from logging import (
     DEBUG,
     WARNING,
     Formatter,
+    Logger,
     StreamHandler,
     addLevelName,
     getLogger,
 )
+from typing import Dict, Optional
 
 from delogger import OnlyFilter
 from delogger.setting import DeloggerSetting
@@ -27,7 +29,9 @@ class DeloggerBase(DeloggerSetting):
 
     """
 
-    def __init__(self, name=None, parent=None, *args, **kwargs):
+    def __init__(
+        self, name: Optional[str] = None, parent=None, *args, **kwargs
+    ) -> None:
         super().__init__(*args, **kwargs)
 
         addLevelName(WARNING, "WARN")
@@ -38,7 +42,7 @@ class DeloggerBase(DeloggerSetting):
         logger = getLogger(name_)
         logger.setLevel(DEBUG)
         logger.propagate = False
-        self._logger = logger
+        self._logger: Logger = logger
 
         if len(self._logger.handlers) > 0:
             # Already set logger
@@ -47,12 +51,18 @@ class DeloggerBase(DeloggerSetting):
             # Not set logger
             self._is_new_logger = True
 
-    def is_already_setup(self):
+    def is_already_setup(self) -> bool:
         return not self._is_new_logger
 
     def add_handler(
-        self, hdlr, level, fmt=None, datefmt=None, only_level=False, formatter=None
-    ):
+        self,
+        hdlr,
+        level: int,
+        fmt: Optional[str] = None,
+        datefmt: Optional[str] = None,
+        only_level: bool = False,
+        formatter=None,
+    ) -> None:
         """Helper function to add a handler.
 
         Args:
@@ -81,15 +91,15 @@ class DeloggerBase(DeloggerSetting):
 
     def add_stream_handler(
         self,
-        level,
+        level: int,
         *,
-        check_level=False,
-        is_color_stream=False,
+        check_level: bool = False,
+        is_color_stream: bool = False,
         hdlr=None,
-        datefmt=None,
-        log_colors=None,
+        datefmt: Optional[str] = None,
+        log_colors: Optional[Dict[str, str]] = None,
         **kwargs
-    ):
+    ) -> None:
         """Helper function to add a stream handler.
 
         Args:
@@ -128,7 +138,14 @@ class DeloggerBase(DeloggerSetting):
         self.add_handler(hdlr, level, datefmt=datefmt, **kwargs)
 
     def add_color_stream_handler(
-        self, level, log_colors, *, check_level=False, hdlr=None, datefmt=None, **kwargs
+        self,
+        level: int,
+        log_colors: Optional[Dict[str, str]],
+        *,
+        check_level: bool = False,
+        hdlr=None,
+        datefmt: Optional[str] = None,
+        **kwargs
     ):
         """Helper function to add a color stream handler.
 

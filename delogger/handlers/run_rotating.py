@@ -3,6 +3,7 @@ import re
 from datetime import datetime as dt
 from logging import FileHandler
 from pathlib import Path
+from typing import Dict, List, Optional
 
 
 class _LOG_FILE(object):
@@ -19,10 +20,10 @@ class _LOG_FILE(object):
 
     """
 
-    def __init__(self, dirname, basename):
+    def __init__(self, dirname: str, basename: str) -> None:
         self.dirname = dirname
         self.basename = basename
-        self.path = dt.today().strftime(str(Path(dirname) / basename))
+        self.path: str = dt.today().strftime(str(Path(dirname) / basename))
 
     def __eq__(self, other):
         """Comparison for RunRotatingHandler.
@@ -58,27 +59,35 @@ class RunRotatingHandler(FileHandler):
 
     """
 
-    LOG_FMT = "%Y%m%d_%H%M%S.log"
+    LOG_FMT: str = "%Y%m%d_%H%M%S.log"
     """Default value of log format."""
 
-    BACKUP_COUNT = 5
+    BACKUP_COUNT: int = 5
     """Default value of backup count."""
 
-    _files = []
+    _files: List[_LOG_FILE] = []
     """This list saving _LOG_FILE of output log file."""
 
-    _LOG_FMT_RE = {r"\d{4}": ["%Y"], r"\d{2}": ["%m", "%d", "%H", "%M", "%S"]}
+    _LOG_FMT_RE: Dict[str, List[str]] = {
+        r"\d{4}": ["%Y"],
+        r"\d{2}": ["%m", "%d", "%H", "%M", "%S"],
+    }
 
     def __init__(
-        self, dirname=None, filepath=None, backup_count=None, fmt=None, **kwargs
+        self,
+        dirname: Optional[str] = None,
+        filepath: Optional[str] = None,
+        backup_count: Optional[int] = None,
+        fmt: Optional[str] = None,
+        **kwargs
     ):
         fmt = fmt or self.LOG_FMT
         backup_count = backup_count or self.BACKUP_COUNT
 
         if filepath:
-            dirname = Path(filepath).parent
+            dirname = str(Path(filepath).parent)
             fmt = Path(filepath).name
-        self.filepath = self._load_file_path(dirname, fmt, backup_count)
+        self.filepath = self._load_file_path(str(dirname), fmt, backup_count)
 
         super().__init__(self.filepath, **kwargs)
 
@@ -96,7 +105,7 @@ class RunRotatingHandler(FileHandler):
 
         return super()._open()
 
-    def _load_file_path(self, dirname, fmt, backup_count):
+    def _load_file_path(self, dirname: str, fmt: str, backup_count: int) -> str:
         """Get the file path of the log output destination.
 
         For each directory, determine the log file path only once at runtime.
@@ -127,7 +136,7 @@ class RunRotatingHandler(FileHandler):
 
         return str(path)
 
-    def _get_match_files(self, dirpath, fmt):
+    def _get_match_files(self, dirpath, fmt) -> List[Path]:
         fmt_ = fmt
         for patter, date_strs in self._LOG_FMT_RE.items():
             for date_str in date_strs:

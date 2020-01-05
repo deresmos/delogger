@@ -1,6 +1,7 @@
 from json import dumps as json_dumps
 from logging import CRITICAL, DEBUG, ERROR, INFO, NOTSET, WARNING, Handler
 from os import getenv
+from typing import Any, Dict, Optional
 
 import requests
 
@@ -32,10 +33,10 @@ class SlackHandler(Handler):
 
     """
 
-    TIMEOUT = 20
+    TIMEOUT: int = 20
     """default timeout for requests."""
 
-    EMOJIS = {
+    EMOJIS: Dict[int, str] = {
         NOTSET: ":loudspeaker:",
         DEBUG: ":simple_smile:",
         INFO: ":smile:",
@@ -45,7 +46,7 @@ class SlackHandler(Handler):
     }
     """Default value of emojis."""
 
-    USERNAMES = {
+    USERNAMES: Dict[int, str] = {
         NOTSET: "Notset",
         DEBUG: "Debug",
         INFO: "Info",
@@ -55,26 +56,26 @@ class SlackHandler(Handler):
     }
     """Default value of usernames."""
 
-    URL_ENV = "DELOGGER_SLACK_URL"
+    URL_ENV: str = "DELOGGER_SLACK_URL"
     """Environment variable name of slack webhook url."""
 
-    TOKEN_ENV = "DELOGGER_TOKEN"
+    TOKEN_ENV: str = "DELOGGER_TOKEN"
     """Environment variable name of slack token."""
 
-    POST_MESSAGE_URL = "https://slack.com/api/chat.postMessage"
+    POST_MESSAGE_URL: str = "https://slack.com/api/chat.postMessage"
     """Execution when using token API."""
 
     def __init__(
         self,
-        url=None,
-        channel=None,
-        as_user=False,
-        token=None,
+        url: Optional[str] = None,
+        channel: Optional[str] = None,
+        as_user: bool = False,
+        token: Optional[str] = None,
         *,
-        emoji=None,
-        username=None,
-        emojis=None,
-        usernames=None
+        emoji: Optional[str] = None,
+        username: Optional[str] = None,
+        emojis: Optional[Dict[int, str]] = None,
+        usernames: Optional[Dict[int, str]] = None
     ):
         self.is_emit = True
 
@@ -97,42 +98,44 @@ class SlackHandler(Handler):
 
         super().__init__()
 
-    def _makeContent(self, levelno, content=None):
+    def _makeContent(
+        self, levelno: int, content: Optional[Dict[str, Any]] = None
+    ) -> str:
         """Get slack's payload."""
 
-        content = content or {}
+        _content: Dict[str, Any] = content or {}
 
         if self.as_user:
-            content["as_user"] = self.as_user
+            _content["as_user"] = self.as_user
 
         else:
             if self.emoji:
-                content["icon_emoji"] = self.emoji
+                _content["icon_emoji"] = self.emoji
             elif self.emojis:
-                content["icon_emoji"] = self.emojis[levelno]
+                _content["icon_emoji"] = self.emojis[levelno]
 
             if self.username:
-                content["username"] = self.username
+                _content["username"] = self.username
             elif self.usernames:
-                content["username"] = self.usernames[levelno]
+                _content["username"] = self.usernames[levelno]
 
         if self.channel:
-            content["channel"] = self.channel
+            _content["channel"] = self.channel
 
         if self.token:
-            content["token"] = self.token
+            _content["token"] = self.token
         else:
-            content = json_dumps(content)
+            content_str = json_dumps(_content)
 
-        return content
+        return content_str
 
-    def makeContent(self, record):
+    def makeContent(self, record) -> str:
         """Get slack's payload."""
 
         content = {"text": self.format(record)}
-        content = self._makeContent(record.levelno, content=content)
+        content_str = self._makeContent(record.levelno, content=content)
 
-        return content
+        return content_str
 
     def emit(self, record):
         """Send a message to Slack."""

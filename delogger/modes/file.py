@@ -23,17 +23,19 @@ class LogFile:
 
 
 class FileMode(ModeBase):
-    file_fmt = (
+    file_fmt: str = (
         "%(asctime)s.%(msecs).03d %(levelname)s %(filename)s:%(lineno)d %(message)s"
     )
     """Default value of file logger fmt."""
 
-    date_fmt = "%Y-%m-%d %H:%M:%S"
+    date_fmt: str = "%Y-%m-%d %H:%M:%S"
     """Default value of datetime format."""
 
-    def __init__(self, fmt: Optional[str] = None, date_fmt: Optional[str] = None):
-        self.fmt = fmt or self.file_fmt
-        self.date_fmt = date_fmt or self.date_fmt
+    def __init__(
+        self, fmt: Optional[str] = None, date_fmt: Optional[str] = None
+    ) -> None:
+        self.fmt: str = fmt or self.file_fmt
+        self.date_fmt: str = date_fmt or self.date_fmt
 
 
 class RunRotatingFileMode(FileMode):
@@ -53,7 +55,7 @@ class RunRotatingFileMode(FileMode):
 
         self.logfile: Optional[LogFile] = None
 
-    def load_to_delogger(self, delogger):
+    def load_to_delogger(self, delogger) -> None:
         run_hdlr = RunRotatingHandler(
             filepath=self.filepath, backup_count=self.backup_count
         )
@@ -82,7 +84,7 @@ class TimedRotatingFileMode(FileMode):
 
         self.logfile = LogFile(filepath)
 
-    def load_to_delogger(self, delogger):
+    def load_to_delogger(self, delogger) -> None:
         self.logfile.mkdir()
         timed_hdlr = TimedRotatingFileHandler(
             filename=str(self.logfile.filepath),
