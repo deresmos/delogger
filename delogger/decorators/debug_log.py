@@ -22,7 +22,7 @@ class DebugLog(DecoratorBase):
         """When this decorator is set, the argument and return value are out-
         put to the log.
         """
-        logger: Logger = self.logger
+        logger: Logger = self.logger  # type: ignore
 
         def wrapper(*args, **kwargs) -> None:
             # Output function name and argument.
