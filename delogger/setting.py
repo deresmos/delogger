@@ -40,7 +40,7 @@ class DeloggerFileSetting(DeloggerSettingBase):
     file_fmt = (
         "%(asctime)s.%(msecs).03d %(levelname)s %(filename)s:%(lineno)d %(message)s"
     )
-    """Default value of file logger fmt."""
+    """[Deprecated] Default value of file logger fmt."""
 
     def __init__(
         self,
