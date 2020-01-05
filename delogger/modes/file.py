@@ -6,6 +6,8 @@ from typing import Optional
 from delogger.handlers.run_rotating import RunRotatingHandler
 from delogger.modes.base import ModeBase
 
+__all__ = ["RunRotatingFileMode", "TimedRotatingFileMode"]
+
 
 class LogFile:
     def __init__(self, filepath: str) -> None:
@@ -22,7 +24,7 @@ class LogFile:
         self.dirpath.mkdir(parents=True, exist_ok=True)
 
 
-class FileMode(ModeBase):
+class FileModeBase(ModeBase):
     file_fmt: str = (
         "%(asctime)s.%(msecs).03d %(levelname)s %(filename)s:%(lineno)d %(message)s"
     )
@@ -38,7 +40,7 @@ class FileMode(ModeBase):
         self.date_fmt: str = date_fmt or self.date_fmt
 
 
-class RunRotatingFileMode(FileMode):
+class RunRotatingFileMode(FileModeBase):
     def __init__(
         self,
         filepath: str = "log/%Y%m%d_%H%M%S.log",
@@ -65,7 +67,7 @@ class RunRotatingFileMode(FileMode):
         self.logfile = LogFile(run_hdlr.filepath)
 
 
-class TimedRotatingFileMode(FileMode):
+class TimedRotatingFileMode(FileModeBase):
     def __init__(
         self,
         filepath: str = "log/delogger.log",

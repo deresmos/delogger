@@ -4,6 +4,8 @@ from typing import Optional
 from delogger.handlers.slack import SlackHandler
 from delogger.modes.base import ModeBase
 
+__all__ = ["SlackWebhookMode"]
+
 
 class SlackWebhookMode(ModeBase):
     def __init__(self, webhook_url: str, level: Optional[int] = INFO) -> None:
