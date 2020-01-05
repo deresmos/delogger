@@ -27,14 +27,20 @@ class StreamMode(ModeBase):
     ]
     """Default value of stream logger fmt.(0: normal, 1: debug)"""
 
-    STREAM_COLOR_FMTS = [
-        STREAM_FMTS[0],
-        STREAM_FMTS[1].replace(
-            "%(levelname)-5s", "%(log_color)s%(levelname)-5s%(reset)s"
-        ),
-    ]
-    """Default value of color stream logger fmt.(0: normal, 1: debug)"""
+    def __init__(
+        self,
+        debug_fmt: Optional[str] = None,
+        info_fmt: Optional[str] = None,
+        date_fmt: Optional[str] = None,
+        stream_fmts: Optional[List[str]] = None,
+    ) -> None:
+        self.debug_fmt = debug_fmt
+        self.info_fmt = info_fmt
+        self.date_fmt = date_fmt or self.DATE_FMT
+        self.stream_fmts = stream_fmts or self.STREAM_FMTS
 
+
+class ColorStreamMode(StreamMode):
     LOG_COLORS = {
         "DEBUG": "cyan",
         "INFO": "green",
@@ -46,22 +52,24 @@ class StreamMode(ModeBase):
 
     def __init__(
         self,
-        debug_fmt: Optional[str] = None,
-        info_fmt: Optional[str] = None,
-        date_fmt: Optional[str] = None,
-        stream_fmts: Optional[List[str]] = None,
         stream_color_fmts: Optional[List[str]] = None,
         log_colors: Optional[Dict[str, str]] = None,
+        **kwargs,
     ) -> None:
-        self.debug_fmt = debug_fmt
-        self.info_fmt = info_fmt
-        self.date_fmt = date_fmt or self.DATE_FMT
-        self.stream_fmts = stream_fmts or self.STREAM_FMTS
-        self.stream_color_fmts = stream_color_fmts or self.STREAM_COLOR_FMTS
+        super().__init__(**kwargs)
+        self.stream_color_fmts = stream_color_fmts or self.make_color_stream_fmts()
         self.log_colors = log_colors or self.LOG_COLORS
 
+    def make_color_stream_fmts(self):
+        return [
+            self.stream_fmts[self.FMT_INFO_I],
+            self.stream_fmts[self.FMT_DEBUG_I].replace(
+                "%(levelname)-5s", "%(log_color)s%(levelname)-5s%(reset)s"
+            ),
+        ]
 
-class ColorStremDebugMode(StreamMode):
+
+class ColorStremDebugMode(ColorStreamMode):
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
 
@@ -73,7 +81,7 @@ class ColorStremDebugMode(StreamMode):
         )
 
 
-class ColorStreamInfoMode(StreamMode):
+class ColorStreamInfoMode(ColorStreamMode):
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
 

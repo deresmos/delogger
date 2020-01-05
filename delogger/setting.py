@@ -103,7 +103,7 @@ class DeloggerStreamSetting(DeloggerSettingBase):
         "ERROR": "red",
         "CRIT": "red,bg_white",
     }
-    """Definition of color stream level setting."""
+    """[Deprecated] Definition of color stream level setting."""
 
     def __init__(
         self,
