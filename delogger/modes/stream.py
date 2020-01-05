@@ -39,6 +39,31 @@ class StreamModeBase(ModeBase):
         self.stream_fmts: List[str] = stream_fmts or self.STREAM_FMTS
 
 
+class StreamDebugMode(StreamModeBase):
+    def __init__(self, **kwargs) -> None:
+        super().__init__(**kwargs)
+
+    def load_to_delogger(self, delogger) -> None:
+        debug_fmt = self.stream_fmts[self.FMT_DEBUG_I]
+
+        delogger.add_stream_handler(DEBUG, fmt=debug_fmt, datefmt=self.date_fmt)
+
+
+class StreamInfoMode(StreamModeBase):
+    def __init__(self, **kwargs) -> None:
+        super().__init__(**kwargs)
+
+    def load_to_delogger(self, delogger) -> None:
+        debug_fmt = self.stream_fmts[self.FMT_DEBUG_I]
+        info_fmt = self.stream_fmts[self.FMT_INFO_I]
+
+        delogger.add_stream_handler(
+            INFO, fmt=info_fmt, only_level=True, datefmt=self.date_fmt
+        )
+
+        delogger.add_stream_handler(WARNING, fmt=debug_fmt, datefmt=self.date_fmt)
+
+
 class StreamColorModeBase(StreamModeBase):
     LOG_COLORS = {
         "DEBUG": "cyan",
@@ -99,28 +124,3 @@ class StreamColorInfoMode(StreamColorModeBase):
         delogger.add_stream_color_handler(
             WARNING, log_colors=self.log_colors, fmt=debug_fmt, datefmt=self.date_fmt
         )
-
-
-class StreamDebugMode(StreamModeBase):
-    def __init__(self, **kwargs) -> None:
-        super().__init__(**kwargs)
-
-    def load_to_delogger(self, delogger) -> None:
-        debug_fmt = self.stream_fmts[self.FMT_DEBUG_I]
-
-        delogger.add_stream_handler(DEBUG, fmt=debug_fmt, datefmt=self.date_fmt)
-
-
-class StreamInfoMode(StreamModeBase):
-    def __init__(self, **kwargs) -> None:
-        super().__init__(**kwargs)
-
-    def load_to_delogger(self, delogger) -> None:
-        debug_fmt = self.stream_fmts[self.FMT_DEBUG_I]
-        info_fmt = self.stream_fmts[self.FMT_INFO_I]
-
-        delogger.add_stream_handler(
-            INFO, fmt=info_fmt, only_level=True, datefmt=self.date_fmt
-        )
-
-        delogger.add_stream_handler(WARNING, fmt=debug_fmt, datefmt=self.date_fmt)
