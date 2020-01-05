@@ -57,14 +57,14 @@ class Delogger(DeloggerBase):
             self.add_stream_handler(
                 self.stream_level,
                 fmt=fmt,
-                is_color_stream=self.is_color_stream,
+                is_stream_color=self.is_color_stream,
                 only_level=True,
             )
 
             # Set warning or more stream
             fmt = self._stream_fmt(is_debug_stream=True)
             self.add_stream_handler(
-                WARNING, fmt=fmt, is_color_stream=self.is_color_stream
+                WARNING, fmt=fmt, is_stream_color=self.is_color_stream
             )
 
         else:
@@ -76,7 +76,7 @@ class Delogger(DeloggerBase):
             # all debug stream.
             fmt = self.stream_fmt
             self.add_stream_handler(
-                stream_level, fmt=fmt, is_color_stream=self.is_color_stream
+                stream_level, fmt=fmt, is_stream_color=self.is_color_stream
             )
         # If there is a log save flag, the log file handler is set.
 

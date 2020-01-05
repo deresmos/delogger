@@ -7,7 +7,7 @@ from delogger import Delogger, SlackHandler
 def _set_logger():
     delogger = Delogger("debug_logger")
     delogger.is_debug_stream = True
-    delogger.is_color_stream = True
+    delogger.is_stream_color = True
     delogger.is_save_file = True
 
     slack_hdlr = None

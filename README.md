@@ -24,20 +24,7 @@ The default logging includes the following:
 
 
 ## Settings
-| variable name   | description                                | default             |
-| -------------   | -------------                              | ------              |
-| date_fmt        | date and time format                       | '%Y-%m-%d %H:%M:%S' |
-| stream_level    | Stream level                               | logging.INFO        |
-| file_level      | Level of file output                       | logging.DEBUG       |
-| is_save_file    | whether to save the log file               | False               |
-| is_color_stream | whether to make the stream color output    | False               |
-| is_debug_stream | Whether to output the stream in debug mode | False               |
-| default         | Whether to use the default handler         | True                |
-| dirpath         | log output folder                          | 'log'               |
-| filepath        | log output filepath                        | None                |
-| is_stream       | If False, disabled stream output           | True                |
-| backup_count    | logfile backup_count                       | 5                   |
-
+TODO
 
 Installation
 ==
