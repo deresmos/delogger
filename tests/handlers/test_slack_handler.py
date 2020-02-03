@@ -1,7 +1,7 @@
-import json
 import logging
 import os
 
+import pytest
 from delogger.handlers.slack import SlackHandler
 
 
@@ -9,6 +9,7 @@ class TestSlackHandler:
     def setup_class(self):
         self.dummy_url = "dummy.url"
         self.dummy_token = "dummy.token"
+        self.debug_record = logging.LogRecord("name", logging.DEBUG, "", "", "", "", "")
 
     def test_normal(self):
         logger = logging.getLogger("normal")
@@ -50,13 +51,8 @@ class TestSlackHandler:
         if os.environ.get(url_env, None):
             del os.environ[url_env]
 
-        try:
+        with pytest.raises(ValueError):
             SlackHandler(channel="#dummy")
-
-        except ValueError:
-            pass
-        else:
-            assert False
 
     def test_token(self):
         logger = logging.getLogger("normal")
@@ -87,21 +83,15 @@ class TestSlackHandler:
         logger = logging.getLogger("error")
         logger.setLevel(logging.DEBUG)
 
-        try:
+        with pytest.raises(ValueError):
             SlackHandler()
-
-        except ValueError:
-            pass
-        else:
-            assert False
 
         logger.debug("error test")
 
     def test_make_content_with_url(self):
-        levelno = logging.DEBUG
-
         slack_handler = SlackHandler(url=self.dummy_url, channel="#dummy")
-        content = slack_handler._makeContent(levelno)
+        content = slack_handler.make_json(self.debug_record)
+        levelno = self.debug_record.levelno
 
         assert content["icon_emoji"] == slack_handler.emojis[levelno]
         assert content["username"] == slack_handler.usernames[levelno]
@@ -111,12 +101,10 @@ class TestSlackHandler:
         assert slack_handler.url != SlackHandler.POST_MESSAGE_URL
 
     def test_make_content_with_token(self):
-        levelno = logging.DEBUG
-
         slack_handler = SlackHandler(
             token=self.dummy_token, channel="#dummy", as_user=True
         )
-        content = slack_handler._makeContent(levelno)
+        content = slack_handler.make_json(self.debug_record)
 
         assert type(content) is dict
         assert "icon_emoji" not in content
@@ -130,7 +118,7 @@ class TestSlackHandler:
         slack_handler = SlackHandler(
             url=self.dummy_url, emoji="emoji", username="username"
         )
-        content = slack_handler._makeContent(logging.INFO)
+        content = slack_handler.make_json(self.debug_record)
 
         assert content["icon_emoji"] == "emoji"
         assert content["username"] == "username"
