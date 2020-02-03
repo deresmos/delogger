@@ -1,4 +1,5 @@
-from json import dumps as json_dumps
+import json
+import urllib.request
 from logging import CRITICAL, DEBUG, ERROR, INFO, NOTSET, WARNING, Handler
 from os import getenv
 from typing import Any, Dict, Optional, Union
@@ -73,13 +74,13 @@ class SlackHandler(Handler):
         emoji: Optional[str] = None,
         username: Optional[str] = None,
         emojis: Optional[Dict[int, str]] = None,
-        usernames: Optional[Dict[int, str]] = None
+        usernames: Optional[Dict[int, str]] = None,
     ):
         self.is_emit = True
 
         self.url = url or getenv(self.URL_ENV)
-        self.token = token or getenv(self.TOKEN_ENV)
-        if self.token:
+        token = token or getenv(self.TOKEN_ENV)
+        if token:
             self.url = self.POST_MESSAGE_URL
 
         if not self.url:
@@ -93,6 +94,10 @@ class SlackHandler(Handler):
         self.as_user = as_user
         self.emoji = emoji
         self.username = username
+
+        self._headers = {"Content-Type": "application/json; charset=utf-8"}
+        if token:
+            self._headers["Authorization"] = f"Bearer {token}"
 
         super().__init__()
 
@@ -120,11 +125,7 @@ class SlackHandler(Handler):
         if self.channel:
             _content["channel"] = self.channel
 
-        if self.token:
-            _content["token"] = self.token
-            return _content
-        else:
-            return json_dumps(_content)
+        return _content
 
     def makeContent(self, record) -> Union[str, Dict[str, Any]]:
         """Get slack's payload."""
@@ -138,13 +139,15 @@ class SlackHandler(Handler):
         """Send a message to Slack."""
 
         try:
-            # TODO: temporary
-            import requests
-
             if not self.is_emit:
                 return
 
-            requests.post(self.url, data=self.makeContent(record), timeout=self.TIMEOUT)
+            payload = self.makeContent(record)
+            body = json.dumps(payload).encode("utf-8")
+            request = urllib.request.Request(
+                url=self.url, method="POST", data=body, headers=self._headers
+            )
+            urllib.request.urlopen(request, timeout=self.TIMEOUT)
 
         except Exception:
             self.handleError(record)

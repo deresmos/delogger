@@ -103,13 +103,10 @@ class TestSLackHandler:
         slack_handler = SlackHandler(url=self.dummy_url, channel="#dummy")
         content = slack_handler._makeContent(levelno)
 
-        assert type(content) is str
-        content = json.loads(content)
         assert content["icon_emoji"] == slack_handler.emojis[levelno]
         assert content["username"] == slack_handler.usernames[levelno]
         assert content["channel"] == "#dummy"
         assert "as_user" not in content
-        assert "token" not in content
 
         assert slack_handler.url != SlackHandler.POST_MESSAGE_URL
 
@@ -126,7 +123,6 @@ class TestSLackHandler:
         assert "username" not in content
         assert content["channel"] == "#dummy"
         assert content["as_user"]
-        assert content["token"] == self.dummy_token
 
         assert slack_handler.url == SlackHandler.POST_MESSAGE_URL
 
@@ -135,7 +131,6 @@ class TestSLackHandler:
             url=self.dummy_url, emoji="emoji", username="username"
         )
         content = slack_handler._makeContent(logging.INFO)
-        content = json.loads(content)
 
         assert content["icon_emoji"] == "emoji"
         assert content["username"] == "username"
