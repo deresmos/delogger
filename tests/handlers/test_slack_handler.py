@@ -20,6 +20,7 @@ class TestSlackHandler:
         logger.addHandler(slack_handler)
 
         assert slack_handler.url != SlackHandler.POST_MESSAGE_URL
+        assert "Authorization" not in slack_handler.headers
 
         logger.debug("normal test")
 
@@ -61,6 +62,7 @@ class TestSlackHandler:
         slack_handler = SlackHandler(token=self.dummy_token, channel="#dummy")
 
         assert slack_handler.url == SlackHandler.POST_MESSAGE_URL
+        assert slack_handler.headers["Authorization"] == f"Bearer {self.dummy_token}"
 
     def test_token_env(self):
         token_env = SlackHandler.TOKEN_ENV
@@ -89,13 +91,12 @@ class TestSlackHandler:
         logger.debug("error test")
 
     def test_make_content_with_url(self):
-        slack_handler = SlackHandler(url=self.dummy_url, channel="#dummy")
+        slack_handler = SlackHandler(url=self.dummy_url)
         content = slack_handler.make_json(self.debug_record)
         levelno = self.debug_record.levelno
 
         assert content["icon_emoji"] == slack_handler.emojis[levelno]
         assert content["username"] == slack_handler.usernames[levelno]
-        assert content["channel"] == "#dummy"
         assert "as_user" not in content
 
         assert slack_handler.url != SlackHandler.POST_MESSAGE_URL
@@ -106,7 +107,6 @@ class TestSlackHandler:
         )
         content = slack_handler.make_json(self.debug_record)
 
-        assert type(content) is dict
         assert "icon_emoji" not in content
         assert "username" not in content
         assert content["channel"] == "#dummy"
