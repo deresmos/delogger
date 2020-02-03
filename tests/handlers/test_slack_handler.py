@@ -5,7 +5,7 @@ import os
 from delogger.handlers.slack import SlackHandler
 
 
-class TestSLackHandler:
+class TestSlackHandler:
     def setup_class(self):
         self.dummy_url = "dummy.url"
         self.dummy_token = "dummy.token"
