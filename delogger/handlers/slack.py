@@ -2,7 +2,7 @@ import json
 import urllib.request
 from logging import CRITICAL, DEBUG, ERROR, INFO, NOTSET, WARNING, Handler
 from os import getenv
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Optional
 
 
 class SlackHandler(Handler):

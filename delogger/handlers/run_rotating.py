@@ -5,8 +5,10 @@ from logging import FileHandler
 from pathlib import Path
 from typing import Dict, List, Optional
 
+__all__ = ["RunRotatingHandler"]
 
-class _LOG_FILE(object):
+
+class LogFile(object):
     """Set the path of the log file.
 
     Args:
@@ -32,7 +34,7 @@ class _LOG_FILE(object):
             True if dirname is the same, False otherwise.
 
         """
-        if not isinstance(other, _LOG_FILE):
+        if not isinstance(other, LogFile):
             raise NotImplementedError
         eq = False
         eq = (other.dirname == self.dirname) and (other.basename == self.basename)
@@ -50,7 +52,8 @@ class RunRotatingHandler(FileHandler):
     """This handler leaves a log file for each execution.
 
     Args:
-        dirname (str): Directory path.
+        dirname (str): [Deprecated] Directory path.
+        filepath (str): log filepath.
         backup_count (int): Leave logs up to the designated generation.
         fmt (str): Filename like date_string.
 
@@ -65,8 +68,8 @@ class RunRotatingHandler(FileHandler):
     BACKUP_COUNT: int = 5
     """Default value of backup count."""
 
-    _files: List[_LOG_FILE] = []
-    """This list saving _LOG_FILE of output log file."""
+    _files: List[LogFile] = []
+    """This list saving LogFile of output log file."""
 
     _LOG_FMT_RE: Dict[str, List[str]] = {
         r"\d{4}": ["%Y"],
@@ -80,14 +83,14 @@ class RunRotatingHandler(FileHandler):
         backup_count: Optional[int] = None,
         fmt: Optional[str] = None,
         **kwargs
-    ):
-        fmt = fmt or self.LOG_FMT
-        backup_count = backup_count or self.BACKUP_COUNT
+    ) -> None:
+        _fmt: str = fmt or self.LOG_FMT
+        _backup_count: int = backup_count or self.BACKUP_COUNT
 
         if filepath:
             dirname = str(Path(filepath).parent)
-            fmt = Path(filepath).name
-        self.filepath = self._load_file_path(str(dirname), fmt, backup_count)
+            _fmt = Path(filepath).name
+        self.filepath: str = self._load_file_path(dirname, _fmt, _backup_count)
 
         super().__init__(self.filepath, **kwargs)
 
@@ -118,7 +121,7 @@ class RunRotatingHandler(FileHandler):
         """
 
         # Set the logfile name.
-        path = _LOG_FILE(dirname, fmt)
+        path = LogFile(dirname, fmt)
         filepath = Path(str(path))
 
         # If already same dirname, return the filepath.

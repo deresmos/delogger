@@ -44,7 +44,6 @@ class LineMemoryProfile(DecoratorBase):
         """When this decorator is set, the argument and return value are out-
         put to the log.
         """
-        logger = self.logger
 
         def wrapper(*args, **kwargs):
             # memory_profiler
@@ -68,7 +67,7 @@ class LineMemoryProfile(DecoratorBase):
                 mix.append(template.format(*l_m_mix))
             mix[self.L_M_HEADER_INDEX] = template.format(*self.L_M_HEADER)
             mix[self.L_M_SEPARATOR_INDEX] += "=" * 27
-            logger.debug("line, memory profiler result\n" + "\n".join(mix))
+            self.logger.debug("line, memory profiler result\n" + "\n".join(mix))
 
             return rtn
 
