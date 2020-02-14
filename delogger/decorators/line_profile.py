@@ -43,7 +43,10 @@ class LineProfileStats(DecoratorBase):
     def __init__(self):
         super().__init__()
 
-        self.prof = LineProfiler()
+        try:
+            self.prof = LineProfiler()
+        except NameError:
+            self.prof = None
 
     def decorator(self, func) -> Callable:
         def wrapper(*args, **kwargs):
