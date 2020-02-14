@@ -1,8 +1,12 @@
-from tests.lib.base import DeloggerTestBase
-
 from delogger import Delogger
-from delogger.decorators.profiles import LineMemoryProfile, LineProfile, MemoryProfile, LineProfileStats
+from delogger.decorators.profiles import (
+    LineMemoryProfile,
+    LineProfile,
+    LineProfileStats,
+    MemoryProfile,
+)
 from delogger.modes.stream import StreamDebugMode
+from tests.lib.base import DeloggerTestBase
 
 
 class TestProfileDecorator(DeloggerTestBase):
