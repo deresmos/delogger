@@ -1,7 +1,7 @@
 from tests.lib.base import DeloggerTestBase
 
 from delogger import Delogger
-from delogger.decorators.profiles import LineMemoryProfile, LineProfile, MemoryProfile
+from delogger.decorators.profiles import LineMemoryProfile, LineProfile, MemoryProfile, LineProfileStats
 from delogger.modes.stream import StreamDebugMode
 
 
@@ -18,6 +18,24 @@ class TestProfileDecorator(DeloggerTestBase):
         logger = delogger.get_logger()
 
         @logger.line_profile
+        def test_func(arg1, arg2=None):
+            pass
+
+        # Only execute
+        test_func("testarg", 123)
+
+    def test_line_profile_stats_decorator(self, capsys, caplog):
+        try:
+            import line_profiler  # noqa
+        except ImportError:
+            return
+
+        delogger = Delogger("line_profile_stats_decorator")
+        delogger.load_modes(StreamDebugMode())
+        delogger.load_decorators(LineProfileStats())
+        logger = delogger.get_logger()
+
+        @logger.add_line_profile
         def test_func(arg1, arg2=None):
             pass
 
