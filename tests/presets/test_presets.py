@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from shutil import rmtree
 
@@ -35,11 +36,16 @@ class TestPresets(DeloggerTestBase):
         assert getattr(logger, "debuglog")
 
     def test_output(self, capsys):
+        filepath = "log/test_output.log"
+        os.environ["DELOGGER_FILEPATH"] = filepath
         from delogger.presets.output import logger
+
+        del os.environ["DELOGGER_FILEPATH"]
 
         self.execute_log(logger)
 
         assert getattr(logger, "debuglog")
+        assert Path(filepath).is_file()
 
     def test_profiler(self):
         from delogger.presets.profiler import logger
@@ -48,5 +54,6 @@ class TestPresets(DeloggerTestBase):
 
         assert getattr(logger, "debuglog")
         assert getattr(logger, "line_profile")
+        assert getattr(logger, "add_line_profile")
         assert getattr(logger, "memory_profile")
         assert getattr(logger, "line_memory_profile")
