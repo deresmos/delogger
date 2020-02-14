@@ -2,7 +2,7 @@ import re
 from datetime import datetime as dt
 from pathlib import Path
 
-_dp = r"\w+\s? \d{2}:\d{2}:\d{2} [^\s]+:\d{1,5} %s\x1b\[0m"
+_dp = r"\w+\s? \d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} [^\s]+:\d{1,5} %s"
 _cp = r"%s"
 _cdp = r"(\x1b\[\d{1,3}m)+\w+\s?\x1b\[0m \d{2}:\d{2}:\d{2} [^\s]+:\d{1,5} %s\x1b\[0m"
 _lp = r"\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}.\d{3} [^\s]+\s? [^\s]+:\d{1,5} %s"
