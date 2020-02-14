@@ -1,23 +1,23 @@
+import urllib.request
 from logging import WARNING
 
 import requests
-from tests.lib.base import DeloggerTestBase
-
 from delogger import Delogger
 from delogger.modes.slack import SlackWebhookMode
+from tests.lib.base import DeloggerTestBase
 
 
 class TestSlackMode(DeloggerTestBase):
     def setup_class(self):
-        self.requests_post = requests.post
+        self.urlopen = urllib.request.urlopen
 
     def teardown_class(self):
-        requests.post = self.requests_post
+        urllib.request.urlopen = self.urlopen
 
     def setup_method(self):
         from unittest.mock import MagicMock
 
-        requests.post = MagicMock()
+        urllib.request.urlopen = MagicMock()
 
     def test_slack_webhook_mode_info(self):
         delogger = Delogger("slack_webhook_mode_info")
@@ -26,7 +26,7 @@ class TestSlackMode(DeloggerTestBase):
 
         self.execute_log(logger)
 
-        assert requests.post.call_count == 4
+        assert urllib.request.urlopen.call_count == 4
 
     def test_slack_webhook_mode_warning(self):
         delogger = Delogger("slack_webhook_mode_warning")
@@ -35,4 +35,4 @@ class TestSlackMode(DeloggerTestBase):
 
         self.execute_log(logger)
 
-        assert requests.post.call_count == 3
+        assert urllib.request.urlopen.call_count == 3

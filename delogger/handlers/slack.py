@@ -1,4 +1,5 @@
-from json import dumps as json_dumps
+import json
+import urllib.request
 from logging import CRITICAL, DEBUG, ERROR, INFO, NOTSET, WARNING, Handler
 from os import getenv
 from typing import Any, Dict, Optional, Union
@@ -73,13 +74,13 @@ class SlackHandler(Handler):
         emoji: Optional[str] = None,
         username: Optional[str] = None,
         emojis: Optional[Dict[int, str]] = None,
-        usernames: Optional[Dict[int, str]] = None
+        usernames: Optional[Dict[int, str]] = None,
     ):
         self.is_emit = True
 
         self.url = url or getenv(self.URL_ENV)
-        self.token = token or getenv(self.TOKEN_ENV)
-        if self.token:
+        token = token or getenv(self.TOKEN_ENV)
+        if token:
             self.url = self.POST_MESSAGE_URL
 
         if not self.url:
@@ -94,57 +95,54 @@ class SlackHandler(Handler):
         self.emoji = emoji
         self.username = username
 
+        self.headers = {"Content-Type": "application/json; charset=utf-8"}
+        if token:
+            self.headers["Authorization"] = f"Bearer {token}"
+
         super().__init__()
 
-    def _makeContent(
-        self, levelno: int, content: Optional[Dict[str, Any]] = None
-    ) -> Union[str, Dict[str, Any]]:
-        """Get slack's payload."""
+    def make_json(self, record) -> Dict[str, Any]:
+        json_data: Dict[str, Any] = {}
 
-        _content: Dict[str, Any] = content or {}
-
+        json_data["text"] = self.format(record)
         if self.as_user:
-            _content["as_user"] = self.as_user
+            json_data["as_user"] = self.as_user
 
         else:
             if self.emoji:
-                _content["icon_emoji"] = self.emoji
+                json_data["icon_emoji"] = self.emoji
             elif self.emojis:
-                _content["icon_emoji"] = self.emojis[levelno]
+                json_data["icon_emoji"] = self.emojis[record.levelno]
 
             if self.username:
-                _content["username"] = self.username
+                json_data["username"] = self.username
             elif self.usernames:
-                _content["username"] = self.usernames[levelno]
+                json_data["username"] = self.usernames[record.levelno]
 
         if self.channel:
-            _content["channel"] = self.channel
+            json_data["channel"] = self.channel
 
-        if self.token:
-            _content["token"] = self.token
-            return _content
-        else:
-            return json_dumps(_content)
+        return json_data
 
-    def makeContent(self, record) -> Union[str, Dict[str, Any]]:
+    def make_payload(self, record) -> bytes:
         """Get slack's payload."""
 
-        content = {"text": self.format(record)}
-        content_str = self._makeContent(record.levelno, content=content)
+        json_data = self.make_json(record)
 
-        return content_str
+        return json.dumps(json_data).encode("utf-8")
 
     def emit(self, record):
         """Send a message to Slack."""
 
         try:
-            # TODO: temporary
-            import requests
-
             if not self.is_emit:
                 return
 
-            requests.post(self.url, data=self.makeContent(record), timeout=self.TIMEOUT)
+            payload = self.make_payload(record)
+            request = urllib.request.Request(
+                url=self.url, method="POST", data=payload, headers=self.headers
+            )
+            urllib.request.urlopen(request, timeout=self.TIMEOUT)
 
         except Exception:
             self.handleError(record)
