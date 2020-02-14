@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Callable, Optional
 
 from delogger.decorators.base import DecoratorBase
 
@@ -17,11 +17,6 @@ class LineProfile(DecoratorBase):
     decorator_name = "line_profile"
 
     def decorator(self, func) -> Callable:
-        """When this decorator is set, the argument and return value are out-
-        put to the log.
-        """
-        logger = self.logger
-
         def wrapper(*args, **kwargs):
             prof = LineProfiler()
             prof.add_function(func)
@@ -30,7 +25,7 @@ class LineProfile(DecoratorBase):
             with StringIO() as f:
                 prof.print_stats(stream=f)
                 msg = "line_profiler result\n{}".format(f.getvalue())
-            logger.debug(msg)
+                self.logger.debug(msg)
 
             return rtn
 
@@ -40,16 +35,20 @@ class LineProfile(DecoratorBase):
 class LineProfileStats(DecoratorBase):
     decorator_name = "add_line_profile"
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
+        self.prof: Optional[LineProfiler] = None
         try:
             self.prof = LineProfiler()
         except NameError:
-            self.prof = None
+            pass
 
     def decorator(self, func) -> Callable:
         def wrapper(*args, **kwargs):
+            if not self.prof:
+                return func(*args, **kwargs)
+
             self.prof.add_function(func)
 
             rtn = self.prof.runcall(func, *args, **kwargs)
@@ -58,7 +57,10 @@ class LineProfileStats(DecoratorBase):
 
         return wrapper
 
-    def print_stats(self):
+    def print_stats(self) -> None:
+        if not self.prof or not self.logger:
+            return None
+
         with StringIO() as f:
             self.prof.print_stats(stream=f)
             msg = "line_profiler_stats result\n{}".format(f.getvalue())

@@ -146,7 +146,7 @@ class DeloggerBase(DeloggerSetting):
         hdlr=None,
         datefmt: Optional[str] = None,
         **kwargs
-    ):
+    ) -> None:
         """Helper function to add a color stream handler.
 
         Args:
