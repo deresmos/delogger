@@ -32,12 +32,12 @@ Example
 ```python
 from delogger import Delogger
 from delogger.decorators.debug_log import DebugLog
-from delogger.modes.file import RunRotatingFileMode
+from delogger.modes.file import CountRotatingFileMode
 from delogger.modes.stream import StreamColorDebugMode
 
 if __name__ == "__main__":
     delogger = Delogger()
-    delogger.load_modes(StreamColorDebugMode(), RunRotatingFileMode())
+    delogger.load_modes(StreamColorDebugMode(), CountRotatingFileMode())
     delogger.load_decorators(DebugLog())
 
     logger = delogger.get_logger()
@@ -89,7 +89,7 @@ Preset
 
 Mode
 ==
-- `RunRotatingFileMode`: Log every execution.
+- `CountRotatingFileMode`: Backup count rotating.
 - `TimedRotatingFileMode`: Same logging.handlers.TimedRotatingFileHandler.
 - `SlackWebhookMode`: Log to slack. (Incomming webhook)
 - `SlackTokenMode`: Log to slack. (token key)

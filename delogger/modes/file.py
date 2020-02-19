@@ -3,10 +3,10 @@ from logging.handlers import TimedRotatingFileHandler
 from pathlib import Path
 from typing import Optional
 
-from delogger.handlers.run_rotating import RunRotatingHandler
+from delogger.handlers.count_rotating_file import CountRotatingFileHandler
 from delogger.modes.base import ModeBase
 
-__all__ = ["RunRotatingFileMode", "TimedRotatingFileMode"]
+__all__ = ["CountRotatingFileMode", "TimedRotatingFileMode"]
 
 
 class LogFile:
@@ -40,7 +40,7 @@ class FileModeBase(ModeBase):
         self.date_fmt: str = date_fmt or self.date_fmt
 
 
-class RunRotatingFileMode(FileModeBase):
+class CountRotatingFileMode(FileModeBase):
     def __init__(
         self,
         filepath: str = "log/%Y%m%d_%H%M%S.log",
@@ -58,7 +58,7 @@ class RunRotatingFileMode(FileModeBase):
         self.logfile: Optional[LogFile] = None
 
     def load_to_delogger(self, delogger) -> None:
-        run_hdlr = RunRotatingHandler(
+        run_hdlr = CountRotatingFileHandler(
             filepath=self.filepath, backup_count=self.backup_count
         )
 

@@ -5,8 +5,7 @@ from logging import FileHandler
 from pathlib import Path
 from typing import Dict, List, Optional
 
-# Deprecated
-__all__ = ["RunRotatingHandler"]
+__all__ = ["CountRotatingFileHandler"]
 
 
 class LogFile(object):
@@ -29,7 +28,7 @@ class LogFile(object):
         self.path: str = dt.today().strftime(str(Path(dirname) / basename))
 
     def __eq__(self, other):
-        """Comparison for RunRotatingHandler.
+        """Comparison for CountRotatingFileHandler.
 
         Returns:
             True if dirname is the same, False otherwise.
@@ -49,8 +48,8 @@ class LogFile(object):
         return self.path
 
 
-class RunRotatingHandler(FileHandler):
-    """This handler leaves a log file for each execution.
+class CountRotatingFileHandler(FileHandler):
+    """This handler to keep the saved log count.
 
     Args:
         dirname (str): [Deprecated] Directory path.
@@ -126,7 +125,7 @@ class RunRotatingHandler(FileHandler):
         filepath = Path(str(path))
 
         # If already same dirname, return the filepath.
-        for fpath in RunRotatingHandler._files:
+        for fpath in CountRotatingFileHandler._files:
             if fpath == path:
                 return str(fpath)
 
@@ -136,7 +135,7 @@ class RunRotatingHandler(FileHandler):
         # Delete the old file and set a new file path
         if (backup_count > 0) and (len(filenames) >= backup_count):
             os.remove(filenames[0])
-        RunRotatingHandler._files.append(path)
+        CountRotatingFileHandler._files.append(path)
 
         return str(path)
 
