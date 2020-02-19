@@ -29,6 +29,7 @@ pip install delogger
 Example
 ==
 
+### Example1
 ```python
 from delogger import Delogger
 from delogger.decorators.debug_log import DebugLog
@@ -68,7 +69,6 @@ File output (./log/20200219_221601.log)
 ```
 
 Same `debug` preset.
-
 ```python
 from delogger.presets.debug import logger
 
@@ -78,6 +78,66 @@ if __name__ == "__main__":
     logger.warning("WARN")
     logger.error("ERROR")
     logger.critical("CRITICAL")
+```
+
+### Example2
+```python
+from delogger import Delogger
+from delogger.decorators.debug_log import DebugLog
+from delogger.decorators.line_profile import LineProfileStats
+from delogger.modes.file import CountRotatingFileMode
+
+if __name__ == "__main__":
+    delogger = Delogger()
+    delogger.load_modes(
+        CountRotatingFileMode(filepath="log/%Y/%Y-%m-%d.log", backup_count=0)
+    )
+    delogger.load_decorators(DebugLog(), LineProfileStats())
+
+    logger = delogger.get_logger()
+
+    @logger.add_line_profile
+    def test():
+        logger.debug("debug")
+        logger.info("info")
+        logger.warning("warn")
+        logger.error("error")
+        logger.critical("critical")
+
+    for _ in range(2):
+        test()
+    logger.print_stats()
+```
+
+
+File output (log/2020/2020-02-19.log)
+```
+2020-02-19 23:01:01.921 DEBUG debug.py:17 debug
+2020-02-19 23:01:01.921 INFO debug.py:18 info
+2020-02-19 23:01:01.922 WARN debug.py:19 warn
+2020-02-19 23:01:01.922 ERROR debug.py:20 error
+2020-02-19 23:01:01.922 CRIT debug.py:21 critical
+2020-02-19 23:01:01.922 DEBUG debug.py:17 debug
+2020-02-19 23:01:01.922 INFO debug.py:18 info
+2020-02-19 23:01:01.922 WARN debug.py:19 warn
+2020-02-19 23:01:01.922 ERROR debug.py:20 error
+2020-02-19 23:01:01.922 CRIT debug.py:21 critical
+2020-02-19 23:01:01.935 DEBUG line_profile.py:67 line_profiler_stats result
+Timer unit: 1e-06 s
+
+Total time: 0.000871 s
+File: examples/debug.py
+Function: test at line 15
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+    15                                               @logger.add_line_profile
+    16                                               def test():
+    17         2        267.0    133.5     30.7          logger.debug("debug")
+    18         2        165.0     82.5     18.9          logger.info("info")
+    19         2        148.0     74.0     17.0          logger.warning("warn")
+    20         2        148.0     74.0     17.0          logger.error("error")
+    21         2        143.0     71.5     16.4          logger.critical("critical")
 ```
 
 Preset
