@@ -1,7 +1,7 @@
 from os import getenv
 from typing import Optional
 
-from delogger.modes.file import RunRotatingFileMode, TimedRotatingFileMode
+from delogger.modes.file import CountRotatingFileMode, TimedRotatingFileMode
 from delogger.modes.slack import SlackWebhookMode
 
 
@@ -16,11 +16,11 @@ class PresetsBase:
         self.filepath: Optional[str] = getenv("DELOGGER_FILEPATH")
         self.slack_webhook: Optional[str] = getenv("DELOGGER_SLACK_WEBHOOK")
 
-    def run_rorating_filemode(self) -> RunRotatingFileMode:
+    def count_rorating_filemode(self) -> CountRotatingFileMode:
         return (
-            RunRotatingFileMode(self.filepath)
+            CountRotatingFileMode(self.filepath)
             if self.filepath
-            else RunRotatingFileMode()
+            else CountRotatingFileMode()
         )
 
     def timed_rotating_filemode(self) -> TimedRotatingFileMode:

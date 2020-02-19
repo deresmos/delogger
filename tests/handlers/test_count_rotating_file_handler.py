@@ -3,12 +3,12 @@ import logging
 import shutil
 from pathlib import Path
 
-from delogger.handlers.run_rotating import RunRotatingHandler
+from delogger.handlers.count_rotating_file import CountRotatingFileHandler
 
 
 class TestRunRotatingHandler:
     def setup_class(self):
-        RunRotatingHandler._files = []
+        CountRotatingFileHandler._files = []
         self.today = datetime.datetime.today()
         self.log_paths = []
 
@@ -26,7 +26,7 @@ class TestRunRotatingHandler:
         logger = logging.getLogger(name)
         logger.setLevel(logging.DEBUG)
 
-        runrotating = RunRotatingHandler(logpath)
+        runrotating = CountRotatingFileHandler(logpath)
         runrotating.setLevel(logging.DEBUG)
         logger.addHandler(runrotating)
 
@@ -38,7 +38,7 @@ class TestRunRotatingHandler:
         logger = logging.getLogger(name)
         logger.setLevel(logging.DEBUG)
 
-        runrotating = RunRotatingHandler(filepath=logpath)
+        runrotating = CountRotatingFileHandler(filepath=logpath)
         runrotating.setLevel(logging.DEBUG)
         logger.addHandler(runrotating)
 
@@ -51,7 +51,7 @@ class TestRunRotatingHandler:
         logger.debug("log file test")
         assert Path(logpath).is_dir()
         assert len(list(Path(logpath).iterdir())) == 1
-        assert len(RunRotatingHandler._files) == len(self.log_paths)
+        assert len(CountRotatingFileHandler._files) == len(self.log_paths)
 
     def test_normal_same(self):
         logpath = "log"
@@ -60,7 +60,7 @@ class TestRunRotatingHandler:
         logger.debug("same normal logger")
         assert Path(logpath).is_dir()
         assert len(list(Path(logpath).iterdir())) == 1
-        assert len(RunRotatingHandler._files) == len(self.log_paths)
+        assert len(CountRotatingFileHandler._files) == len(self.log_paths)
 
     def test_normal2(self):
         logpath = "log2"
@@ -69,7 +69,7 @@ class TestRunRotatingHandler:
         logger.debug("log file test")
         assert Path(logpath).is_dir()
         assert len(list(Path(logpath).iterdir())) == 1
-        assert len(RunRotatingHandler._files) == len(self.log_paths)
+        assert len(CountRotatingFileHandler._files) == len(self.log_paths)
 
     def test_logpath(self):
         logpath = "log/logs"
@@ -78,7 +78,7 @@ class TestRunRotatingHandler:
         logger.debug("log path test: %s", logpath)
         assert Path(logpath).is_dir()
         assert len(list(Path(logpath).iterdir())) == 1
-        assert len(RunRotatingHandler._files) == len(self.log_paths)
+        assert len(CountRotatingFileHandler._files) == len(self.log_paths)
 
     def test_logpath2(self):
         logpath = "log/%Y/%M"
@@ -88,7 +88,7 @@ class TestRunRotatingHandler:
         logger.debug("log path test: %s", logpath)
         assert Path(logpath).is_dir()
         assert len(list(Path(logpath).iterdir())) == 1
-        assert len(RunRotatingHandler._files) == len(self.log_paths)
+        assert len(CountRotatingFileHandler._files) == len(self.log_paths)
 
     def test_filepath(self):
         logpath = "log/%Y/%M%d/%Y.log"
@@ -99,4 +99,4 @@ class TestRunRotatingHandler:
         assert Path(logpath).parent.is_dir()
         assert len(list(Path(logpath).iterdir())) == 1
         assert Path(logpath).exists()
-        assert len(RunRotatingHandler._files) == len(self.log_paths)
+        assert len(CountRotatingFileHandler._files) == len(self.log_paths)

@@ -8,9 +8,9 @@ from delogger.presets.base import PresetsBase
 
 def _get_logger() -> Logger:
 
-    run_rorating_filemode = PresetsBase().run_rorating_filemode()
+    count_rorating_filemode = PresetsBase().count_rorating_filemode()
     delogger = Delogger("debug_logger")
-    delogger.load_modes(StreamColorDebugMode(), run_rorating_filemode)
+    delogger.load_modes(StreamColorDebugMode(), count_rorating_filemode)
     delogger.load_decorators(DebugLog())
 
     return delogger.get_logger()
