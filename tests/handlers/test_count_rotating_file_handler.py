@@ -6,14 +6,14 @@ from pathlib import Path
 from delogger.handlers.count_rotating_file import CountRotatingFileHandler
 
 
-class TestRunRotatingHandler:
+class TestCountRotatingHandler:
     def setup_class(self):
         CountRotatingFileHandler._files = []
         self.today = datetime.datetime.today()
-        self.log_paths = []
+        self.logpath_set = set()
 
     def teardown_class(self):
-        for path in reversed(sorted(self.log_paths)):
+        for path in reversed(sorted(self.logpath_set)):
             logpath = datetime.datetime.strftime(self.today, path)
             if Path(logpath).is_dir():
                 shutil.rmtree(logpath)
@@ -21,82 +21,81 @@ class TestRunRotatingHandler:
                 assert Path(logpath).is_dir()
 
     def _normal_logger(self, name, logpath):
-        self.log_paths.append(logpath)
+        self.logpath_set.add(str(Path(logpath).parent))
 
         logger = logging.getLogger(name)
         logger.setLevel(logging.DEBUG)
 
-        runrotating = CountRotatingFileHandler(logpath)
-        runrotating.setLevel(logging.DEBUG)
-        logger.addHandler(runrotating)
+        count_rotating = CountRotatingFileHandler(logpath)
+        count_rotating.setLevel(logging.DEBUG)
+        logger.addHandler(count_rotating)
 
         return logger
 
-    def _filepath_logger(self, name, logpath):
-        self.log_paths.append(str(Path(logpath).parent))
+    def _unlimit_logger(self, name, logpath):
+        self.logpath_set.add(str(Path(logpath).parent))
 
         logger = logging.getLogger(name)
         logger.setLevel(logging.DEBUG)
 
-        runrotating = CountRotatingFileHandler(filepath=logpath)
-        runrotating.setLevel(logging.DEBUG)
-        logger.addHandler(runrotating)
+        count_rotating = CountRotatingFileHandler(logpath, backup_count=0)
+        count_rotating.setLevel(logging.DEBUG)
+        logger.addHandler(count_rotating)
 
         return logger
+
+    def assert_normal(self, logpath, file_count):
+        _logpath = Path(logpath)
+        _logdir = _logpath.parent
+
+        assert _logdir.is_dir()
+        assert len(list(_logdir.glob("*.log"))) == file_count
 
     def test_normal(self):
-        logpath = "log"
+        logpath = "log/%Y%m%d_%H%M%S.log"
         logger = self._normal_logger("normal", logpath)
 
         logger.debug("log file test")
-        assert Path(logpath).is_dir()
-        assert len(list(Path(logpath).iterdir())) == 1
-        assert len(CountRotatingFileHandler._files) == len(self.log_paths)
+        self.assert_normal(logpath, 1)
 
-    def test_normal_same(self):
-        logpath = "log"
-        logger = logging.getLogger("normal")
+    def test_same_filepath(self):
+        logpath = "log/%Y%m%d_%H%M%S.log"
+        logger = self._normal_logger("same_filepath", logpath)
 
         logger.debug("same normal logger")
-        assert Path(logpath).is_dir()
-        assert len(list(Path(logpath).iterdir())) == 1
-        assert len(CountRotatingFileHandler._files) == len(self.log_paths)
+        self.assert_normal(logpath, 1)
 
-    def test_normal2(self):
-        logpath = "log2"
-        logger = self._normal_logger("normal2", logpath)
+    def test_same_dir(self):
+        logpath = "log/%Y%m%d_%H%M%S_new.log"
+        logger = self._normal_logger("same_dir", logpath)
+
+        logger.debug("same normal logger")
+        self.assert_normal(logpath, 2)
+
+    def test_another_dir(self):
+        logpath = "log/log/%Y.log"
+        logger = self._normal_logger("another_dir", logpath)
 
         logger.debug("log file test")
-        assert Path(logpath).is_dir()
-        assert len(list(Path(logpath).iterdir())) == 1
-        assert len(CountRotatingFileHandler._files) == len(self.log_paths)
+        self.assert_normal(logpath, 1)
 
-    def test_logpath(self):
-        logpath = "log/logs"
-        logger = self._normal_logger("logpath", logpath)
+    def test_unlimit(self):
+        logpath = "log/%Y%m%d_%H%M%S%f_unlimit.log"
+        logger = self._unlimit_logger("unlimit", logpath)
 
-        logger.debug("log path test: %s", logpath)
-        assert Path(logpath).is_dir()
-        assert len(list(Path(logpath).iterdir())) == 1
-        assert len(CountRotatingFileHandler._files) == len(self.log_paths)
+        logger.debug("log file test")
+        self.assert_normal(logpath, 3)
 
-    def test_logpath2(self):
-        logpath = "log/%Y/%M"
-        logger = self._normal_logger("logpath2", logpath)
-        logpath = datetime.datetime.strftime(self.today, logpath)
+    def test_unlimit_same_filepath(self):
+        logpath = "log/%Y%m%d_%H%M%S%f_unlimit.log"
+        logger = self._unlimit_logger("unlimit_same_filepath", logpath)
 
-        logger.debug("log path test: %s", logpath)
-        assert Path(logpath).is_dir()
-        assert len(list(Path(logpath).iterdir())) == 1
-        assert len(CountRotatingFileHandler._files) == len(self.log_paths)
+        logger.debug("log file test")
+        self.assert_normal(logpath, 3)
 
-    def test_filepath(self):
-        logpath = "log/%Y/%M%d/%Y.log"
-        logger = self._normal_logger("filepath", logpath)
-        logpath = datetime.datetime.strftime(self.today, logpath)
+    def test_unlimit_same_dir(self):
+        logpath = "log/%Y%m%d_%H%M%S%f_unlimit_new.log"
+        logger = self._unlimit_logger("unlimit_same_dir", logpath)
 
-        logger.debug("log path test: %s", logpath)
-        assert Path(logpath).parent.is_dir()
-        assert len(list(Path(logpath).iterdir())) == 1
-        assert Path(logpath).exists()
-        assert len(CountRotatingFileHandler._files) == len(self.log_paths)
+        logger.debug("log file test")
+        self.assert_normal(logpath, 4)
