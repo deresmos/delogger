@@ -7,7 +7,6 @@ from delogger.presets.base import PresetsBase
 
 
 def _get_logger() -> Logger:
-
     count_rorating_filemode = PresetsBase().count_rorating_filemode()
     delogger = Delogger("debug_logger")
     delogger.load_modes(StreamColorDebugMode(), count_rorating_filemode)

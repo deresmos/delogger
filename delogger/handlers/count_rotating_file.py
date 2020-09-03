@@ -3,7 +3,7 @@ import re
 from datetime import datetime as dt
 from logging import FileHandler
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 __all__ = ["CountRotatingFileHandler"]
 
@@ -12,61 +12,48 @@ class LogFile(object):
     """Set the path of the log file.
 
     Args:
-        dirname (str): Directory path.
-        basename (str): Filename like date_string.
+        filepath (str): Log file path.
 
     Attributes:
-        dirname (str): Directory path.
-        basename (str): Filename like date_string.
-        path (str): Log file path.
+        filepath (Path): Log file path.
+        filepath_raw (str): Log file path raw.
 
     """
 
-    def __init__(self, dirname: str, basename: str) -> None:
-        self.dirname = dirname
-        self.basename = basename
-        self.path: str = dt.today().strftime(str(Path(dirname) / basename))
+    def __init__(self, filepath: str) -> None:
+        self.filepath: Path = Path(dt.today().strftime(filepath))
+        self.filepath_raw: Path = Path(filepath)
 
     def __eq__(self, other):
         """Comparison for CountRotatingFileHandler.
 
         Returns:
-            True if dirname is the same, False otherwise.
+            True if dirpath is the same, False otherwise.
 
         """
         if not isinstance(other, LogFile):
             raise NotImplementedError
-        eq = False
-        eq = (other.dirname == self.dirname) and (other.basename == self.basename)
 
-        return eq
+        return other.filepath_raw.absolute() == self.filepath_raw.absolute()
 
     def __contains__(self, other):
         return other == self
 
     def __str__(self):
-        return self.path
+        return str(self.filepath)
 
 
 class CountRotatingFileHandler(FileHandler):
     """This handler to keep the saved log count.
 
     Args:
-        dirname (str): [Deprecated] Directory path.
         filepath (str): log filepath.
         backup_count (int): Leave logs up to the designated generation.
-        fmt (str): Filename like date_string.
 
     Attributes:
         filepath (str): File path determined only once at runtime.
 
     """
-
-    LOG_FMT: str = "%Y%m%d_%H%M%S.log"
-    """Default value of log format."""
-
-    BACKUP_COUNT: int = 5
-    """Default value of backup count."""
 
     _files: List[LogFile] = []
     """This list saving LogFile of output log file."""
@@ -74,25 +61,16 @@ class CountRotatingFileHandler(FileHandler):
     _LOG_FMT_RE: Dict[str, List[str]] = {
         r"\d{4}": ["%Y"],
         r"\d{2}": ["%m", "%d", "%H", "%M", "%S"],
+        r"\d{6}": ["%f"],
     }
 
-    def __init__(
-        self,
-        dirname: Optional[str] = None,
-        filepath: Optional[str] = None,
-        backup_count: Optional[int] = None,
-        fmt: Optional[str] = None,
-        **kwargs
-    ) -> None:
-        _fmt: str = fmt or self.LOG_FMT
-        _backup_count: int = backup_count or self.BACKUP_COUNT
+    def __init__(self, filepath, backup_count=5) -> None:
+        dirpath = str(Path(filepath).parent)
+        fmt = Path(filepath).name
 
-        if filepath:
-            dirname = str(Path(filepath).parent)
-            _fmt = Path(filepath).name
-        self.filepath: str = self._load_file_path(dirname, _fmt, _backup_count)
+        self.filepath: str = self._load_file_path(dirpath, fmt, backup_count)
 
-        super().__init__(self.filepath, **kwargs)
+        super().__init__(self.filepath)
 
     def _open(self):
         """It is executed at log output.
@@ -108,44 +86,45 @@ class CountRotatingFileHandler(FileHandler):
 
         return super()._open()
 
-    def _load_file_path(self, dirname: str, fmt: str, backup_count: int) -> str:
+    def _load_file_path(self, dirpath: str, fmt: str, backup_count: int) -> str:
         """Get the file path of the log output destination.
 
         For each directory, determine the log file path only once at runtime.
 
         Args:
-            dirname (str): Directory path.
+            dirpath (str): Directory path.
             fmt (str): Filename like date_string.
             backup_count (int): Leave logs up to the designated generation.
 
         """
 
-        # Set the logfile name.
-        path = LogFile(dirname, fmt)
-        filepath = Path(str(path))
+        logfile = LogFile(str(Path(dirpath) / fmt))
 
-        # If already same dirname, return the filepath.
+        # If already same logfile, return the filepath.
         for fpath in CountRotatingFileHandler._files:
-            if fpath == path:
+            if fpath == logfile:
                 return str(fpath)
+        CountRotatingFileHandler._files.append(logfile)
 
-        # Get a file list that matches the format of fmt.
-        filenames = self._get_match_files(filepath.parent, fmt)
+        if backup_count <= 0:
+            return str(logfile)
 
-        # Delete the old file and set a new file path
-        if (backup_count > 0) and (len(filenames) >= backup_count):
-            os.remove(filenames[0])
-        CountRotatingFileHandler._files.append(path)
+        file_list = self._get_match_files(logfile.filepath.parent, fmt)
 
-        return str(path)
+        # Delete the old file and set a new filepath
+        if len(file_list) >= backup_count:
+            os.remove(file_list[0])
+
+        return str(logfile)
 
     def _get_match_files(self, dirpath, fmt) -> List[Path]:
-        fmt_ = fmt
+        _fmt = fmt
         for patter, date_strs in self._LOG_FMT_RE.items():
             for date_str in date_strs:
-                fmt_ = fmt_.replace(date_str, patter)
+                _fmt = _fmt.replace(date_str, patter)
 
-        repa = re.compile(fmt_)
-        files = [x for x in sorted(Path(dirpath).glob("*")) if repa.search(str(x))]
+        # TODO: check file stat??
+        pattern = re.compile(_fmt)
+        files = [x for x in sorted(Path(dirpath).glob("*")) if pattern.search(str(x))]
 
         return files
