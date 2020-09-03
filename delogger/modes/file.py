@@ -26,7 +26,7 @@ class LogFile:
 
 class FileModeBase(ModeBase):
     file_fmt: str = (
-        "%(asctime)s.%(msecs).03d %(levelname)s %(filename)s:%(lineno)d %(message)s"
+        "%(asctime)s.%(msecs).03d %(levelname)s %(filename)s:%(lineno)d %(funcName)s %(message)s"
     )
     """Default value of file logger fmt."""
 
