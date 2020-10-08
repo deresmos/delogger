@@ -1,20 +1,28 @@
+from abc import ABC, abstractmethod
+from logging import Logger
 from os import getenv
 from typing import Optional
 
+from delogger import Delogger, DeloggerQueue
 from delogger.modes.file import CountRotatingFileMode, TimedRotatingFileMode
 from delogger.modes.slack import SlackWebhookMode
 
 
-class PresetsEnv:
-    def __init__(self) -> None:
-        self.filepath = getenv("DELOGGER_FILEPATH")
-        self.slack_webhook = getenv("DELOGGER_SLACK_WEBHOOK")
+class PresetsBase(ABC):
+    def __init__(self, name: str, is_queue: bool = False) -> None:
+        self.name = getenv("DELOGGER_NAME") or name
+        self.is_queue = is_queue
 
-
-class PresetsBase:
-    def __init__(self) -> None:
         self.filepath: Optional[str] = getenv("DELOGGER_FILEPATH")
         self.slack_webhook: Optional[str] = getenv("DELOGGER_SLACK_WEBHOOK")
+
+    @abstractmethod
+    def make_logger(self, delogger: Delogger) -> Logger:
+        pass
+
+    def get_logger(self) -> Logger:
+        _delogger = DeloggerQueue if self.is_queue else Delogger
+        return self.make_logger(_delogger(self.name))
 
     def count_rorating_filemode(self) -> CountRotatingFileMode:
         return (

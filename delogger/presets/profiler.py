@@ -12,20 +12,18 @@ from delogger.modes.stream import StreamColorDebugMode
 from delogger.presets.base import PresetsBase
 
 
-def _get_logger() -> Logger:
-    count_rorating_filemode = PresetsBase().count_rorating_filemode()
+class ProfilerPresets(PresetsBase):
+    def make_logger(self, delogger: Delogger) -> Logger:
+        delogger.load_modes(StreamColorDebugMode(), self.count_rorating_filemode())
+        delogger.load_decorators(
+            DebugLog(),
+            LineProfile(),
+            LineProfileStats(),
+            MemoryProfile(),
+            LineMemoryProfile(),
+        )
 
-    delogger = Delogger("profiler_logger")
-    delogger.load_modes(StreamColorDebugMode(), count_rorating_filemode)
-    delogger.load_decorators(
-        DebugLog(),
-        LineProfile(),
-        LineProfileStats(),
-        MemoryProfile(),
-        LineMemoryProfile(),
-    )
-
-    return delogger.get_logger()
+        return delogger.get_logger()
 
 
-logger = _get_logger()
+logger = ProfilerPresets("profiler_logger").get_logger()

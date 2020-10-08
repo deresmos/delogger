@@ -6,13 +6,20 @@ from tests.lib.base import DeloggerTestBase
 
 
 class TestPresets(DeloggerTestBase):
-    LOG_DIR_LIST = ["log"]
-
     def teardown_method(self):
-        for log_dir in self.LOG_DIR_LIST:
-            if not Path(log_dir).is_dir():
-                continue
-            rmtree(log_dir)
+        log_dir = self.OUTPUT_DIRPATH
+        if not Path(log_dir).is_dir():
+            return False
+        rmtree(log_dir)
+
+    def test_info(self, capsys):
+        from delogger.presets.info import logger
+
+        self.execute_log(logger)
+
+        self.check_normal_stream_log(logger, capsys, is_color=True)
+
+        assert getattr(logger, "debuglog")
 
     def test_debug(self, capsys):
         from delogger.presets.debug import logger
@@ -36,7 +43,7 @@ class TestPresets(DeloggerTestBase):
         assert getattr(logger, "debuglog")
 
     def test_output(self, capsys):
-        filepath = "log/test_output.log"
+        filepath = f"{self.OUTPUT_DIRPATH}/test_output.log"
         os.environ["DELOGGER_FILEPATH"] = filepath
         from delogger.presets.output import logger
 

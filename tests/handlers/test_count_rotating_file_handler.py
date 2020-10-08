@@ -4,9 +4,10 @@ import shutil
 from pathlib import Path
 
 from delogger.handlers.count_rotating_file import CountRotatingFileHandler
+from tests.lib.base import DeloggerTestBase
 
 
-class TestCountRotatingHandler:
+class TestCountRotatingHandler(DeloggerTestBase):
     def setup_class(self):
         CountRotatingFileHandler._files = []
         self.today = datetime.datetime.today()
@@ -52,49 +53,49 @@ class TestCountRotatingHandler:
         assert len(list(_logdir.glob("*.log"))) == file_count
 
     def test_normal(self):
-        logpath = "log/%Y%m%d_%H%M%S.log"
+        logpath = f"{self.OUTPUT_DIRPATH}/%Y%m%d_%H%M%S.log"
         logger = self._normal_logger("normal", logpath)
 
         logger.debug("log file test")
         self.assert_normal(logpath, 1)
 
     def test_same_filepath(self):
-        logpath = "log/%Y%m%d_%H%M%S.log"
+        logpath = f"{self.OUTPUT_DIRPATH}/%Y%m%d_%H%M%S.log"
         logger = self._normal_logger("same_filepath", logpath)
 
         logger.debug("same normal logger")
         self.assert_normal(logpath, 1)
 
     def test_same_dir(self):
-        logpath = "log/%Y%m%d_%H%M%S_new.log"
+        logpath = f"{self.OUTPUT_DIRPATH}/%Y%m%d_%H%M%S_new.log"
         logger = self._normal_logger("same_dir", logpath)
 
         logger.debug("same normal logger")
         self.assert_normal(logpath, 2)
 
     def test_another_dir(self):
-        logpath = "log/log/%Y.log"
+        logpath = f"{self.OUTPUT_DIRPATH}/log/%Y.log"
         logger = self._normal_logger("another_dir", logpath)
 
         logger.debug("log file test")
         self.assert_normal(logpath, 1)
 
     def test_unlimit(self):
-        logpath = "log/%Y%m%d_%H%M%S%f_unlimit.log"
+        logpath = f"{self.OUTPUT_DIRPATH}/%Y%m%d_%H%M%S%f_unlimit.log"
         logger = self._unlimit_logger("unlimit", logpath)
 
         logger.debug("log file test")
         self.assert_normal(logpath, 3)
 
     def test_unlimit_same_filepath(self):
-        logpath = "log/%Y%m%d_%H%M%S%f_unlimit.log"
+        logpath = f"{self.OUTPUT_DIRPATH}/%Y%m%d_%H%M%S%f_unlimit.log"
         logger = self._unlimit_logger("unlimit_same_filepath", logpath)
 
         logger.debug("log file test")
         self.assert_normal(logpath, 3)
 
     def test_unlimit_same_dir(self):
-        logpath = "log/%Y%m%d_%H%M%S%f_unlimit_new.log"
+        logpath = f"{self.OUTPUT_DIRPATH}/%Y%m%d_%H%M%S%f_unlimit_new.log"
         logger = self._unlimit_logger("unlimit_same_dir", logpath)
 
         logger.debug("log file test")

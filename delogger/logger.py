@@ -2,14 +2,28 @@ import atexit
 from copy import copy
 from logging import DEBUG, INFO, WARNING, Logger
 from queue import Queue
-from typing import Optional
+from typing import Optional, List
+from delogger.modes.base import ModeBase
+from delogger.decorators.base import DecoratorBase
 
 from delogger.base import DeloggerBase
 
 
 class Delogger(DeloggerBase):
-    def __init__(self, name: Optional[str] = None, **kwargs) -> None:
+    def __init__(
+        self,
+        name: Optional[str] = None,
+        modes: Optional[List[ModeBase]] = None,
+        decorators: Optional[List[DecoratorBase]] = None,
+        **kwargs
+    ) -> None:
         super().__init__(name=name, **kwargs)
+
+        if modes:
+            self.load_modes(*modes)
+
+        if decorators:
+            self.load_decorators(*decorators)
 
     @property
     def logger(self):
