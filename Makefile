@@ -1,10 +1,10 @@
 .PHONY: FORCE
 
 install: FORCE
-	pip install . ${ARGS}
+	poetry install --no-dev
 
 install-dev: FORCE
-	pip install -e '.[develop]'
+	poetry install
 
 upload: FORCE
 	python setup.py bdist_wheel
@@ -17,7 +17,7 @@ test: FORCE
 	# @make -ks check-flake8-results
 
 test-detail: FORCE
-	poetry run pytest -v --rootdir=tests
+	poetry run pytest -v --rootdir=tests --durations=5
 
 format: FORCE
 	poetry run black ./

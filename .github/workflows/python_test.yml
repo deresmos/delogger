@@ -18,7 +18,9 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
           architecture: x64
+      - name: Install poetry
+        run: pip install poetry
       - name: Setup Python test
-        run: pip install ".[develop]"
+        run: make install-dev
       - name: Run test
-        run: pytest tests -v --durations=5 --lf
+        run: make test-detail
