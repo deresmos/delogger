@@ -12,6 +12,15 @@ class TestPresets(DeloggerTestBase):
             return False
         rmtree(log_dir)
 
+    def test_info(self, capsys):
+        from delogger.presets.info import logger
+
+        self.execute_log(logger)
+
+        self.check_normal_stream_log(logger, capsys, is_color=True)
+
+        assert getattr(logger, "debuglog")
+
     def test_debug(self, capsys):
         from delogger.presets.debug import logger
 
