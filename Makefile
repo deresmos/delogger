@@ -12,22 +12,22 @@ upload: FORCE
 	rm -rf dist
 
 test: FORCE
-	py.test --rootdir=tests
+	poetry run pytest --rootdir=tests
 	@echo
 	# @make -ks check-flake8-results
 
 test-detail: FORCE
-	py.test -v --rootdir=tests
+	poetry run pytest -v --rootdir=tests
 
 format: FORCE
-	black ./
+	poetry run black ./
 
 check-flake8: FORCE
-	find -type f -name '*.py' | flake8
+	find -type f -name '*.py' | poetry run flake8
 
 check-flake8-results: FORCE
 	@echo '--- flake8 check ---'
-	@flake8; \
+	@poetry run flake8; \
 	if [ $$? = 0 ]; then \
 		echo -e '-> \e[32mOK\e[m'; \
 	else \
