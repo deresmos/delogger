@@ -5,7 +5,6 @@ from delogger.modes.base import ModeBase
 
 __all__ = [
     "StreamColorDebugMode",
-    "StreamColorInfoMode",
     "StreamDebugMode",
     "StreamInfoMode",
 ]
@@ -49,11 +48,7 @@ class StreamInfoMode(StreamModeBase):
         debug_fmt = self.stream_level_fmt.debug
         info_fmt = self.stream_level_fmt.info
 
-        delogger.add_stream_handler(
-            INFO, fmt=info_fmt, only_level=True, datefmt=self.date_fmt
-        )
-
-        delogger.add_stream_handler(WARNING, fmt=debug_fmt, datefmt=self.date_fmt)
+        delogger.add_stream_handler(INFO, fmt=info_fmt, datefmt=self.date_fmt)
 
 
 class StreamColorLevelFmt:
@@ -93,25 +88,4 @@ class StreamColorDebugMode(StreamColorModeBase):
 
         delogger.add_stream_color_handler(
             DEBUG, log_colors=self.log_colors, fmt=debug_fmt, datefmt=self.date_fmt
-        )
-
-
-class StreamColorInfoMode(StreamColorModeBase):
-    def __init__(self, **kwargs) -> None:
-        super().__init__(**kwargs)
-
-    def load_to_delogger(self, delogger) -> None:
-        debug_fmt = self.stream_color_level_fmt.debug
-        info_fmt = self.stream_color_level_fmt.info
-
-        delogger.add_stream_color_handler(
-            INFO,
-            log_colors=self.log_colors,
-            fmt=info_fmt,
-            only_level=True,
-            datefmt=self.date_fmt,
-        )
-
-        delogger.add_stream_color_handler(
-            WARNING, log_colors=self.log_colors, fmt=debug_fmt, datefmt=self.date_fmt
         )

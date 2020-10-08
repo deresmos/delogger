@@ -41,20 +41,12 @@ class DeloggerTestBase:
 
     def check_normal_stream_log(self, logger, capsys, is_color=False):
         captured = capsys.readouterr()
-        if is_color:
-            streams = [
-                "info",
-                self.COLOR_FMT % "warning",
-                self.COLOR_FMT % "error",
-                self.COLOR_FMT % "critical",
-            ]
-        else:
-            streams = [
-                "info",
-                self.DEBUG_FMT % "warning",
-                self.DEBUG_FMT % "error",
-                self.DEBUG_FMT % "critical",
-            ]
+        streams = [
+            "info",
+            "warning",
+            "error",
+            "critical",
+        ]
         logs = captured.err.split("\n")
         for stream, log in zip(streams, logs):
             Assert._match(stream, log)
