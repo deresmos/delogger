@@ -39,6 +39,8 @@ class DeloggerTestBase:
 
     ALL_LEVELS = ["debug", "info", "warning", "error", "critical"]
 
+    OUTPUT_DIRPATH = "log"
+
     def check_normal_stream_log(self, logger, capsys, is_color=False):
         captured = capsys.readouterr()
         streams = [

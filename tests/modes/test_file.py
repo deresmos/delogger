@@ -7,13 +7,11 @@ from tests.lib.base import Assert, DeloggerTestBase
 
 
 class TestFileMode(DeloggerTestBase):
-    LOG_DIR_LIST = ["log"]
-
     def teardown_method(self):
-        for log_dir in self.LOG_DIR_LIST:
-            if not Path(log_dir).is_dir():
-                continue
-            rmtree(log_dir)
+        log_dir = self.OUTPUT_DIRPATH
+        if not Path(log_dir).is_dir():
+            return False
+        rmtree(log_dir)
 
     def test_count_rotation_mode(self, capsys):
         count_rotation_mode = CountRotatingFileMode()
@@ -31,7 +29,9 @@ class TestFileMode(DeloggerTestBase):
         logfile.dirpath.rmdir()
 
     def test_count_rotation_filepath_mode(self, capsys):
-        count_rotation_mode = CountRotatingFileMode(filepath="log/test.log")
+        count_rotation_mode = CountRotatingFileMode(
+            filepath=f"{self.OUTPUT_DIRPATH}/test.log"
+        )
         delogger = Delogger("count_rotationg_file_filepath_mode")
         delogger.load_modes(count_rotation_mode)
         logger = delogger.get_logger()
