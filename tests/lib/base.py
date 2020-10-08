@@ -29,11 +29,11 @@ F_MESSAGE = r"%s"
 
 
 class DeloggerTestBase:
-    DEBUG_FMT = rf"{F_LEVEL_NAME} {F_ASCTIME_S} {F_FILENAME}:{F_LINENO} {F_MESSAGE}"
+    DEBUG_FMT = rf"{F_LEVEL_NAME} | {F_MESSAGE}"
     INFO_FMT = r"{F_MESSAGE}"
     COLOR_FMT = (
         rf"{F_COLOR_START}{F_LEVEL_NAME}{F_COLOR_END} "
-        rf"{F_ASCTIME_S} {F_FILENAME}:{F_LINENO} {F_MESSAGE}{F_COLOR_END}"
+        rf"| {F_MESSAGE}{F_COLOR_END}"
     )
     LOG_FMT = rf"{F_ASCTIME_L} {F_LEVEL_NAME} {F_FILENAME}:{F_LINENO} {F_FUNCNAME} {F_MESSAGE}"
 

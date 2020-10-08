@@ -1,5 +1,5 @@
-from logging import DEBUG, INFO, WARNING
-from typing import Dict, List, Optional
+from logging import DEBUG, INFO
+from typing import Dict, Optional
 
 from delogger.modes.base import ModeBase
 
@@ -11,7 +11,7 @@ __all__ = [
 
 
 class StreamLevelFmt:
-    debug: str = "%(levelname)-5s %(asctime)s %(filename)s:%(lineno)d %(message)s"
+    debug: str = "%(levelname)-5s | %(message)s"
     info: str = "%(message)s"
 
 
