@@ -11,10 +11,9 @@ from logging import (
 from typing import Dict, Optional
 
 from delogger import OnlyFilter
-from delogger.setting import DeloggerSetting
 
 
-class DeloggerBase(DeloggerSetting):
+class DeloggerBase:
     """A class that provides a decided logger.
 
     Args:
@@ -79,8 +78,6 @@ class DeloggerBase(DeloggerSetting):
         hdlr.setLevel(level)
 
         # Set formatter.
-        # deprecated self.date_fmt
-        datefmt = datefmt or self.date_fmt
         formatter = formatter or Formatter(fmt, datefmt)
         hdlr.setFormatter(formatter)
 
@@ -94,7 +91,6 @@ class DeloggerBase(DeloggerSetting):
         level: int,
         *,
         check_level: bool = False,
-        is_stream_color: bool = False,
         hdlr=None,
         datefmt: Optional[str] = None,
         log_colors: Optional[Dict[str, str]] = None,
@@ -105,34 +101,13 @@ class DeloggerBase(DeloggerSetting):
         Args:
             level (int): Handler level.
             check_level (bool): Whether to check the default stream level.
-            is_stream_color (bool): [Deprecated] Whether to output in color stream.
             hdlr: Handler other than stream handler.
             **kwargs: Keyword argument of add_handler method
 
         """
 
-        # disable stream output
-        if not self.is_stream:
-            return
-
         if check_level and self.stream_level <= level:
             return
-
-        # deprecated is_stream_color
-        if is_stream_color:
-            from colorlog import ColoredFormatter
-
-            # deprecated self.date_fmt
-            datefmt = datefmt or self.date_fmt
-            # deprecated self.log_colors
-            log_colors = log_colors or self.log_colors
-            fmt = ColoredFormatter(
-                kwargs.get("fmt", None),
-                log_colors=log_colors,
-                style="%",
-                datefmt=datefmt,
-            )
-            kwargs.setdefault("formatter", fmt)
 
         hdlr = hdlr or StreamHandler()
         self.add_handler(hdlr, level, datefmt=datefmt, **kwargs)
@@ -162,10 +137,6 @@ class DeloggerBase(DeloggerSetting):
 
         from colorlog import ColoredFormatter
 
-        # deprecated self.date_fmt
-        datefmt = datefmt or self.date_fmt
-        # deprecated self.log_colors
-        log_colors = log_colors or self.log_colors
         fmt = ColoredFormatter(
             kwargs.get("fmt", None), log_colors=log_colors, style="%", datefmt=datefmt
         )

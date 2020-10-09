@@ -2,11 +2,11 @@ import atexit
 from copy import copy
 from logging import DEBUG, INFO, WARNING, Logger
 from queue import Queue
-from typing import Optional, List
-from delogger.modes.base import ModeBase
-from delogger.decorators.base import DecoratorBase
+from typing import List, Optional
 
 from delogger.base import DeloggerBase
+from delogger.decorators.base import DecoratorBase
+from delogger.modes.base import ModeBase
 
 
 class Delogger(DeloggerBase):
@@ -24,17 +24,6 @@ class Delogger(DeloggerBase):
 
         if decorators:
             self.load_decorators(*decorators)
-
-    @property
-    def logger(self):
-        """[Deprecated] Return set logging.Logger."""
-
-        # Set only loggers that have not been set yet.
-        if self._is_new_logger and self.default:
-            self.default_logger()
-            self._is_new_logger = False
-
-        return self._logger
 
     def get_logger(self) -> Logger:
         """Return set logging.Logger."""
@@ -61,57 +50,12 @@ class Delogger(DeloggerBase):
         for decorator in decorators:
             decorator.load_to_delogger(delogger=self)
 
-    def default_logger(self):
-        """[Deprecated] Set default handler."""
-        from delogger.handlers.run_rotating import RunRotatingHandler
-
-        if not self.is_debug_stream and self.stream_level <= INFO:
-            # info is a normal stream, over warning it is a debug stream.
-            fmt = self.stream_fmt
-            self.add_stream_handler(
-                self.stream_level,
-                fmt=fmt,
-                is_stream_color=self.is_color_stream,
-                only_level=True,
-            )
-
-            # Set warning or more stream
-            fmt = self._stream_fmt(is_debug_stream=True)
-            self.add_stream_handler(
-                WARNING, fmt=fmt, is_stream_color=self.is_color_stream
-            )
-
-        else:
-
-            stream_level = self.stream_level
-            if self.is_debug_stream and self.stream_level == INFO:
-                stream_level = DEBUG
-
-            # all debug stream.
-            fmt = self.stream_fmt
-            self.add_stream_handler(
-                stream_level, fmt=fmt, is_stream_color=self.is_color_stream
-            )
-        # If there is a log save flag, the log file handler is set.
-
-        if self.is_save_file:
-            rrh = RunRotatingHandler(
-                self.dirpath,
-                backup_count=self.backup_count,
-                filepath=self.filepath,
-                fmt=self.filename,
-            )
-            self.add_handler(rrh, DEBUG, fmt=self.file_fmt)
-
 
 class DeloggerQueue(Delogger):
     """Non-blocking Delogger using QueueHandler.
 
     Args:
         default (bool): Whether to use the default handler.
-        *args: DeloggerSetting.
-        *kwargs: DeloggerSetting.
-
     """
 
     _que: Optional[Queue] = None
@@ -127,14 +71,6 @@ class DeloggerQueue(Delogger):
             self.queue_logger()
 
         return super().get_logger()
-
-    def default_logger(self):
-        """[Deprecated] Default logger for Queue."""
-
-        if not DeloggerQueue._listener:
-            super().default_logger()
-
-        self.queue_logger()
 
     def queue_logger(self) -> None:
         """Set up QueueHandler.
