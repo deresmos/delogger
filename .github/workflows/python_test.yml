@@ -6,15 +6,15 @@ jobs:
   build:
     strategy:
       matrix:
-        python: ['3.6', '3.7', '3.8']
+        python: ['3.6', '3.7', '3.8', '3.9']
         os: [ubuntu-latest, macOS-latest]
 
     runs-on: ${{ matrix.os }}
     name: Python ${{ matrix.python }} ( ${{ matrix.os }} )
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v2
       - name: Setup python
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python }}
           architecture: x64
