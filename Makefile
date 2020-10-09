@@ -6,10 +6,15 @@ install: FORCE
 install-dev: FORCE
 	poetry install
 
-upload: FORCE
-	python setup.py bdist_wheel
-	twine upload dist/*
-	rm -rf dist
+upload: build
+	@poetry publish -u ${PYPI_USER} -p ${PYPI_PASSWORD}
+
+upload-test: build
+	@poetry config repositories.testpypi https://test.pypi.org/legacy/
+	@poetry publish -r testpypi -u ${PYPI_USER} -p ${PYPI_PASSWORD}
+
+build: FORCE
+	poetry build
 
 test: FORCE
 	poetry run pytest --rootdir=tests
