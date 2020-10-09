@@ -16,39 +16,21 @@ class StreamLevelFmt:
 
 
 class StreamModeBase(ModeBase):
-    DATE_FMT: str = "%H:%M:%S"
-
-    def __init__(
-        self,
-        debug_fmt: Optional[str] = None,
-        info_fmt: Optional[str] = None,
-        date_fmt: Optional[str] = None,
-        stream_level_fmt: StreamLevelFmt = None,
-    ) -> None:
-        self.debug_fmt = debug_fmt
-        self.info_fmt = info_fmt
-        self.date_fmt: str = date_fmt or self.DATE_FMT
-        self.stream_level_fmt: StreamLevelFmt = stream_level_fmt or StreamLevelFmt()
+    pass
 
 
 class StreamDebugMode(StreamModeBase):
-    def __init__(self, **kwargs) -> None:
-        super().__init__(**kwargs)
+    fmt = "%(levelname)-5s | %(message)s"
 
-    def load_to_delogger(self, delogger) -> None:
-        debug_fmt = self.stream_level_fmt.debug
-        delogger.add_stream_handler(DEBUG, fmt=debug_fmt, datefmt=self.date_fmt)
+    def load(self, delogger) -> None:
+        delogger.add_stream_handler(DEBUG, fmt=self.fmt, datefmt=self.datefmt)
 
 
 class StreamInfoMode(StreamModeBase):
-    def __init__(self, **kwargs) -> None:
-        super().__init__(**kwargs)
+    fmt = "%(message)s"
 
-    def load_to_delogger(self, delogger) -> None:
-        debug_fmt = self.stream_level_fmt.debug
-        info_fmt = self.stream_level_fmt.info
-
-        delogger.add_stream_handler(INFO, fmt=info_fmt, datefmt=self.date_fmt)
+    def load(self, delogger) -> None:
+        delogger.add_stream_handler(INFO, fmt=self.fmt, datefmt=self.datefmt)
 
 
 class StreamColorLevelFmt:
@@ -59,7 +41,7 @@ class StreamColorLevelFmt:
 
 
 class StreamColorModeBase(StreamModeBase):
-    LOG_COLORS = {
+    log_colors = {
         "DEBUG": "cyan",
         "INFO": "green",
         "WARN": "yellow",
@@ -70,22 +52,18 @@ class StreamColorModeBase(StreamModeBase):
 
     def __init__(
         self,
-        stream_color_level_fmt: StreamColorLevelFmt = None,
         log_colors: Optional[Dict[str, str]] = None,
-        **kwargs,
+        **kwargs
     ) -> None:
         super().__init__(**kwargs)
-        self.stream_color_level_fmt = stream_color_level_fmt or StreamColorLevelFmt()
-        self.log_colors = log_colors or self.LOG_COLORS
+
+        self.log_colors = log_colors or self.log_colors
 
 
 class StreamColorDebugMode(StreamColorModeBase):
-    def __init__(self, **kwargs) -> None:
-        super().__init__(**kwargs)
+    fmt = "%(log_color)s%(levelname)-5s%(reset)s | %(message)s"
 
-    def load_to_delogger(self, delogger) -> None:
-        debug_fmt = self.stream_color_level_fmt.debug
-
+    def load(self, delogger) -> None:
         delogger.add_stream_color_handler(
-            DEBUG, log_colors=self.log_colors, fmt=debug_fmt, datefmt=self.date_fmt
+            DEBUG, log_colors=self.log_colors, fmt=self.fmt, datefmt=self.datefmt
         )

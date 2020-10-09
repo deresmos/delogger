@@ -66,7 +66,7 @@ class LineProfileStats(DecoratorBase):
             msg = "line_profiler_stats result\n{}".format(f.getvalue())
             self.logger.debug(msg)
 
-    def load_to_delogger(self, delogger) -> None:
-        super().load_to_delogger(delogger)
+    def load(self, delogger) -> None:
+        super().load(delogger)
 
         setattr(delogger._logger, "print_stats", self.print_stats)

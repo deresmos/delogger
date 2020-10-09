@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 from logging import (
     CRITICAL,
     DEBUG,
@@ -10,10 +11,10 @@ from logging import (
 )
 from typing import Dict, Optional
 
-from delogger import OnlyFilter
+from delogger.filters.only_filter import OnlyFilter
 
 
-class DeloggerBase:
+class DeloggerBase(ABC):
     """A class that provides a decided logger.
 
     Args:
@@ -28,11 +29,7 @@ class DeloggerBase:
 
     """
 
-    def __init__(
-        self, name: Optional[str] = None, parent=None, *args, **kwargs
-    ) -> None:
-        super().__init__(*args, **kwargs)
-
+    def __init__(self, name: Optional[str] = None, parent=None) -> None:
         addLevelName(WARNING, "WARN")
         addLevelName(CRITICAL, "CRIT")
 
@@ -49,6 +46,11 @@ class DeloggerBase:
         else:
             # Not set logger
             self._is_new_logger = True
+
+    @abstractmethod
+    def get_logger(self) -> Logger:
+        """Return set logging.Logger."""
+        pass
 
     def is_already_setup(self) -> bool:
         return not self._is_new_logger
@@ -90,7 +92,6 @@ class DeloggerBase:
         self,
         level: int,
         *,
-        check_level: bool = False,
         hdlr=None,
         datefmt: Optional[str] = None,
         log_colors: Optional[Dict[str, str]] = None,
@@ -100,14 +101,10 @@ class DeloggerBase:
 
         Args:
             level (int): Handler level.
-            check_level (bool): Whether to check the default stream level.
             hdlr: Handler other than stream handler.
             **kwargs: Keyword argument of add_handler method
 
         """
-
-        if check_level and self.stream_level <= level:
-            return
 
         hdlr = hdlr or StreamHandler()
         self.add_handler(hdlr, level, datefmt=datefmt, **kwargs)
@@ -117,7 +114,6 @@ class DeloggerBase:
         level: int,
         log_colors: Optional[Dict[str, str]],
         *,
-        check_level: bool = False,
         hdlr=None,
         datefmt: Optional[str] = None,
         **kwargs
@@ -126,14 +122,10 @@ class DeloggerBase:
 
         Args:
             level (int): Handler level.
-            check_level (bool): Whether to check the default stream level.
             hdlr: Handler other than stream handler.
             **kwargs: Keyword argument of add_handler method
 
         """
-
-        if check_level and self.stream_level <= level:
-            return
 
         from colorlog import ColoredFormatter
 
@@ -143,3 +135,6 @@ class DeloggerBase:
 
         hdlr = hdlr or StreamHandler()
         self.add_handler(hdlr, level, datefmt=datefmt, formatter=fmt, **kwargs)
+
+    def propagate(self, is_propagate: bool) -> None:
+        self._logger.propagate = is_propagate

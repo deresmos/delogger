@@ -1,9 +1,19 @@
-from abc import ABCMeta, abstractmethod
+from abc import ABC, abstractmethod
+from typing import Optional
 
 __all__ = ["ModeBase"]
 
 
-class ModeBase(metaclass=ABCMeta):
+class ModeBase(ABC):
+    fmt: str = "%(message)s"
+    datefmt: str = "%Y-%m-%d %H:%M:%S"
+
+    def __init__(
+        self, fmt: Optional[str] = None, datefmt: Optional[str] = None
+    ) -> None:
+        self.fmt = fmt or self.fmt
+        self.datefmt = datefmt or self.datefmt
+
     @abstractmethod
-    def load_to_delogger(self, base) -> None:
+    def load(self, delogger) -> None:
         pass

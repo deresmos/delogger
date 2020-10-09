@@ -17,6 +17,8 @@ class LogFile:
         self.dirpath: Path = _filepath.parent
         self.filename: str = _filepath.name
 
+        self.mkdir()
+
     def mkdir(self) -> None:
         if self.dirpath.is_dir():
             return
@@ -25,17 +27,8 @@ class LogFile:
 
 
 class FileModeBase(ModeBase):
-    file_fmt: str = "%(asctime)s.%(msecs).03d %(levelname)s %(filename)s:%(lineno)d %(funcName)s %(message)s"
-    """Default value of file logger fmt."""
-
-    date_fmt: str = "%Y-%m-%d %H:%M:%S"
-    """Default value of datetime format."""
-
-    def __init__(
-        self, fmt: Optional[str] = None, date_fmt: Optional[str] = None
-    ) -> None:
-        self.fmt: str = fmt or self.file_fmt
-        self.date_fmt: str = date_fmt or self.date_fmt
+    fmt = "%(asctime)s.%(msecs).03d %(levelname)s %(filename)s:%(lineno)d %(funcName)s %(message)s"
+    datefmt = "%Y-%m-%d %H:%M:%S"
 
 
 class CountRotatingFileMode(FileModeBase):
@@ -44,10 +37,9 @@ class CountRotatingFileMode(FileModeBase):
         filepath: str = "log/%Y%m%d_%H%M%S.log",
         backup_count: int = 5,
         level: int = DEBUG,
-        fmt: Optional[str] = None,
-        date_fmt: Optional[str] = None,
+        **kwargs
     ) -> None:
-        super().__init__(fmt=fmt, date_fmt=date_fmt)
+        super().__init__(**kwargs)
 
         self.level = level
         self.filepath = filepath
@@ -55,12 +47,12 @@ class CountRotatingFileMode(FileModeBase):
 
         self.logfile: Optional[LogFile] = None
 
-    def load_to_delogger(self, delogger) -> None:
+    def load(self, delogger) -> None:
         run_hdlr = CountRotatingFileHandler(
             filepath=self.filepath, backup_count=self.backup_count
         )
 
-        delogger.add_handler(run_hdlr, self.level, fmt=self.fmt, datefmt=self.date_fmt)
+        delogger.add_handler(run_hdlr, self.level, fmt=self.fmt, datefmt=self.datefmt)
 
         self.logfile = LogFile(run_hdlr.filepath)
 
@@ -72,10 +64,9 @@ class TimedRotatingFileMode(FileModeBase):
         when: str = "midnight",
         backup_count: int = 0,
         level: int = DEBUG,
-        fmt: Optional[str] = None,
-        date_fmt: Optional[str] = None,
+        **kwargs
     ) -> None:
-        super().__init__(fmt=fmt, date_fmt=date_fmt)
+        super().__init__(**kwargs)
 
         self.level = level
         self.filepath = filepath
@@ -84,14 +75,11 @@ class TimedRotatingFileMode(FileModeBase):
 
         self.logfile = LogFile(filepath)
 
-    def load_to_delogger(self, delogger) -> None:
-        self.logfile.mkdir()
+    def load(self, delogger) -> None:
         timed_hdlr = TimedRotatingFileHandler(
             filename=str(self.logfile.filepath),
             when=self.when,
             backupCount=self.backup_count,
         )
 
-        delogger.add_handler(
-            timed_hdlr, self.level, fmt=self.fmt, datefmt=self.date_fmt
-        )
+        delogger.add_handler(timed_hdlr, self.level, fmt=self.fmt, datefmt=self.datefmt)

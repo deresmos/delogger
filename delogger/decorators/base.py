@@ -1,11 +1,11 @@
-from abc import ABCMeta, abstractmethod
+from abc import ABC, abstractmethod
 from logging import Logger
 from typing import Optional
 
-from delogger.base import DeloggerBase
+from delogger.loggers.base import DeloggerBase
 
 
-class DecoratorBase(metaclass=ABCMeta):
+class DecoratorBase(ABC):
     def __init__(self) -> None:
         self.logger: Optional[Logger] = None
 
@@ -18,7 +18,7 @@ class DecoratorBase(metaclass=ABCMeta):
     def decorator(self, func):
         pass
 
-    def load_to_delogger(self, delogger: DeloggerBase) -> None:
+    def load(self, delogger: DeloggerBase) -> None:
         logger = delogger._logger
         _decorator = getattr(logger, self.decorator_name, None)
         if _decorator:
