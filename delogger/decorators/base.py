@@ -2,8 +2,6 @@ from abc import ABC, abstractmethod
 from logging import Logger
 from typing import Optional
 
-from delogger.loggers.base import DeloggerBase
-
 
 class DecoratorBase(ABC):
     def __init__(self) -> None:
@@ -18,7 +16,7 @@ class DecoratorBase(ABC):
     def decorator(self, func):
         pass
 
-    def load(self, delogger: DeloggerBase) -> None:
+    def load(self, delogger) -> None:
         logger = delogger._logger
         _decorator = getattr(logger, self.decorator_name, None)
         if _decorator:

@@ -4,10 +4,10 @@ from logging import Logger
 from queue import Queue
 from typing import Optional
 
-from delogger.loggers.delogger import Delogger
+from delogger.loggers.base import DeloggerBase
 
 
-class DeloggerQueue(Delogger):
+class DeloggerQueue(DeloggerBase):
     """Non-blocking Delogger using QueueHandler.
 
     Args:

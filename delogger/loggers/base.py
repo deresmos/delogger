@@ -1,4 +1,3 @@
-from abc import ABC, abstractmethod
 from logging import (
     CRITICAL,
     DEBUG,
@@ -9,12 +8,14 @@ from logging import (
     addLevelName,
     getLogger,
 )
-from typing import Dict, Optional
+from typing import Dict, List, Optional
 
+from delogger.decorators.base import DecoratorBase
 from delogger.filters.only_filter import OnlyFilter
+from delogger.modes.base import ModeBase
 
 
-class DeloggerBase(ABC):
+class DeloggerBase:
     """A class that provides a decided logger.
 
     Args:
@@ -29,17 +30,23 @@ class DeloggerBase(ABC):
 
     """
 
-    def __init__(self, name: Optional[str] = None, parent=None) -> None:
+    def __init__(
+        self,
+        name: Optional[str] = None,
+        modes: Optional[List[ModeBase]] = None,
+        decorators: Optional[List[DecoratorBase]] = None,
+    ) -> None:
         addLevelName(WARNING, "WARN")
         addLevelName(CRITICAL, "CRIT")
 
-        name_ = parent or self
-        name_ = name or type(name_).__name__
-        logger = getLogger(name_)
+        # base logger
+        name = name or "root"
+        logger = getLogger(name)
         logger.setLevel(DEBUG)
         logger.propagate = False
         self._logger: Logger = logger
 
+        # check already set logger
         if len(self._logger.handlers) > 0:
             # Already set logger
             self._is_new_logger = False
@@ -47,10 +54,34 @@ class DeloggerBase(ABC):
             # Not set logger
             self._is_new_logger = True
 
-    @abstractmethod
+        if not self.is_already_setup():
+            if modes:
+                self.load_modes(*modes)
+
+            if decorators:
+                self.load_decorators(*decorators)
+
     def get_logger(self) -> Logger:
-        """Return set logging.Logger."""
-        pass
+        if self.is_already_setup():
+            return self._logger
+
+        self._is_new_logger = False
+
+        return self._logger
+
+    def load_mode(self, mode: ModeBase) -> None:
+        mode.load(delogger=self)
+
+    def load_modes(self, *modes) -> None:
+        for mode in modes:
+            self.load_mode(mode)
+
+    def load_decorator(self, decorator: DecoratorBase) -> None:
+        decorator.load(delogger=self)
+
+    def load_decorators(self, *decorators) -> None:
+        for decorator in decorators:
+            self.load_decorator(decorator)
 
     def is_already_setup(self) -> bool:
         return not self._is_new_logger
