@@ -18,9 +18,18 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
           architecture: x64
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ matrix.os }}-pip-${{ matrix.python }}-${{ hashFiles('**/requirements.txt') }}
       - name: Install poetry
         run: pip install poetry
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/poetry
+          key: ${{ matrix.os }}-poetry-${{ matrix.python }}-${{ hashFiles('**/poetry.lock') }}
       - name: Setup Python test
         run: make install-dev
+        continue-on-error: true
       - name: Run test
         run: make test-detail
