@@ -1,7 +1,6 @@
 import urllib.request
 from logging import WARNING
 
-import requests
 from delogger import Delogger
 from delogger.mode.slack import SlackWebhookMode
 from tests.lib.base import DeloggerTestBase

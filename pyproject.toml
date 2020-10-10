@@ -10,7 +10,6 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.6"
-requests = "^2.24.0"
 colorlog = "^4.2.1"
 
 [tool.poetry.dev-dependencies]
