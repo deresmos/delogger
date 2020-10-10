@@ -1,5 +1,4 @@
-from logging import Logger
-from typing import Callable, Optional
+from typing import Optional
 
 from delogger.decorators.base import DecoratorBase
 
@@ -18,24 +17,16 @@ class DebugLog(DecoratorBase):
         self.start_message: str = start_message or self.START_MESSAGE
         self.end_message: str = end_message or self.END_MESSAGE
 
-    def decorator(self, func) -> Callable:
-        """When this decorator is set, the argument and return value are out-
-        put to the log.
-        """
-        logger: Logger = self.logger  # type: ignore
+    def wrapper(self, f, *args, **kwargs):
+        # Output function name and argument.
+        msg = self.start_message.format(
+            **{"func_name": f.__qualname__, "args": args, "kwargs": kwargs}
+        )
+        self.logger.debug(msg)
 
-        def wrapper(*args, **kwargs) -> None:
-            # Output function name and argument.
-            msg = self.start_message.format(
-                **{"func_name": func.__qualname__, "args": args, "kwargs": kwargs}
-            )
-            logger.debug(msg)
+        # Output function name and return value.
+        rtn = f(*args, **kwargs)
+        msg = self.end_message.format(**{"func_name": f.__qualname__, "return": rtn})
+        self.logger.debug(msg)
 
-            # Output function name and return value.
-            rtn = func(*args, **kwargs)
-            msg = self.end_message.format(
-                **{"func_name": func.__qualname__, "return": rtn}
-            )
-            logger.debug(msg)
-
-        return wrapper
+        return rtn

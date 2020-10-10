@@ -1,4 +1,4 @@
-from typing import Callable, Generator, List, Tuple
+from typing import Generator, List, Tuple
 
 from delogger.decorators.base import DecoratorBase
 
@@ -40,38 +40,44 @@ class LineMemoryProfile(DecoratorBase):
         "Line Contents",
     ]
 
-    def decorator(self, func) -> Callable:
-        """When this decorator is set, the argument and return value are out-
-        put to the log.
-        """
+    def can_run(self) -> bool:
+        try:
+            LineProfiler
+        except NameError:
+            return False
 
-        def wrapper(*args, **kwargs):
-            # memory_profiler
-            with StringIO() as f:
-                rtn = profile(func, stream=f, precision=2)(*args, **kwargs)
-                memory_value = self._memory_profiler_parse(f.getvalue())
+        try:
+            profile
+        except NameError:
+            return False
 
-            # line_profiler
-            prof = LineProfiler()
-            prof.add_function(func)
+        return True
 
-            rtn = prof.runcall(func, *args, **kwargs)
-            with StringIO() as f:
-                prof.print_stats(stream=f)
-                mix, line_tmp = self._line_profiler_parse(f.getvalue())
+    def wrapper(self, f, *args, **kwargs):
+        # memory_profiler
+        with StringIO() as s:
+            rtn = profile(f, stream=s, precision=2)(*args, **kwargs)
+            memory_value = self._memory_profiler_parse(s.getvalue())
 
-            # memory line mix output
-            template = self.L_M_TEMPLATE
-            for l, m in zip(line_tmp, memory_value):
-                l_m_mix = l[:5] + m
-                mix.append(template.format(*l_m_mix))
-            mix[self.L_M_HEADER_INDEX] = template.format(*self.L_M_HEADER)
-            mix[self.L_M_SEPARATOR_INDEX] += "=" * 27
-            self.logger.debug("line, memory profiler result\n" + "\n".join(mix))
+        # line_profiler
+        prof = LineProfiler()
+        prof.add_function(f)
 
-            return rtn
+        rtn = prof.runcall(f, *args, **kwargs)
+        with StringIO() as s:
+            prof.print_stats(stream=s)
+            mix, line_tmp = self._line_profiler_parse(s.getvalue())
 
-        return wrapper
+        # memory line mix output
+        template = self.L_M_TEMPLATE
+        for l, m in zip(line_tmp, memory_value):
+            l_m_mix = l[:5] + m
+            mix.append(template.format(*l_m_mix))
+        mix[self.L_M_HEADER_INDEX] = template.format(*self.L_M_HEADER)
+        mix[self.L_M_SEPARATOR_INDEX] += "=" * 27
+        self.logger.debug("line, memory profiler result\n" + "\n".join(mix))
+
+        return rtn
 
     @staticmethod
     def _memory_profiler_parse(result) -> Generator[List[str], None, None]:

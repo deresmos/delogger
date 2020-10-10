@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from logging import Logger
-from typing import Optional
+from typing import Callable, Optional
 
 
 class DecoratorBase(ABC):
@@ -13,8 +13,17 @@ class DecoratorBase(ABC):
         pass
 
     @abstractmethod
-    def decorator(self, func):
-        pass
+    def wrapper(self, f, *args, **kwargs):
+        if not self.can_run():
+            return f(*args, **kwargs)
+
+    def decorator(self, f) -> Callable:
+        def wrapper(*args, **kwargs):
+            if not self.can_run():
+                return f(*args, **kwargs)
+            return self.wrapper(f, *args, **kwargs)
+
+        return wrapper
 
     def load(self, delogger) -> None:
         logger = delogger._logger
@@ -24,3 +33,6 @@ class DecoratorBase(ABC):
 
         self.logger = logger
         setattr(logger, self.decorator_name, self.decorator)
+
+    def can_run(self) -> bool:
+        return True

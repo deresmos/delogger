@@ -1,4 +1,4 @@
-from typing import Callable, Optional
+from typing import Optional
 
 from delogger.decorators.base import DecoratorBase
 
@@ -16,20 +16,25 @@ except ImportError:
 class LineProfile(DecoratorBase):
     decorator_name = "line_profile"
 
-    def decorator(self, func) -> Callable:
-        def wrapper(*args, **kwargs):
-            prof = LineProfiler()
-            prof.add_function(func)
+    def can_run(self) -> bool:
+        try:
+            LineProfiler
+        except NameError:
+            return False
 
-            rtn = prof.runcall(func, *args, **kwargs)
-            with StringIO() as f:
-                prof.print_stats(stream=f)
-                msg = "line_profiler result\n{}".format(f.getvalue())
-                self.logger.debug(msg)
+        return True
 
-            return rtn
+    def wrapper(self, f, *args, **kwargs):
+        prof = LineProfiler()
+        prof.add_function(f)
 
-        return wrapper
+        rtn = prof.runcall(f, *args, **kwargs)
+        with StringIO() as f:
+            prof.print_stats(stream=f)
+            msg = "line_profiler result\n{}".format(f.getvalue())
+            self.logger.debug(msg)
+
+        return rtn
 
 
 class LineProfileStats(DecoratorBase):
@@ -44,18 +49,20 @@ class LineProfileStats(DecoratorBase):
         except NameError:
             pass
 
-    def decorator(self, func) -> Callable:
-        def wrapper(*args, **kwargs):
-            if not self.prof:
-                return func(*args, **kwargs)
+    def can_run(self) -> bool:
+        try:
+            LineProfiler
+        except NameError:
+            return False
 
-            self.prof.add_function(func)
+        return True
 
-            rtn = self.prof.runcall(func, *args, **kwargs)
+    def wrapper(self, f, *args, **kwargs):
+        self.prof.add_function(f)
 
-            return rtn
+        rtn = self.prof.runcall(f, *args, **kwargs)
 
-        return wrapper
+        return rtn
 
     def print_stats(self) -> None:
         if not self.prof or not self.logger:
