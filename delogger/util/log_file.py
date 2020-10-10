@@ -4,7 +4,7 @@ from pathlib import Path
 __all__ = ["LogFile"]
 
 
-class LogFile(object):
+class LogFile:
     """Set the path of the log file.
 
     Args:

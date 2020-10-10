@@ -4,6 +4,7 @@ from os import getenv
 from typing import Optional
 
 from delogger import Delogger, DeloggerQueue
+from delogger.logger.base import DeloggerBase
 from delogger.mode.file import CountRotatingFileMode, TimedRotatingFileMode
 from delogger.mode.slack import SlackWebhookMode
 
@@ -17,7 +18,7 @@ class PresetsBase(ABC):
         self.slack_webhook: Optional[str] = getenv("DELOGGER_SLACK_WEBHOOK")
 
     @abstractmethod
-    def make_logger(self, delogger: Delogger) -> Logger:
+    def make_logger(self, delogger: DeloggerBase) -> Logger:
         pass
 
     def get_logger(self) -> Logger:

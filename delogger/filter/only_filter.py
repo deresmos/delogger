@@ -1,4 +1,4 @@
-class OnlyFilter(object):
+class OnlyFilter:
     """A filter that performs control to output only the specified level.
 
     Args:

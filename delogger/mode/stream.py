@@ -10,11 +10,6 @@ __all__ = [
 ]
 
 
-class StreamLevelFmt:
-    debug: str = "%(levelname)-5s | %(message)s"
-    info: str = "%(message)s"
-
-
 class StreamModeBase(ModeBase):
     pass
 
@@ -31,13 +26,6 @@ class StreamInfoMode(StreamModeBase):
 
     def load(self, delogger) -> None:
         delogger.add_stream_handler(INFO, fmt=self.fmt, datefmt=self.datefmt)
-
-
-class StreamColorLevelFmt:
-    debug: str = StreamLevelFmt.debug.replace(
-        "%(levelname)-5s", "%(log_color)s%(levelname)-5s%(reset)s"
-    )
-    info: str = StreamLevelFmt.info
 
 
 class StreamColorModeBase(StreamModeBase):

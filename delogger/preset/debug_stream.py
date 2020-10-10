@@ -1,13 +1,13 @@
 from logging import Logger
 
-from delogger import Delogger
 from delogger.decorator.debug_log import DebugLog
+from delogger.logger.base import DeloggerBase
 from delogger.mode.stream import StreamColorDebugMode
 from delogger.preset.base import PresetsBase
 
 
 class DebugStreamPresets(PresetsBase):
-    def make_logger(self, delogger: Delogger) -> Logger:
+    def make_logger(self, delogger: DeloggerBase) -> Logger:
         delogger.load_modes(StreamColorDebugMode())
         delogger.load_decorators(DebugLog())
 

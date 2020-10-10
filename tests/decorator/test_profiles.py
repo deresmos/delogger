@@ -11,11 +11,6 @@ from tests.lib.base import DeloggerTestBase
 
 class TestProfileDecorator(DeloggerTestBase):
     def test_line_profile_decorator(self, capsys, caplog):
-        try:
-            import line_profiler  # noqa
-        except ImportError:
-            return
-
         delogger = Delogger("line_profile_decorator")
         delogger.load_modes(StreamDebugMode())
         delogger.load_decorators(LineProfile())
@@ -29,11 +24,6 @@ class TestProfileDecorator(DeloggerTestBase):
         test_func("testarg", 123)
 
     def test_line_profile_stats_decorator(self, capsys, caplog):
-        try:
-            import line_profiler  # noqa
-        except ImportError:
-            return
-
         delogger = Delogger("line_profile_stats_decorator")
         delogger.load_modes(StreamDebugMode())
         delogger.load_decorators(LineProfileStats())
@@ -47,11 +37,6 @@ class TestProfileDecorator(DeloggerTestBase):
         test_func("testarg", 123)
 
     def test_memory_profile_decorator(self, capsys, caplog):
-        try:
-            import memory_profiler  # noqa
-        except ImportError:
-            return
-
         delogger = Delogger("memory_profile_decorator")
         delogger.load_modes(StreamDebugMode())
         delogger.load_decorators(MemoryProfile())
@@ -65,11 +50,6 @@ class TestProfileDecorator(DeloggerTestBase):
         test_func("testarg", 123)
 
     def test_line_memory_profile_decorator(self, capsys, caplog):
-        try:
-            import line_profiler  # noqa
-        except ImportError:
-            return
-
         delogger = Delogger("line_memory_profile_decorator")
         delogger.load_modes(StreamDebugMode())
         delogger.load_decorators(LineMemoryProfile())

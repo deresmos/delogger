@@ -119,15 +119,7 @@ class DeloggerBase:
 
         self._logger.addHandler(hdlr)
 
-    def add_stream_handler(
-        self,
-        level: int,
-        *,
-        hdlr=None,
-        datefmt: Optional[str] = None,
-        log_colors: Optional[Dict[str, str]] = None,
-        **kwargs
-    ) -> None:
+    def add_stream_handler(self, level: int, *, hdlr=None, **kwargs) -> None:
         """Helper function to add a stream handler.
 
         Args:
@@ -138,7 +130,7 @@ class DeloggerBase:
         """
 
         hdlr = hdlr or StreamHandler()
-        self.add_handler(hdlr, level, datefmt=datefmt, **kwargs)
+        self.add_handler(hdlr, level, **kwargs)
 
     def add_stream_color_handler(
         self,

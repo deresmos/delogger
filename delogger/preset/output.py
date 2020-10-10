@@ -1,12 +1,12 @@
 from logging import Logger
 
-from delogger import Delogger
+from delogger.logger.base import DeloggerBase
 from delogger.decorator.debug_log import DebugLog
 from delogger.preset.base import PresetsBase
 
 
 class OutputPresets(PresetsBase):
-    def make_logger(self, delogger: Delogger) -> Logger:
+    def make_logger(self, delogger: DeloggerBase) -> Logger:
         delogger.load_modes(self.timed_rotating_filemode())
         delogger.load_decorators(DebugLog())
 
