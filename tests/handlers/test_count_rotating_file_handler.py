@@ -3,7 +3,7 @@ import logging
 import shutil
 from pathlib import Path
 
-from delogger.handlers.count_rotating_file import CountRotatingFileHandler
+from delogger.handler.count_rotating_file import CountRotatingFileHandler
 from tests.lib.base import DeloggerTestBase
 
 

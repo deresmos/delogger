@@ -4,7 +4,7 @@ from logging import Logger
 from queue import Queue
 from typing import Optional
 
-from delogger.loggers.base import DeloggerBase
+from delogger.logger.base import DeloggerBase
 
 
 class DeloggerQueue(DeloggerBase):

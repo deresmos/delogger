@@ -1,15 +1,15 @@
 from logging import Logger
 
 from delogger import Delogger
-from delogger.decorators.debug_log import DebugLog
-from delogger.decorators.profiles import (
+from delogger.decorator.debug_log import DebugLog
+from delogger.decorator.profiles import (
     LineMemoryProfile,
     LineProfile,
     LineProfileStats,
     MemoryProfile,
 )
-from delogger.modes.stream import StreamColorDebugMode
-from delogger.presets.base import PresetsBase
+from delogger.mode.stream import StreamColorDebugMode
+from delogger.preset.base import PresetsBase
 
 
 class ProfilerPresets(PresetsBase):

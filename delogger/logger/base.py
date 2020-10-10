@@ -10,9 +10,9 @@ from logging import (
 )
 from typing import Dict, List, Optional
 
-from delogger.decorators.base import DecoratorBase
-from delogger.filters.only_filter import OnlyFilter
-from delogger.modes.base import ModeBase
+from delogger.decorator.base import DecoratorBase
+from delogger.filter.only_filter import OnlyFilter
+from delogger.mode.base import ModeBase
 
 
 class DeloggerBase:

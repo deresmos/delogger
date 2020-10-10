@@ -3,7 +3,7 @@ from logging import WARNING
 
 import requests
 from delogger import Delogger
-from delogger.modes.slack import SlackWebhookMode
+from delogger.mode.slack import SlackWebhookMode
 from tests.lib.base import DeloggerTestBase
 
 

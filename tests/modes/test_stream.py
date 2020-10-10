@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from delogger import Delogger
-from delogger.modes.stream import StreamColorDebugMode, StreamDebugMode, StreamInfoMode
+from delogger.mode.stream import StreamColorDebugMode, StreamDebugMode, StreamInfoMode
 from tests.lib.base import Assert, DeloggerTestBase
 
 

@@ -1,7 +1,7 @@
-from .loggers.delogger import Delogger
-from .loggers.delogger_queue import DeloggerQueue
-from .modes.base import ModeBase
-from .decorators.base import DecoratorBase
+from .logger.delogger import Delogger
+from .logger.delogger_queue import DeloggerQueue
+from .mode.base import ModeBase
+from .decorator.base import DecoratorBase
 
 __all__ = (
     "Delogger",

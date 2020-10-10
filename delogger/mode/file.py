@@ -3,8 +3,8 @@ from logging.handlers import TimedRotatingFileHandler
 from pathlib import Path
 from typing import Optional
 
-from delogger.handlers.count_rotating_file import CountRotatingFileHandler
-from delogger.modes.base import ModeBase
+from delogger.handler.count_rotating_file import CountRotatingFileHandler
+from delogger.mode.base import ModeBase
 
 __all__ = ["CountRotatingFileMode", "TimedRotatingFileMode"]
 

@@ -1,8 +1,8 @@
 from logging import INFO
 from typing import Optional
 
-from delogger.handlers.slack import SlackHandler
-from delogger.modes.base import ModeBase
+from delogger.handler.slack import SlackHandler
+from delogger.mode.base import ModeBase
 
 __all__ = ["SlackWebhookMode", "SlackTokenMode"]
 

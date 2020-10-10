@@ -1,9 +1,9 @@
 from logging import Logger
 
 from delogger import Delogger
-from delogger.decorators.debug_log import DebugLog
-from delogger.modes.stream import StreamInfoMode
-from delogger.presets.base import PresetsBase
+from delogger.decorator.debug_log import DebugLog
+from delogger.mode.stream import StreamInfoMode
+from delogger.preset.base import PresetsBase
 
 
 class InfoPresets(PresetsBase):

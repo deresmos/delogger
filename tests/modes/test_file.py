@@ -2,7 +2,7 @@ from pathlib import Path
 from shutil import rmtree
 
 from delogger import Delogger
-from delogger.modes.file import CountRotatingFileMode, TimedRotatingFileMode
+from delogger.mode.file import CountRotatingFileMode, TimedRotatingFileMode
 from tests.lib.base import Assert, DeloggerTestBase
 
 

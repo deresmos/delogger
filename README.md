@@ -30,7 +30,7 @@ pip install delogger
 ### Debug stream and output log
 
 ```python
-from delogger.presets.debug import logger
+from delogger.preset.debug import logger
 
 if __name__ == "__main__":
     logger.debug("debug msg")

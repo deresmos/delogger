@@ -1,7 +1,7 @@
 from logging import DEBUG, INFO
 from typing import Dict, Optional
 
-from delogger.modes.base import ModeBase
+from delogger.mode.base import ModeBase
 
 __all__ = [
     "StreamColorDebugMode",

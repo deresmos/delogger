@@ -13,7 +13,7 @@ class TestPresets(DeloggerTestBase):
         rmtree(log_dir)
 
     def test_info(self, capsys):
-        from delogger.presets.info import logger
+        from delogger.preset.info import logger
 
         self.execute_log(logger)
 
@@ -22,7 +22,7 @@ class TestPresets(DeloggerTestBase):
         assert getattr(logger, "debuglog")
 
     def test_debug(self, capsys):
-        from delogger.presets.debug import logger
+        from delogger.preset.debug import logger
 
         self.execute_log(logger)
 
@@ -34,7 +34,7 @@ class TestPresets(DeloggerTestBase):
         assert getattr(logger, "debuglog")
 
     def test_debug_stream(self, capsys):
-        from delogger.presets.debug_stream import logger
+        from delogger.preset.debug_stream import logger
 
         self.execute_log(logger)
 
@@ -45,7 +45,7 @@ class TestPresets(DeloggerTestBase):
     def test_output(self, capsys):
         filepath = f"{self.OUTPUT_DIRPATH}/test_output.log"
         os.environ["DELOGGER_FILEPATH"] = filepath
-        from delogger.presets.output import logger
+        from delogger.preset.output import logger
 
         del os.environ["DELOGGER_FILEPATH"]
 
@@ -55,7 +55,7 @@ class TestPresets(DeloggerTestBase):
         assert Path(filepath).is_file()
 
     def test_profiler(self):
-        from delogger.presets.profiler import logger
+        from delogger.preset.profiler import logger
 
         self.execute_log(logger)
 

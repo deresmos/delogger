@@ -2,7 +2,7 @@ import logging
 import os
 
 import pytest
-from delogger.handlers.slack import SlackHandler
+from delogger.handler.slack import SlackHandler
 
 
 class TestSlackHandler:

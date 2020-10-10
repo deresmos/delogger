@@ -1,6 +1,6 @@
 from typing import Optional
 
-from delogger.decorators.base import DecoratorBase
+from delogger.decorator.base import DecoratorBase
 
 
 class DebugLog(DecoratorBase):

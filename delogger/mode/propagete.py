@@ -1,4 +1,4 @@
-from delogger.modes.base import ModeBase
+from delogger.mode.base import ModeBase
 
 __all__ = ["PropagateMode"]
 

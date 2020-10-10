@@ -1,6 +1,6 @@
 from delogger import Delogger
-from delogger.decorators.debug_log import DebugLog
-from delogger.modes.stream import StreamDebugMode
+from delogger.decorator.debug_log import DebugLog
+from delogger.mode.stream import StreamDebugMode
 from tests.lib.base import Assert, DeloggerTestBase
 
 

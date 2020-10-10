@@ -4,8 +4,8 @@ from os import getenv
 from typing import Optional
 
 from delogger import Delogger, DeloggerQueue
-from delogger.modes.file import CountRotatingFileMode, TimedRotatingFileMode
-from delogger.modes.slack import SlackWebhookMode
+from delogger.mode.file import CountRotatingFileMode, TimedRotatingFileMode
+from delogger.mode.slack import SlackWebhookMode
 
 
 class PresetsBase(ABC):
