@@ -50,11 +50,7 @@ class StreamColorModeBase(StreamModeBase):
     }
     """Definition of color stream level setting."""
 
-    def __init__(
-        self,
-        log_colors: Optional[Dict[str, str]] = None,
-        **kwargs
-    ) -> None:
+    def __init__(self, log_colors: Optional[Dict[str, str]] = None, **kwargs) -> None:
         super().__init__(**kwargs)
 
         self.log_colors = log_colors or self.log_colors
