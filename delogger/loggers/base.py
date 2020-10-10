@@ -160,12 +160,12 @@ class DeloggerBase:
 
         from colorlog import ColoredFormatter
 
-        fmt = ColoredFormatter(
+        formatter = ColoredFormatter(
             kwargs.get("fmt", None), log_colors=log_colors, style="%", datefmt=datefmt
         )
 
         hdlr = hdlr or StreamHandler()
-        self.add_handler(hdlr, level, datefmt=datefmt, formatter=fmt, **kwargs)
+        self.add_handler(hdlr, level, datefmt=datefmt, formatter=formatter, **kwargs)
 
     def propagate(self, is_propagate: bool) -> None:
         self._logger.propagate = is_propagate
