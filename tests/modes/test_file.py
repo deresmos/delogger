@@ -26,7 +26,7 @@ class TestFileMode(DeloggerTestBase):
 
         Assert._bool(logfile.filepath.exists())
         logfile.filepath.unlink()
-        logfile.dirpath.rmdir()
+        logfile.filepath.parent.rmdir()
 
     def test_count_rotation_filepath_mode(self, capsys):
         count_rotation_mode = CountRotatingFileMode(
@@ -43,7 +43,7 @@ class TestFileMode(DeloggerTestBase):
 
         Assert._bool(logfile.filepath.exists())
         logfile.filepath.unlink()
-        logfile.dirpath.rmdir()
+        logfile.filepath.parent.rmdir()
 
     def test_timed_rotating_file_mode(self, capsys):
         timed_file_mode = TimedRotatingFileMode()
@@ -58,4 +58,4 @@ class TestFileMode(DeloggerTestBase):
 
         Assert._bool(logfile.filepath.exists())
         logfile.filepath.unlink()
-        logfile.dirpath.rmdir()
+        logfile.filepath.parent.rmdir()

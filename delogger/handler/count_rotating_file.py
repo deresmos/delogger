@@ -1,46 +1,12 @@
 import os
 import re
-from datetime import datetime as dt
 from logging import FileHandler
 from pathlib import Path
 from typing import Dict, List
 
+from delogger.util.log_file import LogFile
+
 __all__ = ["CountRotatingFileHandler"]
-
-
-class LogFile(object):
-    """Set the path of the log file.
-
-    Args:
-        filepath (str): Log file path.
-
-    Attributes:
-        filepath (Path): Log file path.
-        filepath_raw (str): Log file path raw.
-
-    """
-
-    def __init__(self, filepath: str) -> None:
-        self.filepath: Path = Path(dt.today().strftime(filepath))
-        self.filepath_raw: Path = Path(filepath)
-
-    def __eq__(self, other):
-        """Comparison for CountRotatingFileHandler.
-
-        Returns:
-            True if dirpath is the same, False otherwise.
-
-        """
-        if not isinstance(other, LogFile):
-            raise NotImplementedError
-
-        return other.filepath_raw.absolute() == self.filepath_raw.absolute()
-
-    def __contains__(self, other):
-        return other == self
-
-    def __str__(self):
-        return str(self.filepath)
 
 
 class CountRotatingFileHandler(FileHandler):

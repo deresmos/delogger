@@ -33,7 +33,7 @@ class SlackHandler(Handler):
     """
 
     TIMEOUT: int = 20
-    """default timeout for requests."""
+    """default timeout for request."""
 
     EMOJIS: Dict[int, str] = {
         NOTSET: ":loudspeaker:",

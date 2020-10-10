@@ -1,29 +1,12 @@
 from logging import DEBUG
 from logging.handlers import TimedRotatingFileHandler
-from pathlib import Path
 from typing import Optional
 
 from delogger.handler.count_rotating_file import CountRotatingFileHandler
 from delogger.mode.base import ModeBase
+from delogger.util.log_file import LogFile
 
 __all__ = ["CountRotatingFileMode", "TimedRotatingFileMode"]
-
-
-class LogFile:
-    def __init__(self, filepath: str) -> None:
-        _filepath = Path(filepath)
-
-        self.filepath: Path = _filepath
-        self.dirpath: Path = _filepath.parent
-        self.filename: str = _filepath.name
-
-        self.mkdir()
-
-    def mkdir(self) -> None:
-        if self.dirpath.is_dir():
-            return
-
-        self.dirpath.mkdir(parents=True, exist_ok=True)
 
 
 class FileModeBase(ModeBase):
