@@ -57,6 +57,7 @@ class TimedRotatingFileMode(FileModeBase):
         self.backup_count = backup_count
 
         self.logfile = LogFile(filepath)
+        self.logfile.mkdir()
 
     def load(self, delogger) -> None:
         timed_hdlr = TimedRotatingFileHandler(
