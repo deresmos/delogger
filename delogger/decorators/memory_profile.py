@@ -1,4 +1,5 @@
 from delogger.decorators.base import DecoratorBase
+from delogger.util.warn import warn_import
 
 try:
     from cStringIO import StringIO
@@ -18,6 +19,7 @@ class MemoryProfile(DecoratorBase):
         try:
             profile
         except NameError:
+            warn_import(self.decorator_name, "memory_profiler")
             return False
 
         return True

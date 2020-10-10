@@ -1,6 +1,7 @@
 from typing import Optional
 
 from delogger.decorators.base import DecoratorBase
+from delogger.util.warn import warn_import
 
 try:
     from cStringIO import StringIO
@@ -20,6 +21,7 @@ class LineProfile(DecoratorBase):
         try:
             LineProfiler
         except NameError:
+            warn_import(self.decorator_name, "line_profiler")
             return False
 
         return True
@@ -53,6 +55,7 @@ class LineProfileStats(DecoratorBase):
         try:
             LineProfiler
         except NameError:
+            warn_import(self.decorator_name, "line_profiler")
             return False
 
         return True
