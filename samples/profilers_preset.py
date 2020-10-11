@@ -1,4 +1,4 @@
-from delogger.preset.profiler import logger
+from delogger.presets.profiler import logger
 
 if __name__ == "__main__":
 

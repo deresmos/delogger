@@ -1,4 +1,4 @@
-from delogger.preset.debug import logger
+from delogger.presets.debug import logger
 
 if __name__ == "__main__":
     logger.debug("debug msg")

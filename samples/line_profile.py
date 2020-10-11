@@ -1,7 +1,7 @@
 from delogger import Delogger
-from delogger.decorator.debug_log import DebugLog
-from delogger.decorator.line_profile import LineProfileStats
-from delogger.mode.file import CountRotatingFileMode
+from delogger.decorators.debug_log import DebugLog
+from delogger.decorators.line_profile import LineProfileStats
+from delogger.modes.file import CountRotatingFileMode
 
 if __name__ == "__main__":
     delogger = Delogger()

@@ -3,17 +3,17 @@ workflow:
   - .github/*.yml
   - .github/workflows/**/*
 decorator:
-  - delogger/decorator/*
+  - delogger/decorators/*
 filter:
-  - delogger/filter/*
+  - delogger/filters/*
 handler:
-  - delogger/handler/*
+  - delogger/handlers/*
 logger:
-  - delogger/logger/*
+  - delogger/loggers/*
 mode:
-  - delogger/mode/*
+  - delogger/modes/*
 preset:
-  - delogger/preset/*
+  - delogger/presets/*
 util:
   - delogger/util/*
 tests:

@@ -1,7 +1,7 @@
 from delogger import Delogger
-from delogger.decorator.debug_log import DebugLog
-from delogger.mode.file import CountRotatingFileMode
-from delogger.mode.stream import StreamColorDebugMode
+from delogger.decorators.debug_log import DebugLog
+from delogger.modes.file import CountRotatingFileMode
+from delogger.modes.stream import StreamColorDebugMode
 
 if __name__ == "__main__":
     delogger = Delogger()
