@@ -8,7 +8,7 @@ except ImportError:
 
 try:
     from memory_profiler import profile
-except ImportError:
+except ImportError:  # pragma: no cover
     pass
 
 
