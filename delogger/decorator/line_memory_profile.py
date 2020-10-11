@@ -1,4 +1,6 @@
-from typing import Generator, List, Tuple
+from typing import Generator
+from typing import List
+from typing import Tuple
 
 from delogger.decorator.base import DecoratorBase
 from delogger.util.warn import warn_import

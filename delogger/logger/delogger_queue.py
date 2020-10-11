@@ -32,7 +32,8 @@ class DeloggerQueue(DeloggerBase):
         Set QueueListener only for the first time.
 
         """
-        from logging.handlers import QueueHandler, QueueListener
+        from logging.handlers import QueueHandler
+        from logging.handlers import QueueListener
 
         if DeloggerQueue._listener:
             queue_handler = QueueHandler(DeloggerQueue._que)

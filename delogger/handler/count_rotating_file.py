@@ -1,8 +1,9 @@
-import os
-import re
 from logging import FileHandler
+import os
 from pathlib import Path
-from typing import Dict, List
+import re
+from typing import Dict
+from typing import List
 
 from delogger.util.log_file import LogFile
 

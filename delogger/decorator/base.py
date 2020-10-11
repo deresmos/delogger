@@ -1,6 +1,8 @@
-from abc import ABC, abstractmethod
+from abc import ABC
+from abc import abstractmethod
 from logging import Logger
-from typing import Callable, Optional
+from typing import Callable
+from typing import Optional
 
 
 class DecoratorBase(ABC):

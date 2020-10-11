@@ -1,6 +1,6 @@
 import datetime
-import re
 from pathlib import Path
+import re
 
 TODAY = datetime.datetime.today()
 

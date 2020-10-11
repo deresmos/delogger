@@ -3,7 +3,8 @@ import logging
 from delogger import Delogger
 from delogger.mode.propagete import PropagateMode
 from delogger.mode.stream import StreamInfoMode
-from tests.lib.base import Assert, DeloggerTestBase
+from tests.lib.base import Assert
+from tests.lib.base import DeloggerTestBase
 
 
 class TestPropagateMode(DeloggerTestBase):

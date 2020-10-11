@@ -1,7 +1,7 @@
 from logging import Logger
 
-from delogger.logger.base import DeloggerBase
 from delogger.decorator.debug_log import DebugLog
+from delogger.logger.base import DeloggerBase
 from delogger.preset.base import PresetsBase
 
 

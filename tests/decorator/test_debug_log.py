@@ -1,7 +1,8 @@
 from delogger import Delogger
 from delogger.decorator.debug_log import DebugLog
 from delogger.mode.stream import StreamDebugMode
-from tests.lib.base import Assert, DeloggerTestBase
+from tests.lib.base import Assert
+from tests.lib.base import DeloggerTestBase
 
 
 class TestDebugLogDecorator(DeloggerTestBase):

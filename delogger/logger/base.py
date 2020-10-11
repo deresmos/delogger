@@ -1,14 +1,14 @@
-from logging import (
-    CRITICAL,
-    DEBUG,
-    WARNING,
-    Formatter,
-    Logger,
-    StreamHandler,
-    addLevelName,
-    getLogger,
-)
-from typing import Dict, List, Optional
+from logging import CRITICAL
+from logging import DEBUG
+from logging import Formatter
+from logging import Logger
+from logging import StreamHandler
+from logging import WARNING
+from logging import addLevelName
+from logging import getLogger
+from typing import Dict
+from typing import List
+from typing import Optional
 
 from delogger.decorator.base import DecoratorBase
 from delogger.filter.only_filter import OnlyFilter

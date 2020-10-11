@@ -25,6 +25,7 @@ test-detail: FORCE
 	poetry run pytest -v --rootdir=tests --durations=5
 
 format: FORCE
+	isort ./
 	poetry run black ./
 
 check-flake8: FORCE

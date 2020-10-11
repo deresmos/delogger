@@ -1,10 +1,8 @@
 from delogger import Delogger
-from delogger.decorator.profiles import (
-    LineMemoryProfile,
-    LineProfile,
-    LineProfileStats,
-    MemoryProfile,
-)
+from delogger.decorator.profiles import LineMemoryProfile
+from delogger.decorator.profiles import LineProfile
+from delogger.decorator.profiles import LineProfileStats
+from delogger.decorator.profiles import MemoryProfile
 from delogger.mode.stream import StreamDebugMode
 from tests.lib.base import DeloggerTestBase
 

@@ -1,7 +1,7 @@
 import datetime
 import logging
-import shutil
 from pathlib import Path
+import shutil
 
 from delogger.handler.count_rotating_file import CountRotatingFileHandler
 from tests.lib.base import DeloggerTestBase

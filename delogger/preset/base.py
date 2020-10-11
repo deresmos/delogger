@@ -1,11 +1,14 @@
-from abc import ABC, abstractmethod
+from abc import ABC
+from abc import abstractmethod
 from logging import Logger
 from os import getenv
 from typing import Optional
 
-from delogger import Delogger, DeloggerQueue
+from delogger import Delogger
+from delogger import DeloggerQueue
 from delogger.logger.base import DeloggerBase
-from delogger.mode.file import CountRotatingFileMode, TimedRotatingFileMode
+from delogger.mode.file import CountRotatingFileMode
+from delogger.mode.file import TimedRotatingFileMode
 from delogger.mode.slack import SlackWebhookMode
 
 

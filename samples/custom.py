@@ -1,6 +1,7 @@
 import logging
 
-from delogger import DecoratorBase, ModeBase
+from delogger import DecoratorBase
+from delogger import ModeBase
 
 
 class CustomDecorator(DecoratorBase):

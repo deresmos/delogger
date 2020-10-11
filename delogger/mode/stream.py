@@ -1,5 +1,7 @@
-from logging import DEBUG, INFO
-from typing import Dict, Optional
+from logging import DEBUG
+from logging import INFO
+from typing import Dict
+from typing import Optional
 
 from delogger.mode.base import ModeBase
 

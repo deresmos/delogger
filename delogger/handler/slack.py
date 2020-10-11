@@ -1,8 +1,16 @@
 import json
-import urllib.request
-from logging import CRITICAL, DEBUG, ERROR, INFO, NOTSET, WARNING, Handler
+from logging import CRITICAL
+from logging import DEBUG
+from logging import ERROR
+from logging import Handler
+from logging import INFO
+from logging import NOTSET
+from logging import WARNING
 from os import getenv
-from typing import Any, Dict, Optional
+from typing import Any
+from typing import Dict
+from typing import Optional
+import urllib.request
 
 
 class SlackHandler(Handler):

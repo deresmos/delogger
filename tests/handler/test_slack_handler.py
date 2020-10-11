@@ -2,6 +2,7 @@ import logging
 import os
 
 import pytest
+
 from delogger.handler.slack import SlackHandler
 
 

@@ -1,8 +1,11 @@
 from pathlib import Path
 
 from delogger import Delogger
-from delogger.mode.stream import StreamColorDebugMode, StreamDebugMode, StreamInfoMode
-from tests.lib.base import Assert, DeloggerTestBase
+from delogger.mode.stream import StreamColorDebugMode
+from delogger.mode.stream import StreamDebugMode
+from delogger.mode.stream import StreamInfoMode
+from tests.lib.base import Assert
+from tests.lib.base import DeloggerTestBase
 
 
 class TestStreamMode(DeloggerTestBase):
