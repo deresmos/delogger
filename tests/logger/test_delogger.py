@@ -1,7 +1,7 @@
-from tests.lib.base import DeloggerTestBase
 from delogger import Delogger
 from delogger.decorator.debug_log import DebugLog
 from delogger.mode.stream import StreamDebugMode
+from tests.lib.base import DeloggerTestBase
 
 
 class TestDelogger(DeloggerTestBase):
@@ -10,6 +10,15 @@ class TestDelogger(DeloggerTestBase):
         delogger.load_modes(StreamDebugMode())
         delogger.load_decorators(DebugLog())
 
+        logger = delogger.get_logger()
+
+        self.execute_log(logger)
+
+        self.check_debug_stream_log(logger, capsys, is_color=False)
+
+        assert getattr(logger, "debuglog")
+
+        delogger = Delogger("test_delogger")
         logger = delogger.get_logger()
 
         self.execute_log(logger)
