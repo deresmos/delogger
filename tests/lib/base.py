@@ -40,6 +40,11 @@ class DeloggerTestBase:
 
     OUTPUT_DIRPATH = "log"
 
+    def check_capsys(self, capsys, expected_logs):
+        logs = capsys._captured_err.split("\n")
+        for log, expected_log in zip(logs, expected_logs):
+            Assert._match(log, expected_log)
+
     def check_normal_stream_log(self, logger, capsys, is_color=False):
         captured = capsys.readouterr()
         streams = [

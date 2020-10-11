@@ -10,7 +10,7 @@ except ImportError:
 
 try:
     from line_profiler import LineProfiler
-except ImportError:
+except ImportError:  # pragma: no cover
     pass
 
 

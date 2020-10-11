@@ -2,7 +2,7 @@ from logging import WARNING
 import urllib.request
 
 from delogger import Delogger
-from delogger.mode.slack import SlackWebhookMode
+from delogger.mode.slack import SlackTokenMode, SlackWebhookMode
 from tests.lib.base import DeloggerTestBase
 
 
@@ -35,3 +35,12 @@ class TestSlackMode(DeloggerTestBase):
         self.execute_log(logger)
 
         assert urllib.request.urlopen.call_count == 3
+
+    def test_slack_token_mode_info(self):
+        delogger = Delogger("slack_mode_info")
+        delogger.load_modes(SlackTokenMode("slack_token", "channel"))
+        logger = delogger.get_logger()
+
+        self.execute_log(logger)
+
+        assert urllib.request.urlopen.call_count == 4

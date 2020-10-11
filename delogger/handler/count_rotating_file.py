@@ -31,11 +31,12 @@ class CountRotatingFileHandler(FileHandler):
         r"\d{6}": ["%f"],
     }
 
-    def __init__(self, filepath, backup_count=5) -> None:
+    def __init__(self, filepath: str, backup_count: int = 5) -> None:
         dirpath = str(Path(filepath).parent)
         fmt = Path(filepath).name
 
-        self.filepath: str = self._load_file_path(dirpath, fmt, backup_count)
+        self.logfile = self._load_file_path(dirpath, fmt, backup_count)
+        self.filepath = str(self.logfile.filepath)
 
         super().__init__(self.filepath)
 
@@ -47,13 +48,11 @@ class CountRotatingFileHandler(FileHandler):
         """
 
         # If there is no save destination directory, the directory is created.
-        path_parent = Path(self.filepath).parent
-        if not path_parent.is_dir():
-            os.makedirs(str(path_parent))
+        self.logfile.mkdir()
 
         return super()._open()
 
-    def _load_file_path(self, dirpath: str, fmt: str, backup_count: int) -> str:
+    def _load_file_path(self, dirpath: str, fmt: str, backup_count: int) -> LogFile:
         """Get the file path of the log output destination.
 
         For each directory, determine the log file path only once at runtime.
@@ -70,19 +69,18 @@ class CountRotatingFileHandler(FileHandler):
         # If already same logfile, return the filepath.
         for fpath in CountRotatingFileHandler._files:
             if fpath == logfile:
-                return str(fpath)
+                return fpath
         CountRotatingFileHandler._files.append(logfile)
 
         if backup_count <= 0:
-            return str(logfile)
+            return logfile
 
         file_list = self._get_match_files(logfile.filepath.parent, fmt)
 
         # Delete the old file and set a new filepath
         if len(file_list) >= backup_count:
             os.remove(file_list[0])
-
-        return str(logfile)
+        return logfile
 
     def _get_match_files(self, dirpath, fmt) -> List[Path]:
         _fmt = fmt
@@ -90,7 +88,7 @@ class CountRotatingFileHandler(FileHandler):
             for date_str in date_strs:
                 _fmt = _fmt.replace(date_str, patter)
 
-        # TODO: check file stat??
+        # TODO: check file stat?? datefmt only ok??
         pattern = re.compile(_fmt)
         files = [x for x in sorted(Path(dirpath).glob("*")) if pattern.search(str(x))]
 

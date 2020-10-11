@@ -17,12 +17,21 @@ build: FORCE
 	poetry build
 
 test: FORCE
-	poetry run pytest --rootdir=tests
+	poetry run pytest tests
 	@echo
 	# @make -ks check-flake8-results
 
 test-detail: FORCE
-	poetry run pytest -v --rootdir=tests --durations=5
+	poetry run pytest tests -v --durations=5
+
+test-detail-log: FORCE
+	poetry run pytest tests -v --durations=5 -s
+
+test-coverage: FORCE
+	poetry run pytest tests -v --cov=delogger --cov-report=term-missing
+
+test-coverage-html: FORCE
+	poetry run pytest tests -v --cov=delogger --cov-report=html
 
 format: FORCE
 	isort ./

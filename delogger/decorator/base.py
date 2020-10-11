@@ -12,12 +12,11 @@ class DecoratorBase(ABC):
     @property
     @abstractmethod
     def decorator_name(self) -> str:
-        pass
+        """decorator name"""
 
     @abstractmethod
     def wrapper(self, f, *args, **kwargs):
-        if not self.can_run():
-            return f(*args, **kwargs)
+        """wrapper method"""
 
     def decorator(self, f) -> Callable:
         def wrapper(*args, **kwargs):
@@ -28,7 +27,7 @@ class DecoratorBase(ABC):
         return wrapper
 
     def load(self, delogger) -> None:
-        logger = delogger.get_logger()
+        logger = delogger._logger
         _decorator = getattr(logger, self.decorator_name, None)
         if _decorator:
             raise AttributeError(f"'{self.decorator_name}' already defined.")

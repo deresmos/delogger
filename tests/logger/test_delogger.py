@@ -18,6 +18,15 @@ class TestDelogger(DeloggerTestBase):
 
         assert getattr(logger, "debuglog")
 
+        delogger = Delogger("test_delogger")
+        logger = delogger.get_logger()
+
+        self.execute_log(logger)
+
+        self.check_debug_stream_log(logger, capsys, is_color=False)
+
+        assert getattr(logger, "debuglog")
+
     def test_delogger_constructor(self, capsys):
         delogger = Delogger(
             name="test_delogger_c",

@@ -1,62 +1,60 @@
-import atexit
-from copy import copy
-from logging import Logger
+from logging import NOTSET, Logger
+from logging.handlers import QueueListener
 from queue import Queue
 from typing import Optional
 
+from delogger.handler.delogger_queue import DeloggerQueueHandler
 from delogger.logger.base import DeloggerBase
 
 
 class DeloggerQueue(DeloggerBase):
-    """Non-blocking Delogger using QueueHandler.
+    """Non-blocking Delogger using DeloggerQueueHandler.
 
     Args:
         default (bool): Whether to use the default handler.
     """
 
-    _que: Optional[Queue] = None
-    """Queue used by QueueHandler."""
-
-    _listener = None
+    _queue_hdlr: Optional[DeloggerQueueHandler] = None
     """A common QueueListener for all loggers."""
 
     def get_logger(self) -> Logger:
-        if not DeloggerQueue._listener:
+        if not self.is_already_setup():
             self.queue_logger()
+        else:
+            self._queue_hdlr: Optional[DeloggerQueueHandler] = self._find_queue_hdlr(
+                self._logger.handlers
+            )
 
         return super().get_logger()
 
     def queue_logger(self) -> None:
-        """Set up QueueHandler.
+        """Set up DeloggerQueueHandler.
 
         Set QueueListener only for the first time.
 
         """
-        from logging.handlers import QueueHandler
-        from logging.handlers import QueueListener
+        # init que and listener
+        handlers = self._logger.handlers[:]
+        for hdlr in handlers:
+            self._logger.removeHandler(hdlr)
 
-        if DeloggerQueue._listener:
-            queue_handler = QueueHandler(DeloggerQueue._que)
-            self._logger.addHandler(queue_handler)
+        que: Queue = Queue(-1)
+        listener = QueueListener(que, *handlers, respect_handler_level=True)
+        queue_handler = DeloggerQueueHandler(listener, que)
+        self.add_handler(queue_handler, NOTSET)
 
-        else:
-            # init que and listener
-            handlers = copy(self._logger.handlers)
-            for hdlr in handlers:
-                self._logger.removeHandler(hdlr)
+        self._queue_hdlr = queue_handler
 
-            que: Queue = Queue(-1)
-            queue_handler = QueueHandler(que)
-            listener = QueueListener(que, *handlers, respect_handler_level=True)
-            self._logger.addHandler(queue_handler)
-            listener.start()
+    def join(self) -> bool:
+        if not self._queue_hdlr:
+            return False
 
-            DeloggerQueue._que = que
-            DeloggerQueue._listener = listener
+        self._queue_hdlr.join()
+        return True
 
-            atexit.register(self.listener_stop)
+    def _find_queue_hdlr(self, handlers) -> Optional[DeloggerQueueHandler]:
+        for handler in handlers:
+            if isinstance(handler, DeloggerQueueHandler):
+                return handler
 
-    def listener_stop(self) -> None:
-        """Stop the QueueListener at program exit."""
-        if DeloggerQueue._listener:
-            DeloggerQueue._listener.stop()
+        return None

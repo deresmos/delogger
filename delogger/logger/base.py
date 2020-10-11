@@ -10,6 +10,8 @@ from typing import Dict
 from typing import List
 from typing import Optional
 
+from colorlog import ColoredFormatter
+
 from delogger.decorator.base import DecoratorBase
 from delogger.filter.only_filter import OnlyFilter
 from delogger.mode.base import ModeBase
@@ -149,8 +151,6 @@ class DeloggerBase:
             **kwargs: Keyword argument of add_handler method
 
         """
-
-        from colorlog import ColoredFormatter
 
         formatter = ColoredFormatter(
             kwargs.get("fmt", None), log_colors=log_colors, style="%", datefmt=datefmt

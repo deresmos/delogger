@@ -20,8 +20,6 @@ class LogFile:
         self.filepath: Path = Path(dt.today().strftime(filepath))
         self.filepath_raw: Path = Path(filepath)
 
-        self.mkdir()
-
     def mkdir(self) -> None:
         dirpath = self.filepath.parent
         if dirpath.is_dir():
@@ -39,7 +37,7 @@ class LogFile:
         if not isinstance(other, LogFile):
             raise NotImplementedError
 
-        return other.filepath_raw.absolute() == self.filepath_raw.absolute()
+        return other.filepath.absolute() == self.filepath.absolute()
 
     def __contains__(self, other):
         return other == self
