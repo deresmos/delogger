@@ -13,15 +13,16 @@ class TestDebugLogDecorator(DeloggerTestBase):
 
         @logger.debuglog
         def test_func(arg1, arg2=None):
-            pass
+            return True
 
-        test_func("testarg", 123)
+        ret = test_func("testarg", 123)
 
         streams = [
             r"START TestDebugLogDecorator.test_debug_log_decorator.<locals>.test_func args=\('testarg', 123\) kwargs={}",
             r"END TestDebugLogDecorator.test_debug_log_decorator.<locals>.test_func return=None",
         ]
         self.check_decorator(logger, capsys, streams)
+        assert ret
 
     def check_decorator(self, logger, capsys, streams):
         captured = capsys.readouterr()

@@ -10,7 +10,7 @@ from tests.lib.base import DeloggerTestBase
 
 
 class TestProfileDecorator(DeloggerTestBase):
-    def test_line_profile_decorator(self, capsys, caplog):
+    def test_line_profile_decorator(self):
         delogger = Delogger("line_profile_decorator")
         delogger.load_modes(StreamDebugMode())
         delogger.load_decorators(LineProfile())
@@ -18,10 +18,11 @@ class TestProfileDecorator(DeloggerTestBase):
 
         @logger.line_profile
         def test_func(arg1, arg2=None):
-            pass
+            return True
 
         # Only execute
-        test_func("testarg", 123)
+        ret = test_func("testarg", 123)
+        assert ret
 
     def test_line_profile_stats_decorator(self, capsys, caplog):
         delogger = Delogger("line_profile_stats_decorator")
@@ -31,10 +32,11 @@ class TestProfileDecorator(DeloggerTestBase):
 
         @logger.add_line_profile
         def test_func(arg1, arg2=None):
-            pass
+            return True
 
         # Only execute
-        test_func("testarg", 123)
+        ret = test_func("testarg", 123)
+        assert ret
 
     def test_memory_profile_decorator(self, capsys, caplog):
         delogger = Delogger("memory_profile_decorator")
@@ -44,10 +46,11 @@ class TestProfileDecorator(DeloggerTestBase):
 
         @logger.memory_profile
         def test_func(arg1, arg2=None):
-            pass
+            return True
 
         # Only execute
-        test_func("testarg", 123)
+        ret = test_func("testarg", 123)
+        assert ret
 
     def test_line_memory_profile_decorator(self, capsys, caplog):
         delogger = Delogger("line_memory_profile_decorator")
@@ -57,7 +60,8 @@ class TestProfileDecorator(DeloggerTestBase):
 
         @logger.line_memory_profile
         def test_func(arg1, arg2=None):
-            pass
+            return True
 
         # Only execute
-        test_func("testarg", 123)
+        ret = test_func("testarg", 123)
+        assert ret

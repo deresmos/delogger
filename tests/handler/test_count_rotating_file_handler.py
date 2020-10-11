@@ -59,13 +59,6 @@ class TestCountRotatingHandler(DeloggerTestBase):
         logger.debug("log file test")
         self.assert_normal(logpath, 1)
 
-    def test_same_filepath(self):
-        logpath = f"{self.OUTPUT_DIRPATH}/%Y%m%d_%H%M%S.log"
-        logger = self._normal_logger("same_filepath", logpath)
-
-        logger.debug("same normal logger")
-        self.assert_normal(logpath, 1)
-
     def test_same_dir(self):
         logpath = f"{self.OUTPUT_DIRPATH}/%Y%m%d_%H%M%S_new.log"
         logger = self._normal_logger("same_dir", logpath)
@@ -80,23 +73,23 @@ class TestCountRotatingHandler(DeloggerTestBase):
         logger.debug("log file test")
         self.assert_normal(logpath, 1)
 
-    def test_unlimit(self):
-        logpath = f"{self.OUTPUT_DIRPATH}/%Y%m%d_%H%M%S%f_unlimit.log"
-        logger = self._unlimit_logger("unlimit", logpath)
+    def test_rotating(self, freezer):
+        for i in range(10):
+            freezer.move_to(f"2020-01-{i+1}")
+            logpath = f"{self.OUTPUT_DIRPATH}/%Y%m%d.log"
+            logger = self._normal_logger(f"rotating{i}", logpath)
+            logger.debug("log file test")
 
-        logger.debug("log file test")
-        self.assert_normal(logpath, 3)
+            file_count = 5 if i >= 5 else i + 1
 
-    def test_unlimit_same_filepath(self):
-        logpath = f"{self.OUTPUT_DIRPATH}/%Y%m%d_%H%M%S%f_unlimit.log"
-        logger = self._unlimit_logger("unlimit_same_filepath", logpath)
+            # already two file exists
+            self.assert_normal(logpath, file_count + 2)
 
-        logger.debug("log file test")
-        self.assert_normal(logpath, 3)
+    def test_unlimit(self, freezer):
+        for i in range(10):
+            freezer.move_to(f"2020-01-{i+1}")
+            logpath = f"{self.OUTPUT_DIRPATH}/unlimit/%Y%m%d_%H%M%S%f_unlimit.log"
+            logger = self._unlimit_logger("unlimit", logpath)
 
-    def test_unlimit_same_dir(self):
-        logpath = f"{self.OUTPUT_DIRPATH}/%Y%m%d_%H%M%S%f_unlimit_new.log"
-        logger = self._unlimit_logger("unlimit_same_dir", logpath)
-
-        logger.debug("log file test")
-        self.assert_normal(logpath, 4)
+            logger.debug("log file test")
+            self.assert_normal(logpath, i + 1)

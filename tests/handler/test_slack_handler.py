@@ -3,15 +3,18 @@ import os
 
 import pytest
 from delogger.handler.slack import SlackHandler
+from tests.lib.urlopen_mock import UrlopenMock
 
 
 class TestSlackHandler:
     def setup_class(self):
-        self.dummy_url = "dummy.url"
+        self.dummy_url = "http://dummy.url"
         self.dummy_token = "dummy.token"
         self.debug_record = logging.LogRecord("name", logging.DEBUG, "", "", "", "", "")
 
     def test_normal(self):
+        urlopen_mock = UrlopenMock()
+
         logger = logging.getLogger("normal")
         logger.setLevel(logging.DEBUG)
 
@@ -24,7 +27,11 @@ class TestSlackHandler:
 
         logger.debug("normal test")
 
+        assert urlopen_mock.call_count == 1
+
     def test_slack_handler_dup(self):
+        urlopen_mock = UrlopenMock()
+
         logger = logging.getLogger("slack_dup")
         logger.setLevel(logging.DEBUG)
 
@@ -41,11 +48,15 @@ class TestSlackHandler:
 
         logger.debug("slack handler duplication")
 
+        assert urlopen_mock.call_count == 1
+
     def test_url_env(self):
         url_env = SlackHandler.URL_ENV
         os.environ[url_env] = self.dummy_url
 
-        SlackHandler(channel="#dummy")
+        hdlr = SlackHandler(channel="#dummy")
+
+        assert hdlr.url == self.dummy_url
 
     def test_url_env_error(self):
         url_env = SlackHandler.URL_ENV
@@ -122,3 +133,28 @@ class TestSlackHandler:
 
         assert content["icon_emoji"] == "emoji"
         assert content["username"] == "username"
+
+    def test_not_emit(self):
+        urlopen_mock = UrlopenMock()
+
+        logger = logging.getLogger("not_emit_to_slack")
+        logger.setLevel(logging.DEBUG)
+
+        slack_handler = SlackHandler(url=self.dummy_url, channel="#dummy")
+        slack_handler.setLevel(logging.DEBUG)
+        slack_handler.is_emit = False
+        logger.addHandler(slack_handler)
+
+        assert slack_handler.url != SlackHandler.POST_MESSAGE_URL
+        assert "Authorization" not in slack_handler.headers
+
+        logger.debug("normal test")
+
+        urlopen_mock.assert_not_called()
+
+    def test_eq(self):
+        slack_handler = SlackHandler(url=self.dummy_url, channel="#dummy")
+
+        with pytest.raises(NotImplementedError):
+            if slack_handler == "11":
+                pass
