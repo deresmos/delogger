@@ -25,7 +25,7 @@ class DecoratorBase(ABC):
         return wrapper
 
     def load(self, delogger) -> None:
-        logger = delogger.get_logger()
+        logger = delogger._logger
         _decorator = getattr(logger, self.decorator_name, None)
         if _decorator:
             raise AttributeError(f"'{self.decorator_name}' already defined.")
