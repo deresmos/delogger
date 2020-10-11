@@ -1,5 +1,7 @@
 import pytest
-from delogger import DecoratorBase, Delogger
+
+from delogger import DecoratorBase
+from delogger import Delogger
 from tests.lib.base import DeloggerTestBase
 
 

@@ -1,4 +1,5 @@
-from logging import NOTSET, Logger
+from logging import Logger
+from logging import NOTSET
 from logging.handlers import QueueListener
 from queue import Queue
 from typing import Optional

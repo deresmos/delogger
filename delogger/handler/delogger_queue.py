@@ -1,4 +1,5 @@
-from logging.handlers import QueueHandler, QueueListener
+from logging.handlers import QueueHandler
+from logging.handlers import QueueListener
 
 
 class DeloggerQueueHandler(QueueHandler):

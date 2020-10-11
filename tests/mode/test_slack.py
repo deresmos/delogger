@@ -2,7 +2,8 @@ from logging import WARNING
 import urllib.request
 
 from delogger import Delogger
-from delogger.mode.slack import SlackTokenMode, SlackWebhookMode
+from delogger.mode.slack import SlackTokenMode
+from delogger.mode.slack import SlackWebhookMode
 from tests.lib.base import DeloggerTestBase
 
 

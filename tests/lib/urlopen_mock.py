@@ -1,5 +1,5 @@
-import urllib.request
 from unittest.mock import MagicMock
+import urllib.request
 
 
 class UrlopenMock:
