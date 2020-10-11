@@ -5,7 +5,7 @@
 ![test](https://github.com/deresmos/delogger/workflows/Python%20Test/badge.svg)
 ![CodeQL](https://github.com/deresmos/delogger/workflows/CodeQL/badge.svg)
 
-## Abount
+## About
 
 Delogger is a Python package that makes easy use of decided logging.
 
