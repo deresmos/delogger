@@ -1,8 +1,9 @@
 # delogger
 
-[![Build Status](https://travis-ci.org/deresmos/delogger.svg?branch=master)](https://travis-ci.org/deresmos/delogger)
 [![PyPI](https://badge.fury.io/py/delogger.svg)](https://badge.fury.io/py/delogger)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/deresmos/delogger/blob/master/LICENSE)
+![test](https://github.com/deresmos/delogger/workflows/Python%20Test/badge.svg)
+![CodeQL](https://github.com/deresmos/delogger/workflows/CodeQL/badge.svg)
 
 ## Abount
 
