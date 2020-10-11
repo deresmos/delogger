@@ -3,6 +3,7 @@ from pathlib import Path
 from shutil import rmtree
 
 from tests.lib.base import DeloggerTestBase
+from tests.lib.urlopen_mock import UrlopenMock
 
 
 class TestPresets(DeloggerTestBase):
@@ -51,10 +52,12 @@ class TestPresets(DeloggerTestBase):
         assert Path(self.OUTPUT_DIRPATH).is_dir()
 
     def test_output_env(self, capsys):
+        urlopen_mock = UrlopenMock()
+
         filepath = f"{self.OUTPUT_DIRPATH}/test_output.log"
         os.environ["DELOGGER_NAME"] = "test_output_env"
         os.environ["DELOGGER_FILEPATH"] = filepath
-        os.environ["DELOGGER_SLACK_WEBHOOK"] = "slack_webhook"
+        os.environ["DELOGGER_SLACK_WEBHOOK"] = "http://slack_webhook"
         from delogger.preset.output import OutputPresets
 
         logger = OutputPresets("no_name").get_logger()
@@ -67,6 +70,7 @@ class TestPresets(DeloggerTestBase):
 
         assert getattr(logger, "debuglog")
         assert Path(filepath).is_file()
+        assert urlopen_mock.call_count == 4
 
     def test_profiler(self):
         from delogger.preset.profiler import logger

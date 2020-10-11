@@ -1,27 +1,20 @@
 import logging
 import os
-import urllib.request
-from unittest.mock import MagicMock
 
 import pytest
 from delogger.handler.slack import SlackHandler
+from tests.lib.urlopen_mock import UrlopenMock
 
 
 class TestSlackHandler:
     def setup_class(self):
-        self.dummy_url = "dummy.url"
+        self.dummy_url = "http://dummy.url"
         self.dummy_token = "dummy.token"
         self.debug_record = logging.LogRecord("name", logging.DEBUG, "", "", "", "", "")
 
-        self._tmp_urllib_request = urllib.request.Request
-
-    def teardown_class(self):
-        urllib.request.Request = self._tmp_urllib_request
-
-    def setup_method(self):
-        urllib.request.Request = MagicMock()
-
     def test_normal(self):
+        urlopen_mock = UrlopenMock()
+
         logger = logging.getLogger("normal")
         logger.setLevel(logging.DEBUG)
 
@@ -34,9 +27,11 @@ class TestSlackHandler:
 
         logger.debug("normal test")
 
-        assert urllib.request.Request.call_count == 1
+        assert urlopen_mock.call_count == 1
 
     def test_slack_handler_dup(self):
+        urlopen_mock = UrlopenMock()
+
         logger = logging.getLogger("slack_dup")
         logger.setLevel(logging.DEBUG)
 
@@ -53,7 +48,7 @@ class TestSlackHandler:
 
         logger.debug("slack handler duplication")
 
-        assert urllib.request.Request.call_count == 1
+        assert urlopen_mock.call_count == 1
 
     def test_url_env(self):
         url_env = SlackHandler.URL_ENV
@@ -140,6 +135,8 @@ class TestSlackHandler:
         assert content["username"] == "username"
 
     def test_not_emit(self):
+        urlopen_mock = UrlopenMock()
+
         logger = logging.getLogger("not_emit_to_slack")
         logger.setLevel(logging.DEBUG)
 
@@ -153,7 +150,7 @@ class TestSlackHandler:
 
         logger.debug("normal test")
 
-        urllib.request.Request.assert_not_called()
+        urlopen_mock.assert_not_called()
 
     def test_eq(self):
         slack_handler = SlackHandler(url=self.dummy_url, channel="#dummy")
