@@ -8,17 +8,17 @@ except ImportError:
 
 try:
     from memory_profiler import profile
+
+    _can_memory_profiler = True
 except ImportError:  # pragma: no cover
-    pass
+    _can_memory_profiler = False
 
 
 class MemoryProfile(DecoratorBase):
     decorator_name = "memory_profile"
 
     def can_run(self) -> bool:
-        try:
-            profile
-        except NameError:
+        if not _can_memory_profiler:
             warn_import(self.decorator_name, "memory_profiler")
             return False
 

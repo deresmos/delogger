@@ -12,14 +12,18 @@ except ImportError:
 
 try:
     from line_profiler import LineProfiler
+
+    _can_line_profiler = True
 except ImportError:  # pragma: no cover
-    pass
+    _can_line_profiler = False
 
 
 try:
     from memory_profiler import profile
+
+    _can_memory_profiler = True
 except ImportError:  # pragma: no cover
-    pass
+    _can_memory_profiler = False
 
 
 class LineEmpty(Exception):
@@ -44,15 +48,13 @@ class LineMemoryProfile(DecoratorBase):
     ]
 
     def can_run(self) -> bool:
-        try:
-            LineProfiler
-        except NameError:
+        if not _can_line_profiler:
             warn_import(self.decorator_name, "line_profiler")
             return False
 
-        try:
-            profile
-        except NameError:
+        return True
+
+        if not _can_memory_profiler:
             warn_import(self.decorator_name, "memory_profiler")
             return False
 
