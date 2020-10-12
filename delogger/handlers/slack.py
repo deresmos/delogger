@@ -6,7 +6,6 @@ from logging import Handler
 from logging import INFO
 from logging import NOTSET
 from logging import WARNING
-from os import getenv
 from typing import Any
 from typing import Dict
 from typing import Optional
@@ -63,12 +62,6 @@ class SlackHandler(Handler):
     }
     """Default value of usernames."""
 
-    URL_ENV: str = "DELOGGER_SLACK_URL"
-    """Environment variable name of slack webhook url."""
-
-    TOKEN_ENV: str = "DELOGGER_TOKEN"
-    """Environment variable name of slack token."""
-
     POST_MESSAGE_URL: str = "https://slack.com/api/chat.postMessage"
     """Execution when using token API."""
 
@@ -86,8 +79,8 @@ class SlackHandler(Handler):
     ):
         self.is_emit = True
 
-        self.url = url or getenv(self.URL_ENV)
-        token = token or getenv(self.TOKEN_ENV)
+        self.url = url
+        token = token
         if token:
             self.url = self.POST_MESSAGE_URL
 

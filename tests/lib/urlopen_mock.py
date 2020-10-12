@@ -7,8 +7,8 @@ class UrlopenMock:
         self._tmp_urlopen = urllib.request.urlopen
         self.load()
 
-    def load(self):
-        urllib.request.urlopen = MagicMock()
+    def load(self, *args, **kwargs):
+        urllib.request.urlopen = MagicMock(*args, **kwargs)
 
     def reset(self):
         urllib.request.urlopen = self._tmp_urlopen

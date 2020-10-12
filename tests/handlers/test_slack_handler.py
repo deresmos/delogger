@@ -1,5 +1,4 @@
 import logging
-import os
 
 import pytest
 
@@ -51,22 +50,6 @@ class TestSlackHandler:
 
         assert urlopen_mock.call_count == 1
 
-    def test_url_env(self):
-        url_env = SlackHandler.URL_ENV
-        os.environ[url_env] = self.dummy_url
-
-        hdlr = SlackHandler(channel="#dummy")
-
-        assert hdlr.url == self.dummy_url
-
-    def test_url_env_error(self):
-        url_env = SlackHandler.URL_ENV
-        if os.environ.get(url_env, None):
-            del os.environ[url_env]
-
-        with pytest.raises(ValueError):
-            SlackHandler(channel="#dummy")
-
     def test_token(self):
         logger = logging.getLogger("normal")
         logger.setLevel(logging.DEBUG)
@@ -76,24 +59,7 @@ class TestSlackHandler:
         assert slack_handler.url == SlackHandler.POST_MESSAGE_URL
         assert slack_handler.headers["Authorization"] == f"Bearer {self.dummy_token}"
 
-    def test_token_env(self):
-        token_env = SlackHandler.TOKEN_ENV
-        os.environ[token_env] = self.dummy_token
-
-        slack_handler = SlackHandler(channel="#dummy")
-
-        assert slack_handler.url == SlackHandler.POST_MESSAGE_URL
-
     def test_token_error(self):
-        url_env = SlackHandler.URL_ENV
-        token_env = SlackHandler.TOKEN_ENV
-
-        if os.environ.get(url_env, None):
-            del os.environ[url_env]
-
-        if os.environ.get(token_env, None):
-            del os.environ[token_env]
-
         logger = logging.getLogger("error")
         logger.setLevel(logging.DEBUG)
 
@@ -159,3 +125,18 @@ class TestSlackHandler:
         with pytest.raises(NotImplementedError):
             if slack_handler == "11":
                 pass
+
+    def test_handle_error(self):
+        urlopen_mock = UrlopenMock()
+        urlopen_mock.load(side_effect=Exception())
+
+        logger = logging.getLogger("slack_exception")
+        logger.setLevel(logging.DEBUG)
+
+        slack_handler = SlackHandler(url=self.dummy_url, channel="#dummy")
+        slack_handler.setLevel(logging.DEBUG)
+        logger.addHandler(slack_handler)
+
+        logger.debug("normal test")
+
+        assert urlopen_mock.call_count == 1
