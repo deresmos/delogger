@@ -46,7 +46,6 @@ class DeloggerBase:
         name = name or os.getenv("DELOGGER_NAME", "delogger")
         logger = getLogger(name)
         logger.setLevel(DEBUG)
-        logger.propagate = False
         self._logger: Logger = logger
 
         # check already set logger
@@ -160,5 +159,10 @@ class DeloggerBase:
         hdlr = hdlr or StreamHandler()
         self.add_handler(hdlr, level, datefmt=datefmt, formatter=formatter, **kwargs)
 
+    @property
+    def propagete(self) -> bool:
+        return self._logger.propagate
+
+    @propagete.setter
     def propagate(self, is_propagate: bool) -> None:
         self._logger.propagate = is_propagate

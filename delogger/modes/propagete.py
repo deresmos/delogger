@@ -1,8 +1,8 @@
 from delogger.modes.base import ModeBase
 
-__all__ = ["PropagateMode"]
+__all__ = ["NotPropagateMode"]
 
 
-class PropagateMode(ModeBase):
+class NotPropagateMode(ModeBase):
     def load(self, delogger) -> None:
-        delogger.propagate(True)
+        delogger.propagate = False
