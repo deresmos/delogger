@@ -160,9 +160,9 @@ class DeloggerBase:
         self.add_handler(hdlr, level, datefmt=datefmt, formatter=formatter, **kwargs)
 
     @property
-    def propagete(self) -> bool:
+    def propagate(self) -> bool:
         return self._logger.propagate
 
-    @propagete.setter
+    @propagate.setter
     def propagate(self, is_propagate: bool) -> None:
         self._logger.propagate = is_propagate

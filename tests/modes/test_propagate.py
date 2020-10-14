@@ -1,7 +1,7 @@
 import logging
 
 from delogger import Delogger
-from delogger.modes.propagete import NotPropagateMode
+from delogger.modes.propagate import NotPropagateMode
 from delogger.modes.stream import StreamInfoMode
 from tests.lib.base import Assert
 from tests.lib.base import DeloggerTestBase
