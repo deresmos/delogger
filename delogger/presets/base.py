@@ -13,8 +13,8 @@ from delogger.modes.slack import SlackWebhookMode
 
 
 class PresetsBase(ABC):
-    def __init__(self, name: str, is_queue: bool = False) -> None:
-        self.name = getenv("DELOGGER_NAME") or name
+    def __init__(self, name: Optional[str] = None, is_queue: bool = False) -> None:
+        self.name = getenv("DELOGGER_NAME", name)
         self.is_queue = is_queue
 
         self.filepath: Optional[str] = getenv("DELOGGER_FILEPATH")

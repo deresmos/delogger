@@ -6,6 +6,7 @@ from logging import StreamHandler
 from logging import WARNING
 from logging import addLevelName
 from logging import getLogger
+import os
 from typing import Dict
 from typing import List
 from typing import Optional
@@ -42,7 +43,7 @@ class DeloggerBase:
         addLevelName(CRITICAL, "CRIT")
 
         # base logger
-        name = name or "root"
+        name = name or os.getenv("DELOGGER_NAME", "delogger")
         logger = getLogger(name)
         logger.setLevel(DEBUG)
         logger.propagate = False
