@@ -1,0 +1,35 @@
+name: Python Test
+
+on: push
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        python: ['3.6', '3.7', '3.8', '3.9']
+        os: [ubuntu-latest, macOS-latest]
+
+    runs-on: ${{ matrix.os }}
+    name: Python ${{ matrix.python }} ( ${{ matrix.os }} )
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python }}
+          architecture: x64
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ matrix.os }}-pip-${{ matrix.python }}-${{ hashFiles('**/requirements.txt') }}
+      - name: Install poetry
+        run: pip install poetry
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/poetry
+          key: ${{ matrix.os }}-poetry-${{ matrix.python }}-${{ hashFiles('**/poetry.lock') }}
+      - name: Setup Python test
+        run: make install-dev
+        continue-on-error: true
+      - name: Run test
+        run: make test-detail

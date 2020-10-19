@@ -1,46 +1,24 @@
-delogger
-==
+# delogger
 
-[![Build Status](https://travis-ci.org/deresmos/delogger.svg?branch=master)](https://travis-ci.org/deresmos/delogger)
 [![PyPI](https://badge.fury.io/py/delogger.svg)](https://badge.fury.io/py/delogger)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/deresmos/delogger/blob/master/LICENSE)
+![test](https://github.com/deresmos/delogger/workflows/Python%20Test/badge.svg)
+![CodeQL](https://github.com/deresmos/delogger/workflows/CodeQL/badge.svg)
 
+## About
 
-About
-===
 Delogger is a Python package that makes easy use of decided logging.
 
-The default logging includes the following:
-- Stream handler
-- In save mode, log is saved in directory as program execution unit.
-
 ### Delogger
+
 - It behaves like normal logging.
-- Decorator `Delogger.debuglog` logging arguments and return values
 
 ### DeloggerQueue
+
 - Non-blocking logging using QueueHandler.
-- Decorator `DeloggerQueue.debuglog` logging arguments and return values
 
+## Installation
 
-## Settings
-| variable name   | description                                | default             |
-| -------------   | -------------                              | ------              |
-| date_fmt        | date and time format                       | '%Y-%m-%d %H:%M:%S' |
-| stream_level    | Stream level                               | logging.INFO        |
-| file_level      | Level of file output                       | logging.DEBUG       |
-| is_save_file    | whether to save the log file               | False               |
-| is_color_stream | whether to make the stream color output    | False               |
-| is_debug_stream | Whether to output the stream in debug mode | False               |
-| default         | Whether to use the default handler         | True                |
-| dirpath         | log output folder                          | 'log'               |
-| filepath        | log output filepath                        | None                |
-| is_stream       | If False, disabled stream output           | True                |
-| backup_count    | logfile backup_count                       | 5                   |
-
-
-Installation
-==
 To install Delogger, use pip.
 
 ```bash
@@ -48,111 +26,152 @@ pip install delogger
 
 ```
 
-Examples
-==
+## Sample
 
-
-### Normal stream mode
+### Debug stream and output log
 
 ```python
-from delogger import Delogger
+from delogger.presets.debug import logger
 
-delogger = Delogger(name='test_logger')
-logger = delogger.logger
-
-logger.info('Start logging')
-logger.debug('debug')
-logger.warning('warning')
-logger.info('End logging')
+if __name__ == "__main__":
+    logger.debug("debug msg")
+    logger.info("info msg")
+    logger.warning("warn msg")
+    logger.error("error msg")
+    logger.critical("critical msg")
 ```
-![normal](https://user-images.githubusercontent.com/27688389/49737427-335e1100-fcd0-11e8-8a59-7d0fe3088273.png "normal")
 
+Output
+![debug_sample_output]()
 
-### Debug stream mode
-
-```python
-from delogger import Delogger
-
-Delogger.is_debug_stream = True
-delogger = Delogger(name='test_logger')
-logger = delogger.logger
-
-logger.info('Start logging')
-logger.debug('debug')
-logger.warning('warning')
-logger.info('End logging')
+File output (./log/20201010_164622.log)
 ```
-![debug](https://user-images.githubusercontent.com/27688389/49737352-03af0900-fcd0-11e8-8420-f1fc295394c8.png "debug")
-
-
-### Save log file
-
-```python
-from delogger import Delogger
-
-Delogger.is_save_file = True
-delogger = Delogger(name='test_logger', filepath='%Y/%m%d.log')
-logger = delogger.logger
-
-logger.info('Start logging')
-logger.debug('debug')
-logger.warning('warning')
-logger.info('End logging')
+2020-10-10 16:46:22.050 DEBUG debug_preset.py:4 <module> debug msg
+2020-10-10 16:46:22.050 INFO debug_preset.py:5 <module> info msg
+2020-10-10 16:46:22.051 WARN debug_preset.py:6 <module> warn msg
+2020-10-10 16:46:22.051 ERROR debug_preset.py:7 <module> error msg
+2020-10-10 16:46:22.051 CRIT debug_preset.py:8 <module> critical msg
 ```
-![logfile](https://user-images.githubusercontent.com/27688389/49738444-c730dc80-fcd2-11e8-9fb2-2bd0336e25db.png "logfile")
 
 
-### Queue mode
+and more [samples](https://github.com/deresmos/delogger/tree/main/tests)
 
-```python
-import time
+## Preset
 
-from delogger import DeloggerQueue
+- `debug`: Output color debug log and save log file.
+- `debug_stream`: Output color debug log.
+- `output`: Save log file and notify to slack.
+- `profiler`: Same debug preset and seted profiles decorator.
 
-delogger = DeloggerQueue(name='test_logger')
-logger = delogger.logger
+## Mode
 
-print('Start queue mode')
-logger.info('Start logging')
-logger.debug('debug')
-logger.warning('warning')
-time.sleep(1)
-logger.info('End logging')
-print('End queue mode')
+- `CountRotatingFileMode`: Backup count rotating.
+- `TimedRotatingFileMode`: Same logging.handlers.TimedRotatingFileHandler.
+- `SlackWebhookMode`: Log to slack. (Incomming webhook)
+- `SlackTokenMode`: Log to slack. (token key)
+- `StreamColorDebugMode`: Output color log. (debug and above)
+- `StreamDebugMode`: Output noncolor log. (debug and above)
+- `StreamInfoMode`: Output noncolor log. (info and above)
+- `PropagateMode`: Set Setropagate true.
+
+## Environment
+
+- `DELOGGER_NAME`: logger name for presets.
+- `DELOGGER_FILEPATH`: output log filepath for presets.
+- `DELOGGER_SLACK_WEBHOOK`: send slack for presets.
+
+## Decorator
+
+Inject decorator into logger.
+
+### debuglog
+
+```text
+DEBUG 21:00:00 debug_log.py:32 START test args=('test',) kwargs={}
+DEBUG 21:00:01 debug_log.py:39 END test return=value
 ```
-![queue](https://user-images.githubusercontent.com/27688389/49737371-10336180-fcd0-11e8-84dd-f9be5f223f42.png "queue")
 
+### line_profile
 
-### No Color stream mode
+Required [line_profiler](https://github.com/pyutils/line_profiler) package.
 
-```python
-from delogger import Delogger
+```text
+DEBUG 21:38:22 line_profile.py:28 line_profiler result
+Timer unit: 1e-06 s
 
-Delogger.is_color_stream = False
-delogger = Delogger(name='test_logger')
-logger = delogger.logger
+Total time: 6.4e-05 s
+File: test.py
+Function: test at line 6
 
-logger.info('Start logging')
-logger.debug('debug')
-logger.warning('warning')
-logger.info('End logging')
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+     6                                           @logger.line_profile
+     7                                           def test(arg1):
+     8       101         43.0      0.4     67.2      for i in range(100):
+     9       100         21.0      0.2     32.8          pass
+    10         1          0.0      0.0      0.0      return i
 ```
-![no-color-normal](https://user-images.githubusercontent.com/27688389/48709759-c49a1480-ec49-11e8-92ee-99dae12c6e63.png "no-color-normal")
 
+### memory_profile
 
-### Debug and no color stream mode
+Required [memory_profiler](https://github.com/pythonprofilers/memory_profiler) package.
 
-```python
-from delogger import Delogger
+```text
+DEBUG 21:40:31 memory_profile.py:25 memory_profiler result
+Filename: test.py
 
-Delogger.is_color_stream = False
-Delogger.is_debug_stream = True
-delogger = Delogger(name='test_logger')
-logger = delogger.logger
-
-logger.info('Start logging')
-logger.debug('debug')
-logger.warning('warning')
-logger.info('End logging')
+Line #    Mem usage    Increment   Line Contents
+================================================
+     6    37.96 MiB    37.96 MiB   @logger.memory_profile
+     7                             def test(arg1):
+     8    45.43 MiB     7.47 MiB       a = [0] * 1000 * 1000
+     9    45.43 MiB     0.00 MiB       for i in range(100):
+    10    45.43 MiB     0.00 MiB           pass
+    11    45.43 MiB     0.00 MiB       return i
 ```
-![no-color-debug](https://user-images.githubusercontent.com/27688389/49737616-a8314b00-fcd0-11e8-8d11-2274bb7e0ae1.png "no-color-debug")
+
+### line_memory_profile
+
+Required [line_profiler](https://github.com/pyutils/line_profiler) and [memory_profiler](https://github.com/pythonprofilers/memory_profiler) package.
+
+```text
+DEBUG 21:41:08 line_memory_profile.py:70 line, memory profiler result
+Timer unit: 1e-06 s
+
+Total time: 0.004421 s
+File: test.py
+Function: test at line 6
+
+Line #      Hits         Time  Per Hit   % Time    Mem usage    Increment   Line Contents
+=========================================================================================
+     6                                             37.96 MiB    37.96 MiB   @logger.line_memory_profile
+     7                                                                      def test(arg1):
+     8         1       4355.0   4355.0     98.5    45.43 MiB     7.47 MiB       a = [0] * 1000 * 1000
+     9       101         33.0      0.3      0.7    45.43 MiB     0.00 MiB       for i in range(100):
+    10       100         32.0      0.3      0.7    45.43 MiB     0.00 MiB           pass
+    11         1          1.0      1.0      0.0    45.43 MiB     0.00 MiB       return i
+```
+
+### add_line_profile
+
+- It can adjust the timing of profile output
+
+Required [line_profiler](https://github.com/pyutils/line_profiler) package.
+
+```text
+DEBUG 21:45:55 line_profile.py:67 line_profiler_stats result
+Timer unit: 1e-06 s
+
+Total time: 0.009081 s
+File: test.py
+Function: test at line 6
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+     6                                           @logger.add_line_profile
+     7                                           def test(arg1):
+     8         2       8957.0   4478.5     98.6      a = [0] * 1000 * 1000
+     9       202         71.0      0.4      0.8      for i in range(100):
+    10       200         52.0      0.3      0.6          pass
+    11         2          1.0      0.5      0.0      return i
+```

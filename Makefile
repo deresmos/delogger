@@ -1,30 +1,48 @@
 .PHONY: FORCE
 
 install: FORCE
-	pip install . ${ARGS}
+	poetry install --no-dev
 
 install-dev: FORCE
-	pip install -e '.[develop]'
+	poetry install
 
-upload: FORCE
-	python setup.py bdist_wheel
-	twine upload dist/*
-	rm -rf dist
+upload: build
+	@poetry publish -u ${PYPI_USER} -p ${PYPI_PASSWORD}
+
+upload-test: build
+	@poetry config repositories.testpypi https://test.pypi.org/legacy/
+	@poetry publish -r testpypi -u ${PYPI_USER} -p ${PYPI_PASSWORD}
+
+build: FORCE
+	poetry build
 
 test: FORCE
-	py.test --rootdir=tests
+	poetry run pytest tests
 	@echo
-	@make -ks check-flake8-results
+	# @make -ks check-flake8-results
 
 test-detail: FORCE
-	py.test -v --rootdir=tests
+	poetry run pytest tests -v --durations=5
+
+test-detail-log: FORCE
+	poetry run pytest tests -v --durations=5 -s
+
+test-coverage: FORCE
+	poetry run pytest tests -v --cov=delogger --cov-report=term-missing
+
+test-coverage-html: FORCE
+	poetry run pytest tests -v --cov=delogger --cov-report=html
+
+format: FORCE
+	isort ./
+	poetry run black ./
 
 check-flake8: FORCE
-	find -type f -name '*.py' | flake8
+	find -type f -name '*.py' | poetry run flake8
 
 check-flake8-results: FORCE
 	@echo '--- flake8 check ---'
-	@flake8; \
+	@poetry run flake8; \
 	if [ $$? = 0 ]; then \
 		echo -e '-> \e[32mOK\e[m'; \
 	else \

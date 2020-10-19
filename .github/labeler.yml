@@ -1,0 +1,20 @@
+---
+workflow:
+  - .github/*.yml
+  - .github/workflows/**/*
+decorator:
+  - delogger/decorators/*
+filter:
+  - delogger/filters/*
+handler:
+  - delogger/handlers/*
+logger:
+  - delogger/loggers/*
+mode:
+  - delogger/modes/*
+preset:
+  - delogger/presets/*
+util:
+  - delogger/util/*
+tests:
+  - tests/*
