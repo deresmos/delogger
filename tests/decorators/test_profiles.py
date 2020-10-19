@@ -8,10 +8,12 @@ from delogger.decorators.profiles import LineProfileStats
 from delogger.decorators.profiles import MemoryProfile
 from delogger.modes.stream import StreamDebugMode
 from tests.lib.base import DeloggerTestBase
+from tests.lib.base import skip_version
 from tests.lib.line_profiler_mock import LineProfilerMock
 
 
 class TestProfileDecorator(DeloggerTestBase):
+    @skip_version
     def test_line_profile_decorator(self):
         mock = LineProfilerMock()
 

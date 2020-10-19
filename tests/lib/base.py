@@ -1,8 +1,11 @@
 import datetime
 from pathlib import Path
 import re
+import sys
 
 TODAY = datetime.datetime.today()
+
+PYTHON_VERSION = sys.version.split()[0]
 
 
 class Assert:
@@ -87,3 +90,13 @@ class DeloggerTestBase:
         logger.warning("warning")
         logger.error("error")
         logger.critical("critical")
+
+
+def skip_version(f, skip_version=["3.9"]):
+    def wrapper(*args, **kwargs):
+        return f(*args, **kwargs)
+
+    if PYTHON_VERSION in skip_version:
+        return
+
+    return wrapper
