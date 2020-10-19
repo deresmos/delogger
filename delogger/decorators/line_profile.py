@@ -46,10 +46,8 @@ class LineProfileStats(DecoratorBase):
         super().__init__()
 
         self.prof: Optional[LineProfiler] = None
-        try:
+        if _can_line_profiler:
             self.prof = LineProfiler()
-        except NameError:
-            pass
 
     def can_run(self) -> bool:
         if not _can_line_profiler:
@@ -66,7 +64,7 @@ class LineProfileStats(DecoratorBase):
         return rtn
 
     def print_stats(self) -> None:
-        if not self.prof or not self.logger:
+        if not self.prof:
             return None
 
         with StringIO() as f:

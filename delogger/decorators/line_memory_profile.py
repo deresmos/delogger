@@ -52,8 +52,6 @@ class LineMemoryProfile(DecoratorBase):
             warn_import(self.decorator_name, "line_profiler")
             return False
 
-        return True
-
         if not _can_memory_profiler:
             warn_import(self.decorator_name, "memory_profiler")
             return False
