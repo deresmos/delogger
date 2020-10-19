@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "delogger"
-version = "0.2.4"
+version = "0.3.0"
 description = "delogger is a convenient logging package"
 authors = ["deresmos <deresmos@gmail.com>"]
 repository = "https://github.com/deresmos/delogger"
